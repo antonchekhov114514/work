@@ -8,6 +8,7 @@ import numpy as np
 
 from .demo import BONE, SAT, SKIN, SOFT, layered_torso_mesh
 from .io import load_mesh, load_result_npz, save_result_bundle
+from .mat_convert import convert_mat, describe_arrays, load_mat_arrays
 from .preprocess import repair_surface
 from .solver import Material, SolverOptions, morph_sat
 from .surface_map import load_surface, map_surface, save_center_result, save_surface_result
@@ -137,6 +138,40 @@ def command_map_surface(args: argparse.Namespace) -> None:
         print(f"  wrote: {path}")
 
 
+def command_convert_mat(args: argparse.Namespace) -> None:
+    arrays = load_mat_arrays(args.input)
+    if args.list_variables:
+        print(json.dumps(describe_arrays(arrays), indent=2, ensure_ascii=False))
+        return
+    if args.output is None:
+        raise ValueError("--output is required unless --list-variables is used")
+    tag_names = None
+    if args.tag_names:
+        tag_names = json.loads(Path(args.tag_names).read_text(encoding="utf-8"))
+    index_base = "one" if args.one_based else "zero" if args.zero_based else "auto"
+    report = convert_mat(
+        args.input,
+        args.output,
+        points_key=args.points_key,
+        tetra_key=args.tetra_key,
+        tags_key=args.tags_key,
+        surface_points_key=args.surface_points_key,
+        surface_faces_key=args.surface_faces_key,
+        surface_output=args.surface_output,
+        report_path=args.report,
+        index_base=index_base,
+        tag_names=tag_names,
+    )
+    print("\nMAT conversion completed")
+    print(f"  mesh points       : {report['mesh']['points']}")
+    print(f"  tetrahedra        : {report['mesh']['tetrahedra']}")
+    print(f"  wrote: {args.output}")
+    if args.surface_output and "surface" in report:
+        print(f"  wrote: {args.surface_output}")
+    if args.report:
+        print(f"  wrote: {args.report}")
+
+
 def _add_solver_arguments(parser: argparse.ArgumentParser) -> None:
     target = parser.add_mutually_exclusive_group(required=True)
     target.add_argument(
@@ -224,6 +259,25 @@ def build_parser() -> argparse.ArgumentParser:
         help="skip triangle-center mapping",
     )
     mapper.set_defaults(func=command_map_surface)
+
+    converter = subparsers.add_parser(
+        "convert-mat", help="convert MATLAB mesh arrays to satmorph NPZ inputs"
+    )
+    converter.add_argument("--input", required=True)
+    converter.add_argument("--output", default=None)
+    converter.add_argument("--surface-output", default=None)
+    converter.add_argument("--report", default=None)
+    converter.add_argument("--list-variables", action="store_true")
+    converter.add_argument("--points-key", default=None)
+    converter.add_argument("--tetra-key", default=None)
+    converter.add_argument("--tags-key", default=None)
+    converter.add_argument("--surface-points-key", default=None)
+    converter.add_argument("--surface-faces-key", default=None)
+    converter.add_argument("--tag-names", default=None)
+    base = converter.add_mutually_exclusive_group()
+    base.add_argument("--one-based", action="store_true")
+    base.add_argument("--zero-based", action="store_true")
+    converter.set_defaults(func=command_convert_mat)
     return parser
 
 

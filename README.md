@@ -298,6 +298,30 @@ satmorph map-surface \
 
 ## NPZ 格式
 
+如果原始数据是 MATLAB `.mat` 文件，可以先查看其中的变量：
+
+```bash
+satmorph convert-mat --input model.mat --list-variables
+```
+
+常见变量名（如 `nodes`、`elements`、`materials`、`skin_vertices`、`skin_faces`）会自动识别：
+
+```bash
+satmorph convert-mat \
+  --input model.mat \
+  --output model-coarse.npz \
+  --surface-output model-surface.npz \
+  --report model-convert.json
+```
+
+若变量名比较特殊，可通过 `--points-key`、`--tetra-key`、`--tags-key`、`--surface-points-key` 和 `--surface-faces-key` 指定。MATLAB 常见的从 1 开始的节点编号会自动转换；也可用 `--one-based` 或 `--zero-based` 明确指定。
+
+MATLAB v7.3 文件需要额外安装 HDF5 支持：
+
+```bash
+python -m pip install -e '.[mat]'
+```
+
 最小粗四面体输入：
 
 ```python
