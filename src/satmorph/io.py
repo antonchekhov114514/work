@@ -1,0 +1,181 @@
+from __future__ import annotations
+
+import json
+from html import escape
+from pathlib import Path
+
+import numpy as np
+
+from .mesh import TetMesh
+from .solver import MorphResult
+
+
+def load_mesh(path: str | Path, cell_data_name: str | None = None) -> TetMesh:
+    path = Path(path)
+    if path.suffix.lower() == ".npz":
+        with np.load(path, allow_pickle=False) as data:
+            points = data["points"]
+            tetra = data["tetra"]
+            tags = data["cell_tags"]
+            raw_names = data.get("tag_names_json")
+            names = json.loads(str(raw_names.item())) if raw_names is not None else {}
+        return TetMesh(points, tetra, tags, names)
+
+    try:
+        import meshio
+    except ImportError as exc:
+        raise RuntimeError("meshio is required to read non-NPZ meshes") from exc
+
+    source = meshio.read(path)
+    tetra_blocks: list[np.ndarray] = []
+    tag_blocks: list[np.ndarray] = []
+    candidate_names = [cell_data_name] if cell_data_name else [
+        "gmsh:physical",
+        "region",
+        "cell_tags",
+        "material",
+    ]
+    chosen = next((name for name in candidate_names if name and name in source.cell_data), None)
+
+    for block_index, block in enumerate(source.cells):
+        if block.type not in {"tetra", "tetra10"}:
+            continue
+        tetra_blocks.append(np.asarray(block.data[:, :4], dtype=np.int64))
+        if chosen is None:
+            tag_blocks.append(np.zeros(len(block.data), dtype=np.int64))
+        else:
+            tag_blocks.append(np.asarray(source.cell_data[chosen][block_index], dtype=np.int64))
+    if not tetra_blocks:
+        raise ValueError(f"no tetrahedral cells found in {path}")
+
+    names: dict[str, int] = {}
+    for name, value in source.field_data.items():
+        raw = np.asarray(value).ravel()
+        if len(raw) >= 2 and int(raw[1]) == 3:
+            names[str(name)] = int(raw[0])
+    return TetMesh(
+        np.asarray(source.points[:, :3], dtype=float),
+        np.vstack(tetra_blocks),
+        np.concatenate(tag_blocks),
+        names,
+    )
+
+
+def load_result_npz(path: str | Path) -> tuple[TetMesh, np.ndarray, np.ndarray]:
+    path = Path(path)
+    with np.load(path, allow_pickle=False) as data:
+        required = {"points", "tetra", "cell_tags", "displacement", "deformed_points"}
+        missing = sorted(required.difference(data.files))
+        if missing:
+            raise ValueError(f"{path} is missing required result fields: {missing}")
+        raw_names = data.get("tag_names_json")
+        names = json.loads(str(raw_names.item())) if raw_names is not None else {}
+        mesh = TetMesh(data["points"], data["tetra"], data["cell_tags"], names)
+        displacement = np.asarray(data["displacement"], dtype=float)
+        deformed_points = np.asarray(data["deformed_points"], dtype=float)
+    if displacement.shape != mesh.points.shape:
+        raise ValueError("result displacement shape does not match mesh points")
+    if deformed_points.shape != mesh.points.shape:
+        raise ValueError("result deformed_points shape does not match mesh points")
+    return mesh, displacement, deformed_points
+
+
+def save_npz(path: str | Path, mesh: TetMesh, result: MorphResult | None = None) -> None:
+    path = Path(path)
+    payload: dict[str, np.ndarray] = {
+        "points": mesh.points,
+        "tetra": mesh.tetra,
+        "cell_tags": mesh.cell_tags,
+        "tag_names_json": np.asarray(json.dumps(mesh.tag_names)),
+    }
+    if result is not None:
+        payload.update(
+            {
+                "deformed_points": result.points,
+                "displacement": result.displacement,
+                "growth_lambda": result.growth_lambda,
+                "j_total": result.j_total,
+                "j_elastic": result.j_elastic,
+            }
+        )
+    np.savez_compressed(path, **payload)
+
+
+def _ascii(array: np.ndarray) -> str:
+    flat = np.asarray(array).ravel()
+    if np.issubdtype(flat.dtype, np.integer):
+        return " ".join(str(int(value)) for value in flat)
+    return " ".join(f"{float(value):.16g}" for value in flat)
+
+
+def save_vtu(path: str | Path, mesh: TetMesh, result: MorphResult) -> None:
+    """Write a dependency-free ASCII VTU file for inspection in ParaView."""
+    path = Path(path)
+    connectivity = mesh.tetra.astype(np.int64)
+    offsets = np.arange(1, mesh.n_cells + 1, dtype=np.int64) * 4
+    types = np.full(mesh.n_cells, 10, dtype=np.uint8)  # VTK_TETRA
+    point_data = {
+        "displacement": result.displacement,
+        "displacement_magnitude": np.linalg.norm(result.displacement, axis=1),
+    }
+    cell_data = {
+        "region": mesh.cell_tags,
+        "growth_lambda": result.growth_lambda,
+        "J_total": result.j_total,
+        "J_elastic": result.j_elastic,
+    }
+
+    lines = [
+        '<?xml version="1.0"?>',
+        '<VTKFile type="UnstructuredGrid" version="0.1" byte_order="LittleEndian">',
+        "  <UnstructuredGrid>",
+        f'    <Piece NumberOfPoints="{mesh.n_points}" NumberOfCells="{mesh.n_cells}">',
+        "      <PointData>",
+    ]
+    for name, values in point_data.items():
+        values = np.asarray(values)
+        components = values.shape[1] if values.ndim == 2 else 1
+        lines.append(
+            f'        <DataArray type="Float64" Name="{escape(name)}" '
+            f'NumberOfComponents="{components}" format="ascii">{_ascii(values)}</DataArray>'
+        )
+    lines.extend(["      </PointData>", "      <CellData>"])
+    for name, values in cell_data.items():
+        vtk_type = "Int64" if np.issubdtype(np.asarray(values).dtype, np.integer) else "Float64"
+        lines.append(
+            f'        <DataArray type="{vtk_type}" Name="{escape(name)}" '
+            f'format="ascii">{_ascii(values)}</DataArray>'
+        )
+    lines.extend(
+        [
+            "      </CellData>",
+            "      <Points>",
+            f'        <DataArray type="Float64" NumberOfComponents="3" format="ascii">{_ascii(result.points)}</DataArray>',
+            "      </Points>",
+            "      <Cells>",
+            f'        <DataArray type="Int64" Name="connectivity" format="ascii">{_ascii(connectivity)}</DataArray>',
+            f'        <DataArray type="Int64" Name="offsets" format="ascii">{_ascii(offsets)}</DataArray>',
+            f'        <DataArray type="UInt8" Name="types" format="ascii">{_ascii(types)}</DataArray>',
+            "      </Cells>",
+            "    </Piece>",
+            "  </UnstructuredGrid>",
+            "</VTKFile>",
+        ]
+    )
+    path.write_text("\n".join(lines), encoding="utf-8")
+
+
+def save_result_bundle(base_path: str | Path, mesh: TetMesh, result: MorphResult) -> tuple[Path, Path, Path]:
+    base = Path(base_path)
+    if base.suffix:
+        base = base.with_suffix("")
+    base.parent.mkdir(parents=True, exist_ok=True)
+    npz_path = base.with_suffix(".npz")
+    vtu_path = base.with_suffix(".vtu")
+    json_path = base.with_suffix(".json")
+    save_npz(npz_path, mesh, result)
+    save_vtu(vtu_path, mesh, result)
+    json_path.write_text(
+        json.dumps(result.summary(), indent=2, ensure_ascii=False), encoding="utf-8"
+    )
+    return npz_path, vtu_path, json_path

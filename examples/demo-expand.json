@@ -1,0 +1,370 @@
+{
+  "target_volume_ratio_unconstrained": 1.5,
+  "actual_sat_volume_ratio": 1.46760947918061,
+  "sat_reference_volume": 3.5999999999999996,
+  "sat_current_volume": 5.2833941250501955,
+  "minimum_total_jacobian": 1.0,
+  "maximum_displacement": 0.20513912412303195,
+  "iterations": [
+    {
+      "increment": 1,
+      "fraction": 0.1,
+      "iteration": 0,
+      "residual_norm": 1183.5235315570985,
+      "energy": 52.69156396634487,
+      "step_length": 1.0,
+      "min_jacobian": 1.0
+    },
+    {
+      "increment": 1,
+      "fraction": 0.1,
+      "iteration": 1,
+      "residual_norm": 27.174928591234146,
+      "energy": 2.764800251177806,
+      "step_length": 1.0,
+      "min_jacobian": 1.0
+    },
+    {
+      "increment": 1,
+      "fraction": 0.1,
+      "iteration": 2,
+      "residual_norm": 0.16366613801143978,
+      "energy": 2.6920319214286628,
+      "step_length": 1.0,
+      "min_jacobian": 1.0
+    },
+    {
+      "increment": 1,
+      "fraction": 0.1,
+      "iteration": 3,
+      "residual_norm": 6.354160117584905e-06,
+      "energy": 2.6920298946837766,
+      "step_length": 0.0,
+      "min_jacobian": 1.0
+    },
+    {
+      "increment": 2,
+      "fraction": 0.2,
+      "iteration": 0,
+      "residual_norm": 1163.795686704101,
+      "energy": 60.76125980532028,
+      "step_length": 1.0,
+      "min_jacobian": 1.0
+    },
+    {
+      "increment": 2,
+      "fraction": 0.2,
+      "iteration": 1,
+      "residual_norm": 26.46864114041532,
+      "energy": 10.832915353289264,
+      "step_length": 1.0,
+      "min_jacobian": 1.0
+    },
+    {
+      "increment": 2,
+      "fraction": 0.2,
+      "iteration": 2,
+      "residual_norm": 0.17069364725351843,
+      "energy": 10.759095915189768,
+      "step_length": 1.0,
+      "min_jacobian": 1.0
+    },
+    {
+      "increment": 2,
+      "fraction": 0.2,
+      "iteration": 3,
+      "residual_norm": 6.6187863311568406e-06,
+      "energy": 10.759093726443396,
+      "step_length": 0.0,
+      "min_jacobian": 1.0
+    },
+    {
+      "increment": 3,
+      "fraction": 0.3,
+      "iteration": 0,
+      "residual_norm": 1144.5480104922633,
+      "energy": 74.19466037166153,
+      "step_length": 1.0,
+      "min_jacobian": 1.0
+    },
+    {
+      "increment": 3,
+      "fraction": 0.3,
+      "iteration": 1,
+      "residual_norm": 25.792385120682525,
+      "energy": 24.265218903738994,
+      "step_length": 1.0,
+      "min_jacobian": 1.0
+    },
+    {
+      "increment": 3,
+      "fraction": 0.3,
+      "iteration": 2,
+      "residual_norm": 0.17770277034967297,
+      "energy": 24.190305151890392,
+      "step_length": 1.0,
+      "min_jacobian": 1.0
+    },
+    {
+      "increment": 3,
+      "fraction": 0.3,
+      "iteration": 3,
+      "residual_norm": 6.877118901936807e-06,
+      "energy": 24.19030279204639,
+      "step_length": 0.0,
+      "min_jacobian": 1.0
+    },
+    {
+      "increment": 4,
+      "fraction": 0.4,
+      "iteration": 0,
+      "residual_norm": 1125.7624073716995,
+      "energy": 92.98434936433456,
+      "step_length": 1.0,
+      "min_jacobian": 1.0
+    },
+    {
+      "increment": 4,
+      "fraction": 0.4,
+      "iteration": 1,
+      "residual_norm": 25.144855666139627,
+      "energy": 43.0542617463369,
+      "step_length": 1.0,
+      "min_jacobian": 1.0
+    },
+    {
+      "increment": 4,
+      "fraction": 0.4,
+      "iteration": 2,
+      "residual_norm": 0.18464621186175265,
+      "energy": 42.97821733612776,
+      "step_length": 1.0,
+      "min_jacobian": 1.0
+    },
+    {
+      "increment": 4,
+      "fraction": 0.4,
+      "iteration": 3,
+      "residual_norm": 7.127840416820125e-06,
+      "energy": 42.97821479650634,
+      "step_length": 0.0,
+      "min_jacobian": 1.0
+    },
+    {
+      "increment": 5,
+      "fraction": 0.5,
+      "iteration": 0,
+      "residual_norm": 1107.421685974155,
+      "energy": 117.12624642967688,
+      "step_length": 1.0,
+      "min_jacobian": 1.0
+    },
+    {
+      "increment": 5,
+      "fraction": 0.5,
+      "iteration": 1,
+      "residual_norm": 24.524772191298773,
+      "energy": 67.19592678665909,
+      "step_length": 1.0,
+      "min_jacobian": 1.0
+    },
+    {
+      "increment": 5,
+      "fraction": 0.5,
+      "iteration": 2,
+      "residual_norm": 0.19147882966399044,
+      "energy": 67.11872267960251,
+      "step_length": 1.0,
+      "min_jacobian": 1.0
+    },
+    {
+      "increment": 5,
+      "fraction": 0.5,
+      "iteration": 3,
+      "residual_norm": 7.369649260290797e-06,
+      "energy": 67.11871995207407,
+      "step_length": 0.0,
+      "min_jacobian": 1.0
+    },
+    {
+      "increment": 6,
+      "fraction": 0.6,
+      "iteration": 0,
+      "residual_norm": 1089.5095133947543,
+      "energy": 146.61948718956114,
+      "step_length": 1.0,
+      "min_jacobian": 1.0
+    },
+    {
+      "increment": 6,
+      "fraction": 0.6,
+      "iteration": 1,
+      "residual_norm": 23.93088044173389,
+      "energy": 96.68930977851234,
+      "step_length": 1.0,
+      "min_jacobian": 1.0
+    },
+    {
+      "increment": 6,
+      "fraction": 0.6,
+      "iteration": 2,
+      "residual_norm": 0.19815767825856426,
+      "energy": 96.6109246159156,
+      "step_length": 1.0,
+      "min_jacobian": 1.0
+    },
+    {
+      "increment": 6,
+      "fraction": 0.6,
+      "iteration": 3,
+      "residual_norm": 7.601266776628708e-06,
+      "energy": 96.61092169303899,
+      "step_length": 0.0,
+      "min_jacobian": 1.0
+    },
+    {
+      "increment": 7,
+      "fraction": 0.7,
+      "iteration": 0,
+      "residual_norm": 1072.0103749890143,
+      "energy": 181.46629902676574,
+      "step_length": 1.0,
+      "min_jacobian": 1.0
+    },
+    {
+      "increment": 7,
+      "fraction": 0.7,
+      "iteration": 1,
+      "residual_norm": 23.36195474533754,
+      "energy": 131.5365955582865,
+      "step_length": 1.0,
+      "min_jacobian": 1.0
+    },
+    {
+      "increment": 7,
+      "fraction": 0.7,
+      "iteration": 2,
+      "residual_norm": 0.2046420744873192,
+      "energy": 131.45701596209648,
+      "step_length": 1.0,
+      "min_jacobian": 1.0
+    },
+    {
+      "increment": 7,
+      "fraction": 0.7,
+      "iteration": 3,
+      "residual_norm": 7.821449872740328e-06,
+      "energy": 131.45701283725626,
+      "step_length": 0.0,
+      "min_jacobian": 1.0
+    },
+    {
+      "increment": 8,
+      "fraction": 0.8,
+      "iteration": 0,
+      "residual_norm": 1054.9095354753888,
+      "energy": 221.6718731142661,
+      "step_length": 1.0,
+      "min_jacobian": 1.0
+    },
+    {
+      "increment": 8,
+      "fraction": 0.8,
+      "iteration": 1,
+      "residual_norm": 22.81680001931349,
+      "energy": 171.74293049652425,
+      "step_length": 1.0,
+      "min_jacobian": 1.0
+    },
+    {
+      "increment": 8,
+      "fraction": 0.8,
+      "iteration": 2,
+      "residual_norm": 0.21089371542157842,
+      "energy": 171.66215129026781,
+      "step_length": 1.0,
+      "min_jacobian": 1.0
+    },
+    {
+      "increment": 8,
+      "fraction": 0.8,
+      "iteration": 3,
+      "residual_norm": 8.029014120547302e-06,
+      "energy": 171.66214795781212,
+      "step_length": 0.0,
+      "min_jacobian": 1.0
+    },
+    {
+      "increment": 9,
+      "fraction": 0.9,
+      "iteration": 0,
+      "residual_norm": 1038.1930013778856,
+      "energy": 267.24423338269503,
+      "step_length": 1.0,
+      "min_jacobian": 1.0
+    },
+    {
+      "increment": 9,
+      "fraction": 0.9,
+      "iteration": 1,
+      "residual_norm": 22.29425353072663,
+      "energy": 217.31629185976763,
+      "step_length": 1.0,
+      "min_jacobian": 1.0
+    },
+    {
+      "increment": 9,
+      "fraction": 0.9,
+      "iteration": 2,
+      "residual_norm": 0.21687683543394956,
+      "energy": 217.23431620349447,
+      "step_length": 1.0,
+      "min_jacobian": 1.0
+    },
+    {
+      "increment": 9,
+      "fraction": 0.9,
+      "iteration": 3,
+      "residual_norm": 8.222825704003831e-06,
+      "energy": 217.23431265885833,
+      "step_length": 0.0,
+      "min_jacobian": 1.0
+    },
+    {
+      "increment": 10,
+      "fraction": 1.0,
+      "iteration": 0,
+      "residual_norm": 1021.8474848304829,
+      "energy": 318.19410305090315,
+      "step_length": 1.0,
+      "min_jacobian": 1.0
+    },
+    {
+      "increment": 10,
+      "fraction": 1.0,
+      "iteration": 1,
+      "residual_norm": 21.793186419410212,
+      "energy": 268.2673547080063,
+      "step_length": 1.0,
+      "min_jacobian": 1.0
+    },
+    {
+      "increment": 10,
+      "fraction": 1.0,
+      "iteration": 2,
+      "residual_norm": 0.22255838928324095,
+      "energy": 268.18419414229766,
+      "step_length": 1.0,
+      "min_jacobian": 1.0
+    },
+    {
+      "increment": 10,
+      "fraction": 1.0,
+      "iteration": 3,
+      "residual_norm": 8.401839881088288e-06,
+      "energy": 268.1841903821269,
+      "step_length": 0.0,
+      "min_jacobian": 1.0
+    }
+  ]
+}

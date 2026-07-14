@@ -1,0 +1,43 @@
+{
+  "source_keys": {
+    "points": "nodes",
+    "tetra": "elements",
+    "cell_tags": "materials",
+    "surface_points": "skin_vertices",
+    "surface_faces": "skin_faces"
+  },
+  "mesh": {
+    "points": 5,
+    "tetra": 2,
+    "tag_counts": {
+      "1": 1,
+      "3": 1
+    },
+    "minimum_cell_volume": 0.16666666666666666,
+    "maximum_cell_volume": 0.3333333333333333,
+    "bounds_min": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "bounds_max": [
+      1.0,
+      1.0,
+      1.0
+    ]
+  },
+  "surface": {
+    "points": 3,
+    "triangles": 1,
+    "bounds_min": [
+      0.1,
+      0.1,
+      0.1
+    ],
+    "bounds_max": [
+      0.4,
+      0.4,
+      0.1
+    ]
+  }
+}
