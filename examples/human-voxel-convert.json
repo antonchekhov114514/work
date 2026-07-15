@@ -1,0 +1,63 @@
+{
+  "input": "outputs\\human voxel model handoff20260702\\combined_material_label_model_001_073_1mm.mat",
+  "label_variable": "MaterialLabelGrid",
+  "source_grid_shape": [
+    598,
+    263,
+    1645
+  ],
+  "source_axis_unit": "m",
+  "output_coordinate_unit": "m",
+  "coarse_stride_voxels": 20,
+  "coarse_envelope_fraction": 0.25,
+  "coarse_skin_fraction": 0.25,
+  "coarse_block_shape": [
+    30,
+    14,
+    83
+  ],
+  "mesh": {
+    "output": "outputs\\sat-morphing-fem\\examples\\human-voxel-coarse.npz",
+    "points": 14445,
+    "tetrahedra": 65994,
+    "tag_names": {
+      "BONE": 1,
+      "SOFT": 2,
+      "SAT": 3,
+      "SKIN": 4
+    },
+    "tetrahedra_by_tag": {
+      "BONE": 4020,
+      "SOFT": 53934,
+      "SAT": 7932,
+      "SKIN": 108
+    },
+    "volume_by_tag": {
+      "BONE": 0.005276204302670943,
+      "SOFT": 0.07131948298165512,
+      "SAT": 0.010741279994349805,
+      "SKIN": 0.00014009802999163018
+    }
+  },
+  "source_label_groups": {
+    "SAT": [
+      1
+    ],
+    "SKIN": [
+      2
+    ],
+    "BONE": [
+      19,
+      68,
+      69,
+      70
+    ],
+    "SOFT": "all other non-zero labels"
+  },
+  "surface": {
+    "output": "outputs\\sat-morphing-fem\\examples\\human-voxel-surface.npz",
+    "stride_voxels": 4,
+    "points": 148243,
+    "triangles": 296572
+  }
+}

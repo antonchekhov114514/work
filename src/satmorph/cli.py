@@ -12,6 +12,7 @@ from .mat_convert import convert_mat, describe_arrays, load_mat_arrays
 from .preprocess import repair_surface
 from .solver import Material, SolverOptions, morph_sat
 from .surface_map import load_surface, map_surface, save_center_result, save_surface_result
+from .voxel_convert import convert_voxel_mat
 
 
 def _options(args: argparse.Namespace) -> SolverOptions:
@@ -172,6 +173,40 @@ def command_convert_mat(args: argparse.Namespace) -> None:
         print(f"  wrote: {args.report}")
 
 
+def command_convert_voxel_mat(args: argparse.Namespace) -> None:
+    report = convert_voxel_mat(
+        args.input,
+        args.output,
+        surface_output=args.surface_output,
+        report_path=args.report,
+        variable=args.variable,
+        axis_keys=tuple(args.axis_key),
+        axis_unit=args.axis_unit,
+        output_unit=args.output_unit,
+        voxel_size_mm=args.voxel_size_mm,
+        stride=args.stride,
+        surface_stride=args.surface_stride,
+        sat_labels=args.sat_label,
+        skin_labels=args.skin_label,
+        bone_labels=args.bone_label,
+        max_tetrahedra=args.max_tetrahedra,
+        envelope_fraction=args.envelope_fraction,
+        skin_fraction=args.skin_fraction,
+    )
+    mesh = report["mesh"]
+    print("\nVoxel MAT conversion completed")
+    print(f"  source grid       : {tuple(report['source_grid_shape'])}")
+    print(f"  mesh points       : {mesh['points']}")
+    print(f"  tetrahedra        : {mesh['tetrahedra']}")
+    print(f"  wrote: {args.output}")
+    if args.surface_output:
+        surface = report["surface"]
+        print(f"  surface triangles : {surface['triangles']}")
+        print(f"  wrote: {args.surface_output}")
+    if args.report:
+        print(f"  wrote: {args.report}")
+
+
 def _add_solver_arguments(parser: argparse.ArgumentParser) -> None:
     target = parser.add_mutually_exclusive_group(required=True)
     target.add_argument(
@@ -278,11 +313,44 @@ def build_parser() -> argparse.ArgumentParser:
     base.add_argument("--one-based", action="store_true")
     base.add_argument("--zero-based", action="store_true")
     converter.set_defaults(func=command_convert_mat)
+
+    voxel = subparsers.add_parser(
+        "convert-voxel-mat",
+        help="convert a labeled MATLAB voxel atlas to a coarse tetra mesh and body surface",
+    )
+    voxel.add_argument("--input", required=True)
+    voxel.add_argument("--output", required=True)
+    voxel.add_argument("--surface-output", default=None)
+    voxel.add_argument("--report", default=None)
+    voxel.add_argument("--variable", default="MaterialLabelGrid")
+    voxel.add_argument(
+        "--axis-key", action="append", default=None,
+        help="MAT axis variable; provide exactly three times (default: Axis0/Axis1/Axis2)",
+    )
+    voxel.add_argument("--axis-unit", choices=("m", "mm"), default="m")
+    voxel.add_argument("--output-unit", choices=("m", "mm"), default="m")
+    voxel.add_argument("--voxel-size-mm", type=float, default=1.0)
+    voxel.add_argument("--stride", type=int, default=20)
+    voxel.add_argument("--surface-stride", type=int, default=4)
+    voxel.add_argument("--max-tetrahedra", type=int, default=500_000)
+    voxel.add_argument("--envelope-fraction", type=float, default=0.25)
+    voxel.add_argument("--skin-fraction", type=float, default=0.25)
+    voxel.add_argument("--sat-label", action="append", type=int, default=None)
+    voxel.add_argument("--skin-label", action="append", type=int, default=None)
+    voxel.add_argument("--bone-label", action="append", type=int, default=None)
+    voxel.set_defaults(func=command_convert_voxel_mat)
     return parser
 
 
 def main(argv: list[str] | None = None) -> None:
     args = build_parser().parse_args(argv)
+    if args.command == "convert-voxel-mat":
+        args.axis_key = args.axis_key or ["Axis0", "Axis1", "Axis2"]
+        if len(args.axis_key) != 3:
+            raise ValueError("--axis-key must be provided exactly three times")
+        args.sat_label = args.sat_label or [1]
+        args.skin_label = args.skin_label or [2]
+        args.bone_label = args.bone_label or [19, 68, 69, 70]
     args.func(args)
 
 
