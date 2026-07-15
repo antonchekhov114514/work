@@ -1,0 +1,12 @@
+{
+  "mapped_points": 148243,
+  "inside_points": 148243,
+  "outside_points": 0,
+  "maximum_point_residual": 5.551115123125783e-16,
+  "maximum_point_displacement": 0.005181343172724152,
+  "mapped_triangle_centers": 296572,
+  "inside_triangle_centers": 296572,
+  "outside_triangle_centers": 0,
+  "maximum_center_residual": 5.88418203051333e-15,
+  "maximum_center_displacement": 0.005091472152182973
+}

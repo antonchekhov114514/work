@@ -1,0 +1,63 @@
+{
+  "input": "combined_material_label_model_001_073_1mm.mat",
+  "label_variable": "MaterialLabelGrid",
+  "source_grid_shape": [
+    598,
+    263,
+    1645
+  ],
+  "source_axis_unit": "m",
+  "output_coordinate_unit": "m",
+  "coarse_stride_voxels": 10,
+  "coarse_envelope_fraction": 0.25,
+  "coarse_skin_fraction": 0.25,
+  "coarse_block_shape": [
+    60,
+    27,
+    165
+  ],
+  "mesh": {
+    "output": "outputs/human-coarse.npz",
+    "points": 87398,
+    "tetrahedra": 448638,
+    "tag_names": {
+      "BONE": 1,
+      "SOFT": 2,
+      "SAT": 3,
+      "SKIN": 4
+    },
+    "tetrahedra_by_tag": {
+      "BONE": 37662,
+      "SOFT": 334974,
+      "SAT": 49590,
+      "SKIN": 26412
+    },
+    "volume_by_tag": {
+      "BONE": 0.006169954374152719,
+      "SOFT": 0.054962674241450266,
+      "SAT": 0.008136179287737553,
+      "SKIN": 0.0043315292896299335
+    }
+  },
+  "source_label_groups": {
+    "SAT": [
+      1
+    ],
+    "SKIN": [
+      2
+    ],
+    "BONE": [
+      19,
+      68,
+      69,
+      70
+    ],
+    "SOFT": "all other non-zero labels"
+  },
+  "surface": {
+    "output": "outputs/human-surface.npz",
+    "stride_voxels": 4,
+    "points": 148243,
+    "triangles": 296572
+  }
+}
