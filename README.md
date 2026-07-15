@@ -344,6 +344,66 @@ satmorph map-surface \
 
 该转换是规则体素块四面体化，适合验证 SAT 增减和粗到细位移映射。它不会自动平滑台阶状体表，也不等同于经过 TetWild、CGAL 或 Gmsh 优化的临床级网格。正式计算前仍应检查标签、表面和四面体质量。
 
+### 平滑可视化表面
+
+`.vtu` 是粗四面体 FEM 结果，主要用于检查 `region`、`growth_lambda`、`J_total` 和 `J_elastic`。如果目标是得到更好看的外表面，应额外从体素 atlas 提取三角表面，再把粗 FEM 位移映射到这个表面。
+
+安装 marching cubes 可选依赖：
+
+```bash
+python -m pip install -e '.[visual]'
+```
+
+从 `MaterialLabelGrid` 提取平滑体表：
+
+```bash
+satmorph extract-visual-surface \
+  --input combined_material_label_model_001_073_1mm.mat \
+  --output outputs/human-visual-surface.vtk \
+  --report outputs/human-visual-surface.json \
+  --surface-stride 2 \
+  --method marching-cubes \
+  --pre-smooth-sigma 0.5 \
+  --smooth-method taubin \
+  --smooth-iterations 20
+```
+
+如果没有安装 `scikit-image`，可以先用块状回退版本：
+
+```bash
+satmorph extract-visual-surface \
+  --input combined_material_label_model_001_073_1mm.mat \
+  --output outputs/human-visual-surface.npz \
+  --report outputs/human-visual-surface.json \
+  --surface-stride 2 \
+  --method blocks \
+  --smooth-method taubin \
+  --smooth-iterations 20
+```
+
+然后把 SAT 求解结果映射到这个平滑表面：
+
+```bash
+satmorph map-surface \
+  --coarse-result outputs/human-sat-120.npz \
+  --surface outputs/human-visual-surface.vtk \
+  --output outputs/human-sat-120-visual.vtk \
+  --centers-output outputs/human-sat-120-visual-centers.npz \
+  --report outputs/human-sat-120-visual-map.json
+```
+
+也可以导出给 Blender 或其他软件：
+
+```bash
+satmorph map-surface \
+  --coarse-result outputs/human-sat-120.npz \
+  --surface outputs/human-visual-surface.vtk \
+  --output outputs/human-sat-120-visual.ply \
+  --report outputs/human-sat-120-visual-map.json
+```
+
+建议用于展示的文件是 `human-sat-120-visual.vtk`、`.ply` 或 `.obj`，而不是粗网格 `.vtu`。映射后的表面坐标已经变形，不需要在 ParaView 里再次使用 `Warp By Vector`。
+
 如果原始数据是 MATLAB `.mat` 文件，可以先查看其中的变量：
 
 ```bash

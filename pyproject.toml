@@ -17,6 +17,7 @@ dependencies = [
 [project.optional-dependencies]
 preprocess = ["pymeshfix>=0.17", "pyvista>=0.43"]
 mat = ["h5py>=3.10"]
+visual = ["scikit-image>=0.22"]
 test = ["pytest>=8"]
 
 [project.scripts]
