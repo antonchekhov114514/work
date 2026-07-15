@@ -12,6 +12,7 @@ from .mat_convert import convert_mat, describe_arrays, load_mat_arrays
 from .preprocess import repair_surface
 from .solver import Material, SolverOptions, morph_sat
 from .surface_map import load_surface, map_surface, save_center_result, save_surface_result
+from .visual_surface import extract_visual_surface_from_voxel_mat
 from .voxel_convert import convert_voxel_mat
 
 
@@ -207,6 +208,38 @@ def command_convert_voxel_mat(args: argparse.Namespace) -> None:
         print(f"  wrote: {args.report}")
 
 
+def command_extract_visual_surface(args: argparse.Namespace) -> None:
+    report = extract_visual_surface_from_voxel_mat(
+        args.input,
+        args.output,
+        report_path=args.report,
+        variable=args.variable,
+        axis_keys=tuple(args.axis_key),
+        axis_unit=args.axis_unit,
+        output_unit=args.output_unit,
+        voxel_size_mm=args.voxel_size_mm,
+        surface_stride=args.surface_stride,
+        method=args.method,
+        pre_smooth_sigma=args.pre_smooth_sigma,
+        smooth_method=args.smooth_method,
+        smooth_iterations=args.smooth_iterations,
+        laplacian_lambda=args.laplacian_lambda,
+        taubin_lambda=args.taubin_lambda,
+        taubin_mu=args.taubin_mu,
+    )
+    surface = report["surface"]
+    raw = report["raw_surface"]
+    print("\nVisual surface extraction completed")
+    print(f"  method            : {report['method']}")
+    print(f"  raw points        : {raw['points']}")
+    print(f"  raw triangles     : {raw['triangles']}")
+    print(f"  smoothed points   : {surface['points']}")
+    print(f"  smoothed triangles: {surface['triangles']}")
+    print(f"  wrote: {args.output}")
+    if args.report:
+        print(f"  wrote: {args.report}")
+
+
 def _add_solver_arguments(parser: argparse.ArgumentParser) -> None:
     target = parser.add_mutually_exclusive_group(required=True)
     target.add_argument(
@@ -339,6 +372,47 @@ def build_parser() -> argparse.ArgumentParser:
     voxel.add_argument("--skin-label", action="append", type=int, default=None)
     voxel.add_argument("--bone-label", action="append", type=int, default=None)
     voxel.set_defaults(func=command_convert_voxel_mat)
+
+    visual = subparsers.add_parser(
+        "extract-visual-surface",
+        help="extract a smoother visualization surface from a labeled voxel MAT atlas",
+    )
+    visual.add_argument("--input", required=True)
+    visual.add_argument("--output", required=True)
+    visual.add_argument("--report", default=None)
+    visual.add_argument("--variable", default="MaterialLabelGrid")
+    visual.add_argument(
+        "--axis-key",
+        action="append",
+        default=None,
+        help="MAT axis variable; provide exactly three times (default: Axis0/Axis1/Axis2)",
+    )
+    visual.add_argument("--axis-unit", choices=("m", "mm"), default="m")
+    visual.add_argument("--output-unit", choices=("m", "mm"), default="m")
+    visual.add_argument("--voxel-size-mm", type=float, default=1.0)
+    visual.add_argument("--surface-stride", type=int, default=2)
+    visual.add_argument(
+        "--method",
+        choices=("marching-cubes", "blocks"),
+        default="marching-cubes",
+        help="surface extraction method; blocks needs no scikit-image but remains blockier",
+    )
+    visual.add_argument(
+        "--pre-smooth-sigma",
+        type=float,
+        default=0.0,
+        help="optional Gaussian smoothing of the occupancy field before marching cubes",
+    )
+    visual.add_argument(
+        "--smooth-method",
+        choices=("none", "laplacian", "taubin"),
+        default="taubin",
+    )
+    visual.add_argument("--smooth-iterations", type=int, default=20)
+    visual.add_argument("--laplacian-lambda", type=float, default=0.35)
+    visual.add_argument("--taubin-lambda", type=float, default=0.5)
+    visual.add_argument("--taubin-mu", type=float, default=-0.53)
+    visual.set_defaults(func=command_extract_visual_surface)
     return parser
 
 
@@ -351,6 +425,10 @@ def main(argv: list[str] | None = None) -> None:
         args.sat_label = args.sat_label or [1]
         args.skin_label = args.skin_label or [2]
         args.bone_label = args.bone_label or [19, 68, 69, 70]
+    if args.command == "extract-visual-surface":
+        args.axis_key = args.axis_key or ["Axis0", "Axis1", "Axis2"]
+        if len(args.axis_key) != 3:
+            raise ValueError("--axis-key must be provided exactly three times")
     args.func(args)
 
 

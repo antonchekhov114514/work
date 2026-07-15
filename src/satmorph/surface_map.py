@@ -138,12 +138,14 @@ def save_surface_result(
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
     if path.suffix.lower() == ".npz":
+        deformed_normals = _compute_point_normals(result.points, surface.triangles)
         np.savez_compressed(
             path,
             points=surface.points,
             triangles=surface.triangles,
             deformed_points=result.points,
             displacement=result.displacement,
+            deformed_normals=deformed_normals,
             cell_index=result.cell_index,
             barycentric=result.barycentric,
             inside=result.inside,
@@ -187,11 +189,13 @@ def save_surface_result(
         raise RuntimeError("meshio is required to write non-NPZ surface meshes") from exc
 
     cells = [("triangle", surface.triangles)] if surface.n_triangles else []
+    deformed_normals = _compute_point_normals(result.points, surface.triangles)
     point_data = {
         "displacement": result.displacement,
         "mapped_cell": result.cell_index,
         "inside_tet": result.inside.astype(np.int8),
         "map_residual": result.residual,
+        "Normals": deformed_normals,
     }
     suffix = path.suffix.lower()
     if suffix in {".stl", ".obj", ".ply"}:
@@ -390,3 +394,24 @@ def _clamp_barycentric(bary: np.ndarray) -> np.ndarray:
         clipped[np.argmax(bary)] = 1.0
         return clipped
     return clipped / total
+
+
+def _compute_point_normals(points: np.ndarray, triangles: np.ndarray) -> np.ndarray:
+    normals = np.zeros_like(points, dtype=float)
+    if len(points) == 0 or len(triangles) == 0:
+        return normals
+    face_points = points[triangles]
+    face_normals = np.cross(
+        face_points[:, 1] - face_points[:, 0],
+        face_points[:, 2] - face_points[:, 0],
+    )
+    lengths = np.linalg.norm(face_normals, axis=1)
+    valid = lengths > 0.0
+    face_normals[valid] /= lengths[valid, None]
+    np.add.at(normals, triangles[:, 0], face_normals)
+    np.add.at(normals, triangles[:, 1], face_normals)
+    np.add.at(normals, triangles[:, 2], face_normals)
+    normal_lengths = np.linalg.norm(normals, axis=1)
+    valid_points = normal_lengths > 0.0
+    normals[valid_points] /= normal_lengths[valid_points, None]
+    return normals
