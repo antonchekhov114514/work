@@ -58,6 +58,8 @@ class SurfaceMapResult:
     center_barycentric: np.ndarray | None = None
     center_inside: np.ndarray | None = None
     center_residual: np.ndarray | None = None
+    point_cell_data: dict[str, np.ndarray] | None = None
+    center_cell_data: dict[str, np.ndarray] | None = None
 
     def summary(self) -> dict[str, object]:
         payload: dict[str, object] = {
@@ -139,8 +141,7 @@ def save_surface_result(
     path.parent.mkdir(parents=True, exist_ok=True)
     if path.suffix.lower() == ".npz":
         deformed_normals = _compute_point_normals(result.points, surface.triangles)
-        np.savez_compressed(
-            path,
+        payload = dict(
             points=surface.points,
             triangles=surface.triangles,
             deformed_points=result.points,
@@ -181,6 +182,11 @@ def save_surface_result(
                 else result.center_residual
             ),
         )
+        for name, values in (result.point_cell_data or {}).items():
+            payload[f"mapped_{name}"] = values
+        for name, values in (result.center_cell_data or {}).items():
+            payload[f"center_{name}"] = values
+        np.savez_compressed(path, **payload)
         return
 
     try:
@@ -197,6 +203,8 @@ def save_surface_result(
         "map_residual": result.residual,
         "Normals": deformed_normals,
     }
+    for name, values in (result.point_cell_data or {}).items():
+        point_data[f"mapped_{name}"] = values
     suffix = path.suffix.lower()
     if suffix in {".stl", ".obj", ".ply"}:
         point_data = {}
@@ -217,6 +225,10 @@ def save_center_result(path: str | Path, result: SurfaceMapResult) -> None:
         center_barycentric=result.center_barycentric,
         center_inside=result.center_inside,
         center_residual=result.center_residual,
+        **{
+            f"center_{name}": values
+            for name, values in (result.center_cell_data or {}).items()
+        },
     )
 
 
@@ -262,7 +274,16 @@ def map_surface(
         center_barycentric=None if center_map is None else center_map.barycentric,
         center_inside=None if center_map is None else center_map.inside,
         center_residual=None if center_map is None else center_map.residual,
+        point_cell_data=_sample_cell_data(mesh, point_map.cell_index),
+        center_cell_data=None if center_map is None else _sample_cell_data(mesh, center_map.cell_index),
     )
+
+
+def _sample_cell_data(mesh: TetMesh, cell_index: np.ndarray) -> dict[str, np.ndarray]:
+    sampled = {"region": mesh.cell_tags[cell_index]}
+    for name, values in mesh.cell_data.items():
+        sampled[name] = np.asarray(values)[cell_index]
+    return sampled
 
 
 @dataclass

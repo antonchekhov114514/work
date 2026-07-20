@@ -19,7 +19,18 @@ def load_mesh(path: str | Path, cell_data_name: str | None = None) -> TetMesh:
             tags = data["cell_tags"]
             raw_names = data.get("tag_names_json")
             names = json.loads(str(raw_names.item())) if raw_names is not None else {}
-        return TetMesh(points, tetra, tags, names)
+            raw_cell_data_names = data.get("cell_data_names_json")
+            cell_data_names = (
+                json.loads(str(raw_cell_data_names.item()))
+                if raw_cell_data_names is not None
+                else []
+            )
+            cell_data = {
+                str(name): data[f"cell_data__{name}"]
+                for name in cell_data_names
+                if f"cell_data__{name}" in data
+            }
+        return TetMesh(points, tetra, tags, names, cell_data)
 
     try:
         import meshio
@@ -53,11 +64,25 @@ def load_mesh(path: str | Path, cell_data_name: str | None = None) -> TetMesh:
         raw = np.asarray(value).ravel()
         if len(raw) >= 2 and int(raw[1]) == 3:
             names[str(name)] = int(raw[0])
+    extra_cell_data: dict[str, np.ndarray] = {}
+    for data_name, blocks in source.cell_data.items():
+        if data_name == chosen:
+            continue
+        selected_blocks: list[np.ndarray] = []
+        for block_index, block in enumerate(source.cells):
+            if block.type in {"tetra", "tetra10"} and block_index < len(blocks):
+                values = np.asarray(blocks[block_index])
+                if len(values) == len(block.data):
+                    selected_blocks.append(values)
+        if selected_blocks:
+            extra_cell_data[str(data_name)] = np.concatenate(selected_blocks)
+
     return TetMesh(
         np.asarray(source.points[:, :3], dtype=float),
         np.vstack(tetra_blocks),
         np.concatenate(tag_blocks),
         names,
+        extra_cell_data,
     )
 
 
@@ -70,7 +95,18 @@ def load_result_npz(path: str | Path) -> tuple[TetMesh, np.ndarray, np.ndarray]:
             raise ValueError(f"{path} is missing required result fields: {missing}")
         raw_names = data.get("tag_names_json")
         names = json.loads(str(raw_names.item())) if raw_names is not None else {}
-        mesh = TetMesh(data["points"], data["tetra"], data["cell_tags"], names)
+        raw_cell_data_names = data.get("cell_data_names_json")
+        cell_data_names = (
+            json.loads(str(raw_cell_data_names.item()))
+            if raw_cell_data_names is not None
+            else []
+        )
+        cell_data = {
+            str(name): data[f"cell_data__{name}"]
+            for name in cell_data_names
+            if f"cell_data__{name}" in data
+        }
+        mesh = TetMesh(data["points"], data["tetra"], data["cell_tags"], names, cell_data)
         displacement = np.asarray(data["displacement"], dtype=float)
         deformed_points = np.asarray(data["deformed_points"], dtype=float)
     if displacement.shape != mesh.points.shape:
@@ -87,7 +123,10 @@ def save_npz(path: str | Path, mesh: TetMesh, result: MorphResult | None = None)
         "tetra": mesh.tetra,
         "cell_tags": mesh.cell_tags,
         "tag_names_json": np.asarray(json.dumps(mesh.tag_names)),
+        "cell_data_names_json": np.asarray(json.dumps(list(mesh.cell_data))),
     }
+    for name, values in mesh.cell_data.items():
+        payload[f"cell_data__{name}"] = np.asarray(values)
     if result is not None:
         payload.update(
             {
@@ -124,6 +163,9 @@ def save_vtu(path: str | Path, mesh: TetMesh, result: MorphResult) -> None:
         "J_total": result.j_total,
         "J_elastic": result.j_elastic,
     }
+    for name, values in mesh.cell_data.items():
+        if name not in cell_data:
+            cell_data[name] = values
 
     lines = [
         '<?xml version="1.0"?>',

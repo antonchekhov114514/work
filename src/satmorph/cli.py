@@ -12,6 +12,7 @@ from .mat_convert import convert_mat, describe_arrays, load_mat_arrays
 from .preprocess import repair_surface
 from .solver import Material, SolverOptions, morph_sat
 from .surface_map import load_surface, map_surface, save_center_result, save_surface_result
+from .tissue_groups import DEFAULT_MECHANICAL_PARAMETERS, MECHANICAL_GROUP_NAMES
 from .visual_surface import extract_visual_surface_from_voxel_mat
 from .voxel_convert import convert_voxel_mat
 
@@ -43,6 +44,21 @@ def _load_materials(path: str | None, mesh) -> tuple[Material, dict[int, Materia
     for key, values in raw.items():
         by_tag[mesh.resolve_tag(key)] = Material(**values)
     return default, by_tag
+
+
+def _default_cell_materials(mesh) -> np.ndarray | None:
+    group_ids = mesh.cell_data.get("mechanical_group_id")
+    if group_ids is None:
+        return None
+    materials = np.empty(mesh.n_cells, dtype=object)
+    fallback = Material(10_000.0, 0.45)
+    for group_id, group_name in MECHANICAL_GROUP_NAMES.items():
+        params = DEFAULT_MECHANICAL_PARAMETERS.get(group_name)
+        material = fallback if params is None else Material(**params)
+        materials[np.asarray(group_ids, dtype=np.int64) == int(group_id)] = material
+    unset = np.fromiter((value is None for value in materials), dtype=bool, count=len(materials))
+    materials[unset] = fallback
+    return materials
 
 
 def _print_outputs(paths, result) -> None:
@@ -87,6 +103,7 @@ def command_solve(args: argparse.Namespace) -> None:
     default, materials = _load_materials(args.materials, mesh)
     if sat_tag not in materials:
         materials[sat_tag] = Material(args.young_sat, args.poisson_sat)
+    cell_materials = None if args.materials else _default_cell_materials(mesh)
     result = morph_sat(
         mesh,
         sat_cells,
@@ -94,6 +111,7 @@ def command_solve(args: argparse.Namespace) -> None:
         _target_ratio(args),
         materials=materials,
         default_material=default,
+        cell_materials=cell_materials,
         options=_options(args),
     )
     _print_outputs(save_result_bundle(args.output, mesh, result), result)
@@ -226,6 +244,7 @@ def command_extract_visual_surface(args: argparse.Namespace) -> None:
         laplacian_lambda=args.laplacian_lambda,
         taubin_lambda=args.taubin_lambda,
         taubin_mu=args.taubin_mu,
+        include_labels=args.include_label,
     )
     surface = report["surface"]
     raw = report["raw_surface"]
@@ -412,6 +431,13 @@ def build_parser() -> argparse.ArgumentParser:
     visual.add_argument("--laplacian-lambda", type=float, default=0.35)
     visual.add_argument("--taubin-lambda", type=float, default=0.5)
     visual.add_argument("--taubin-mu", type=float, default=-0.53)
+    visual.add_argument(
+        "--include-label",
+        action="append",
+        type=int,
+        default=None,
+        help="extract only the selected source label; repeat for multiple labels",
+    )
     visual.set_defaults(func=command_extract_visual_surface)
     return parser
 
@@ -424,7 +450,7 @@ def main(argv: list[str] | None = None) -> None:
             raise ValueError("--axis-key must be provided exactly three times")
         args.sat_label = args.sat_label or [1]
         args.skin_label = args.skin_label or [2]
-        args.bone_label = args.bone_label or [19, 68, 69, 70]
+        args.bone_label = args.bone_label or [19, 68, 69]
     if args.command == "extract-visual-surface":
         args.axis_key = args.axis_key or ["Axis0", "Axis1", "Axis2"]
         if len(args.axis_key) != 3:

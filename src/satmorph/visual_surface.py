@@ -28,6 +28,7 @@ def extract_visual_surface_from_voxel_mat(
     laplacian_lambda: float = 0.35,
     taubin_lambda: float = 0.5,
     taubin_mu: float = -0.53,
+    include_labels: list[int] | tuple[int, ...] | None = None,
 ) -> dict[str, object]:
     if surface_stride < 1:
         raise ValueError("surface_stride must be at least one")
@@ -44,7 +45,11 @@ def extract_visual_surface_from_voxel_mat(
         output_unit=output_unit,
         voxel_size_mm=voxel_size_mm,
     )
-    occupied = _block_occupancy(labels, surface_stride)
+    if include_labels:
+        selected = np.isin(labels, np.asarray(include_labels, dtype=np.int64))
+        occupied = _block_occupancy(selected.astype(np.uint8), surface_stride)
+    else:
+        occupied = _block_occupancy(labels, surface_stride)
     surface_axes = tuple(
         _coarse_edges(axis, labels.shape[index], surface_stride)
         for index, axis in enumerate(source_axes)
@@ -83,6 +88,7 @@ def extract_visual_surface_from_voxel_mat(
         "source_axis_unit": axis_unit,
         "output_coordinate_unit": output_unit,
         "surface_stride_voxels": surface_stride,
+        "include_labels": None if include_labels is None else [int(value) for value in include_labels],
         "method": method_used,
         "pre_smooth_sigma": pre_smooth_sigma,
         "smoothing": {

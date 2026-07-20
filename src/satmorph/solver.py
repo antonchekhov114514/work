@@ -89,6 +89,7 @@ class _Assembler:
         materials: Mapping[int, Material],
         default_material: Material,
         dense_dof_limit: int,
+        cell_materials: np.ndarray | None = None,
     ) -> None:
         self.mesh = mesh
         self.volumes, self.grads, _ = mesh.reference_geometry()
@@ -99,10 +100,12 @@ class _Assembler:
                 f"SciPy is required for {self.n_dof} DOFs; dense fallback limit is {dense_dof_limit}"
             )
 
+        if cell_materials is not None and len(cell_materials) != mesh.n_cells:
+            raise ValueError("cell_materials must have one Material per tetrahedron")
         self.mu = np.empty(mesh.n_cells, dtype=float)
         self.kappa = np.empty(mesh.n_cells, dtype=float)
         for cell, tag in enumerate(mesh.cell_tags):
-            material = materials.get(int(tag), default_material)
+            material = cell_materials[cell] if cell_materials is not None else materials.get(int(tag), default_material)
             self.mu[cell], self.kappa[cell] = material.lame
 
         local = np.arange(3, dtype=np.int64)
@@ -203,6 +206,7 @@ def morph_sat(
     target_volume_ratio: float,
     materials: Mapping[int, Material] | None = None,
     default_material: Material = Material(young=10_000.0, poisson=0.45),
+    cell_materials: np.ndarray | None = None,
     options: SolverOptions | None = None,
 ) -> MorphResult:
     """Morph SAT by prescribed isotropic inelastic strain and static equilibrium."""
@@ -223,7 +227,11 @@ def morph_sat(
         raise ValueError("increments must be at least one")
 
     assembler = _Assembler(
-        mesh, materials or {}, default_material, dense_dof_limit=options.dense_dof_limit
+        mesh,
+        materials or {},
+        default_material,
+        dense_dof_limit=options.dense_dof_limit,
+        cell_materials=cell_materials,
     )
     target_lambda = target_volume_ratio ** (1.0 / 3.0)
     displacement = np.zeros_like(mesh.points)
@@ -345,4 +353,3 @@ def morph_sat(
         target_volume_ratio=target_volume_ratio,
         records=records,
     )
-
