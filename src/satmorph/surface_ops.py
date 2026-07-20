@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from html import escape
 
 import numpy as np
 
@@ -60,15 +61,31 @@ def smooth_surface(
     return SurfaceMesh(points, surface.triangles.copy())
 
 
-def save_surface_mesh(path: str | Path, surface: SurfaceMesh, *, normals: bool = True) -> None:
+def save_surface_mesh(
+    path: str | Path,
+    surface: SurfaceMesh,
+    *,
+    normals: bool = True,
+    point_data: dict[str, np.ndarray] | None = None,
+    cell_data: dict[str, np.ndarray] | None = None,
+) -> None:
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
     point_normals = compute_point_normals(surface.points, surface.triangles) if normals else None
+    point_data = dict(point_data or {})
+    cell_data = dict(cell_data or {})
+    if point_normals is not None:
+        point_data.setdefault("Normals", point_normals)
     if path.suffix.lower() == ".npz":
         payload = {"points": surface.points, "triangles": surface.triangles}
         if point_normals is not None:
             payload["normals"] = point_normals
+        payload.update(point_data)
+        payload.update({f"cell_data__{name}": values for name, values in cell_data.items()})
         np.savez_compressed(path, **payload)
+        return
+    if path.suffix.lower() == ".vtp":
+        save_surface_vtp(path, surface.points, surface.triangles, point_data, cell_data)
         return
 
     try:
@@ -77,10 +94,67 @@ def save_surface_mesh(path: str | Path, surface: SurfaceMesh, *, normals: bool =
         raise RuntimeError("meshio is required to write non-NPZ surface meshes") from exc
 
     cells = [("triangle", surface.triangles)] if surface.n_triangles else []
-    point_data = {}
-    if point_normals is not None and path.suffix.lower() not in {".stl", ".obj"}:
-        point_data["Normals"] = point_normals
-    meshio.write(path, meshio.Mesh(surface.points, cells, point_data=point_data))
+    if path.suffix.lower() in {".stl", ".obj"}:
+        point_data = {}
+        cell_data = {}
+    meshio.write(path, meshio.Mesh(surface.points, cells, point_data=point_data, cell_data={name: [values] for name, values in cell_data.items()}))
+
+
+def save_surface_vtp(
+    path: str | Path,
+    points: np.ndarray,
+    triangles: np.ndarray,
+    point_data: dict[str, np.ndarray] | None = None,
+    cell_data: dict[str, np.ndarray] | None = None,
+) -> None:
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    points = np.asarray(points, dtype=float)
+    triangles = np.asarray(triangles, dtype=np.int64)
+    offsets = np.arange(1, len(triangles) + 1, dtype=np.int64) * 3
+    lines = [
+        '<?xml version="1.0"?>',
+        '<VTKFile type="PolyData" version="0.1" byte_order="LittleEndian">',
+        "  <PolyData>",
+        f'    <Piece NumberOfPoints="{len(points)}" NumberOfPolys="{len(triangles)}">',
+        "      <PointData>",
+    ]
+    for name, values in (point_data or {}).items():
+        lines.append(_vtk_array(name, values, "        "))
+    lines.extend(["      </PointData>", "      <CellData>"])
+    for name, values in (cell_data or {}).items():
+        lines.append(_vtk_array(name, values, "        "))
+    lines.extend(
+        [
+            "      </CellData>",
+            "      <Points>",
+            _vtk_array(None, points, "        "),
+            "      </Points>",
+            "      <Polys>",
+            _vtk_array("connectivity", triangles, "        "),
+            _vtk_array("offsets", offsets, "        "),
+            "      </Polys>",
+            "    </Piece>",
+            "  </PolyData>",
+            "</VTKFile>",
+        ]
+    )
+    path.write_text("\n".join(lines), encoding="utf-8")
+
+
+def _vtk_array(name: str | None, values: np.ndarray, indent: str) -> str:
+    values = np.asarray(values)
+    vtk_type = "Int64" if np.issubdtype(values.dtype, np.integer) else "Float64"
+    components = values.shape[1] if values.ndim == 2 else 1
+    name_text = "" if name is None else f' Name="{escape(name)}"'
+    body = " ".join(
+        str(int(value)) if np.issubdtype(values.dtype, np.integer) else f"{float(value):.16g}"
+        for value in values.ravel()
+    )
+    return (
+        f'{indent}<DataArray type="{vtk_type}"{name_text} '
+        f'NumberOfComponents="{components}" format="ascii">{body}</DataArray>'
+    )
 
 
 def _adjacency_matrix(triangles: np.ndarray, n_points: int):

@@ -184,9 +184,11 @@ def save_vtu(path: str | Path, mesh: TetMesh, result: MorphResult) -> None:
     lines.extend(["      </PointData>", "      <CellData>"])
     for name, values in cell_data.items():
         vtk_type = "Int64" if np.issubdtype(np.asarray(values).dtype, np.integer) else "Float64"
+        values = np.asarray(values)
+        components = values.shape[1] if values.ndim == 2 else 1
         lines.append(
             f'        <DataArray type="{vtk_type}" Name="{escape(name)}" '
-            f'format="ascii">{_ascii(values)}</DataArray>'
+            f'NumberOfComponents="{components}" format="ascii">{_ascii(values)}</DataArray>'
         )
     lines.extend(
         [

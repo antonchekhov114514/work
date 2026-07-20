@@ -28,12 +28,12 @@ det(F_in) = lambda^3
 
 | 目标 | 当前完成度 | 说明 |
 |---|---:|---|
-| SAT 增减论文功能复现 | 60%-70% | 已有 SAT 增长、粗 FEM、表面映射、体积/Jacobian 报告 |
-| 73 标签人体模型接入 | 50%-60% | 已能从体素标签生成粗网格，并保留 `source_label` / `mechanical_group_id` |
-| 好看的外表面可视化 | 55%-65% | 已有 marching cubes、Taubin smoothing、法向量、位移映射 |
-| 通用器官变形 | 30%-40% | 还缺器官级边界条件、器官接触、真实材料标定和高质量体网格 |
-| 接近 Sim4Life 工作流 | 35%-45% | 已有命令行流程，但缺 GUI、模型管理、验证库、稳定大规模求解和多物理场 |
-| 工程级/发表级可靠性 | 25%-35% | 仍需系统验证、网格质量控制、材料来源追踪和误差分析 |
+| SAT 增减论文功能复现 | 82%-87% | 已有外层校正、动态接触、体积审计、形态指标、粗细表面映射 |
+| 73 标签人体模型接入 | 80%-85% | 支持累计审计驱动三级加密、多组织表面和纤维方向场 |
+| 好看的外表面可视化 | 85%-90% | 支持独立 VTP、VTM、透明多组织三视图和自动解剖方向校正 |
+| 通用器官变形 | 55%-65% | 已有按标签变形和动态有限滑移近似接触，未实现器官姿态控制 |
+| 接近 Sim4Life 工作流 | 55%-65% | 已有验证、批处理和多组织输出，仍缺 GUI、模型管理和多物理场 |
+| 工程级/发表级可靠性 | 50%-60% | 已有真实 73 标签验证，材料参数仍需文献标定和实验对照 |
 
 一句话：现在已经不是“玩具脚本”，而是一个 SAT 变形研究原型；但离真正 Sim4Life 式通用器官变形，还差接触、材料、网格、边界条件、验证和大规模求解这几座山。
 
@@ -70,14 +70,14 @@ det(F_in) = lambda^3
 
 需要做：
 
-- 把 `sat_cells` 扩展为通用 `target_cells`。
-- 支持按 `source_label` 选择器官，例如 `--target-label 35` 表示 Liver。
+- 已把 `sat_cells` 扩展为通用 `target_cells`。
+- 已支持按 `source_label` 选择目标组织，例如 `--target-label 1` 表示 SAT，`--target-label 35` 表示 Liver。
 - 支持不同类型的目标变形：
-  - 体积增减：`lambda I`
+  - 已支持体积增减：`lambda I`
   - 指定位移：器官表面/中心点移动
   - 局部缩放：按器官中心缩放
   - 形状模板匹配：向目标表面配准
-- 输出每个器官的体积变化报告。
+- 已输出 `volume_by_region` 和 `volume_by_source_label` 体积变化报告。
 
 ### 第 4 阶段：改善生物材料真实性
 
@@ -89,23 +89,32 @@ det(F_in) = lambda^3
 - 增加机械分组 `mechanical_group_id`。
 - 默认按机械组给不同演示级 Young 模量和泊松比。
 - 将 SAT、普通脂肪、黄骨髓分开。
+- 实现参考方向上的纤维增强超弹性项。
+- 自动生成皮肤切向和肌肉/肌腱组织主轴方向场。
+- 将 `fiber_direction` 保存为三分量单元数据。
 
 还需要做：
 
 - 从文献整理各组织 Young 模量、泊松比、密度。
 - 把材料表从“电磁/密度属性”扩展成“力学属性表”。
-- 对皮肤、肌肉、韧带、椎间盘等加入各向异性标记。
-- 如果有纤维方向，再实现横观各向同性或纤维增强模型。
+- 用真实 DTI、解剖纤维图谱或实验数据替换当前规则/PCA 估计方向。
+- 标定纤维刚度；当前数值是演示级参数，不能直接作为临床结论。
 
 ### 第 5 阶段：加入接触和边界条件
 
 目标：器官之间不要互相穿透，骨骼和皮肤约束更合理。
 
-需要做：
+已完成：
 
-- 添加器官之间的接触检测。
-- 添加无穿透约束或罚函数接触。
+- 可从两组 `source_label` 的表面邻近关系建立节点-三角面接触候选。
+- 求解器中加入无穿透罚函数的能量、残差和一致切线刚度。
+- JSON 输出接触数量、激活数量、最小间隙和最大穿透量。
+- 动态模式在每次装配时更新最近主面、投影点和当前法向。
+
+还需要做：
+
 - 对骨骼从“固定节点”升级到“刚体骨架约束”。
+- 动态接触当前使用冻结法向的准 Newton 切线；后续可实现严格几何一致切线和摩擦。
 - 支持局部固定、对称面固定、表面牵引等边界条件。
 
 ### 第 6 阶段：大规模求解和验证
@@ -115,10 +124,15 @@ det(F_in) = lambda^3
 需要做：
 
 - 引入更好的体网格生成工具，例如 Gmsh、TetGen、fTetWild、CGAL 流程。
-- 增加网格质量报告：最小体积、最小角、Jacobian、连通性。
-- 增加批处理脚本，自动跑多个目标比例。
-- 与原始体素体积、论文结果或人工测量做误差对比。
-- 对百万级单元考虑 PETSc/FEniCSx/MPI，而不是纯 Python 装配。
+- 已增加平均比质量、边长比、负体积和变形前后质量报告。
+- 已增加批处理脚本和目标 SAT 体积外层校正。
+- 已增加原始体素、转换网格、变形结果之间的逐组织体积对比。
+- 已增加腰围曲线、面积、封闭体积、Hausdorff/Chamfer 距离和 SAT 厚度统计。
+- 线搜索残差已向量化，单元切线由批量 `einsum` 生成，外层校正复用上轮位移作为初值。
+- 对线性四面体增加 `kappa/mu` 上限作为锁死缓解措施。
+- 仍需与论文结果或人工测量做误差对比。
+- 当前锁死控制不是真正的混合 `u-p` 单元；高精度近不可压缩分析仍应迁移到 FEniCSx/PETSc。
+- 对百万级单元考虑 PETSc/FEniCSx/MPI，而不是纯 Python 稀疏装配。
 
 ## 安装
 
@@ -292,7 +306,7 @@ cell_data__mechanical_group_id
 ```bash
 satmorph solve \
   --input outputs/human-coarse.npz \
-  --sat-tag SAT \
+  --target-label 1 \
   --bone-tag BONE \
   --target-volume-ratio 1.2 \
   --output outputs/human-sat-120
@@ -303,7 +317,7 @@ satmorph solve \
 ```bash
 satmorph solve \
   --input outputs/human-coarse.npz \
-  --sat-tag SAT \
+  --target-label 1 \
   --bone-tag BONE \
   --target-volume-ratio 0.8 \
   --output outputs/human-sat-080
@@ -316,6 +330,19 @@ outputs/human-sat-120.npz     原始点、变形点、位移、单元数据
 outputs/human-sat-120.vtu     ParaView 可视化粗 FEM 结果
 outputs/human-sat-120.json    体积比例、Jacobian、迭代记录
 ```
+
+也可以继续使用旧接口：
+
+```bash
+satmorph solve \
+  --input outputs/human-coarse.npz \
+  --sat-tag SAT \
+  --bone-tag BONE \
+  --target-volume-ratio 1.2 \
+  --output outputs/human-sat-120
+```
+
+但论文复现更推荐 `--target-label 1`，因为它直接对应 73 标签模型里的原始 SAT 标签。
 
 ### 3. 提取平滑可视化表面
 
@@ -529,7 +556,7 @@ poisson    泊松比
 ```bash
 satmorph solve \
   --input outputs/human-coarse.npz \
-  --sat-tag SAT \
+  --target-label 1 \
   --bone-tag BONE \
   --target-volume-ratio 1.2 \
   --materials materials.json \
@@ -584,7 +611,7 @@ map-surface
 ```bash
 satmorph solve \
   --input outputs/human-coarse.npz \
-  --sat-tag SAT \
+  --target-label 1 \
   --bone-tag BONE \
   --target-volume-ratio 1.2 \
   --increments 24 \
@@ -615,9 +642,33 @@ satmorph solve \
 建议先跑三组：
 
 ```bash
-satmorph solve --input outputs/human-coarse.npz --sat-tag SAT --bone-tag BONE --target-volume-ratio 0.8 --output outputs/human-sat-080
-satmorph solve --input outputs/human-coarse.npz --sat-tag SAT --bone-tag BONE --target-volume-ratio 1.0 --output outputs/human-sat-100
-satmorph solve --input outputs/human-coarse.npz --sat-tag SAT --bone-tag BONE --target-volume-ratio 1.2 --output outputs/human-sat-120
+satmorph solve --input outputs/human-coarse.npz --target-label 1 --bone-tag BONE --target-volume-ratio 0.8 --output outputs/human-sat-080
+satmorph solve --input outputs/human-coarse.npz --target-label 1 --bone-tag BONE --target-volume-ratio 1.0 --output outputs/human-sat-100
+satmorph solve --input outputs/human-coarse.npz --target-label 1 --bone-tag BONE --target-volume-ratio 1.2 --output outputs/human-sat-120
+```
+
+也可以用 `solve-series` 一次跑完：
+
+```bash
+satmorph solve-series \
+  --input outputs/human-coarse.npz \
+  --target-label 1 \
+  --bone-tag BONE \
+  --ratio 0.8 \
+  --ratio 1.0 \
+  --ratio 1.2 \
+  --output-dir outputs/sat-series \
+  --prefix human-sat
+```
+
+会生成：
+
+```text
+outputs/sat-series/human-sat-080.npz
+outputs/sat-series/human-sat-080.vtu
+outputs/sat-series/human-sat-080.json
+outputs/sat-series/human-sat-100.*
+outputs/sat-series/human-sat-120.*
 ```
 
 然后分别映射到同一个平滑表面：
@@ -628,7 +679,331 @@ satmorph map-surface --coarse-result outputs/human-sat-100.npz --surface outputs
 satmorph map-surface --coarse-result outputs/human-sat-120.npz --surface outputs/human-visual-surface.vtp --output outputs/human-sat-120-visual.vtp --report outputs/human-sat-120-visual-map.json
 ```
 
+也可以用 `map-series` 批量映射：
+
+```bash
+satmorph map-series \
+  --input-dir outputs/sat-series \
+  --pattern "*.npz" \
+  --surface outputs/human-visual-surface.vtp \
+  --output-dir outputs/sat-series-visual \
+  --output-suffix=-visual.vtp \
+  --report
+```
+
+如果当前环境没有安装 `meshio`，先导出不依赖额外写网格库的 `.npz`：
+
+```bash
+satmorph map-series \
+  --input-dir outputs/sat-series \
+  --pattern "*.npz" \
+  --surface outputs/human-visual-surface.npz \
+  --output-dir outputs/sat-series-visual \
+  --output-suffix=-visual.npz \
+  --report
+```
+
+最后把所有求解 JSON 汇总成 CSV：
+
+```bash
+satmorph summarize-series \
+  --input-dir outputs/sat-series \
+  --pattern "*.json" \
+  --output outputs/sat-series-summary.csv
+```
+
+这个 CSV 适合直接放进周报或论文复现对比表，重点列包括：
+
+```text
+target_volume_ratio
+actual_target_volume_ratio
+target_volume_error_percent
+minimum_total_jacobian
+maximum_displacement
+source_label_1_volume_ratio
+region_SAT_volume_ratio
+```
+
 这三组最适合放进周报或 PPT，能直观看到减少、原始、增加 SAT 的效果。
+
+## 高可信 SAT 流程（新增）
+
+下面这套命令把“局部加密、体积审计、外层校正、质量检查和论文图”串在一起。坐标单位为 `m` 时，`--search-distance 0.005` 表示 5 mm。
+
+### 1. 多组织边界感知的自适应转换
+
+```bash
+satmorph convert-voxel-mat-adaptive \
+  --input combined_material_label_model_001_073_1mm.mat \
+  --output outputs/human-adaptive.npz \
+  --report outputs/human-adaptive.json \
+  --coarse-stride 20 \
+  --refine-stride 5 \
+  --refine-all-boundaries \
+  --refine-halo-blocks 1
+```
+
+自适应模式在多组织混合边界块中加入更密的采样点，再做全局 Delaunay 四面体化，因此没有悬挂节点。只关心 SAT/皮肤边界时，可把 `--refine-all-boundaries` 换成重复的 `--refine-label 1 --refine-label 2`，显著减少点数。它仍属于研究型转换器：四面体标签由中心点回采原始体素确定，正式求解前必须运行 `volume-audit` 和 `quality-report`。
+
+已在当前 `598 x 263 x 1645` 的真实 73 标签 MAT 上做过低成本验证：
+
+| 网格 | 四面体 | 总组织体积 | SAT 误差 | Skin 误差 | Liver 误差 |
+|---|---:|---:|---:|---:|---:|
+| 原始体素 | - | 0.062866 m³ | - | - | - |
+| 规则 `stride=40` | 10,644 | 0.113254 m³ | +160.66% | +443.84% | - |
+| 自适应 `40/20` | 47,660 | 0.062608 m³ | -2.47% | -0.45% | -1.88% |
+
+这组结果说明自适应采样明显改善了主体组织体积，但 `Ureter/Urethra`、`Eye Lens/Cornea`、部分脑内小结构在 20 体素细化尺度下仍会消失。正式的 73 标签全保留网格需要继续缩小 `refine_stride`，或针对审计报告中的 `missing_source_labels` 再做一次标签定向加密。
+
+### 2. 对照原始体素逐组织检查体积
+
+```bash
+satmorph volume-audit \
+  --voxel-mat combined_material_label_model_001_073_1mm.mat \
+  --mesh outputs/human-adaptive.npz \
+  --output outputs/human-volume-audit.csv \
+  --report outputs/human-volume-audit.json
+```
+
+CSV 每行对应一个原始标签，重点看 `mesh_vs_voxel_error_percent`。JSON 还包含缺失标签、平均/最大绝对体积误差和参考网格质量。
+
+### 3. 可选：建立器官间无穿透接触
+
+```bash
+satmorph build-contact \
+  --input outputs/human-adaptive.npz \
+  --slave-label 35 \
+  --master-label 26 \
+  --search-distance 0.005 \
+  --penalty 100000 \
+  --output outputs/liver-stomach-contact.json
+```
+
+当前实现是参考法向的节点-三角面罚接触，适合防止邻近但网格节点不共享的器官表面穿透。对于共享节点的 conforming 组织界面，当前网格本身是绑定界面，不应重复建立接触。它还不是 Sim4Life/Abaqus 级的有限滑移接触；大位移时需要更新接触搜索和法向。
+
+### 4. 外层校正到实际 SAT 体积比
+
+```bash
+satmorph calibrate-growth \
+  --input outputs/human-adaptive.npz \
+  --target-label 1 \
+  --bone-tag BONE \
+  --desired-volume-ratio 1.20 \
+  --calibration-tolerance 0.0025 \
+  --max-corrections 4 \
+  --contact outputs/liver-stomach-contact.json \
+  --output outputs/human-sat-120-calibrated
+```
+
+外层循环会重复调用非线性 FEM，并用乘法更新/割线更新调整内部的 `growth_lambda^3`，直到约束后的实际 SAT 体积比接近 1.20。结果 JSON 中：
+
+```text
+desired_target_volume_ratio       真正希望达到的 SAT 体积比
+target_volume_ratio_unconstrained 最后一次施加的自由生长体积比
+actual_target_volume_ratio        FEM 平衡后的实际 SAT 体积比
+calibration_iterations            每轮校正历史
+contact                           接触激活和穿透统计
+```
+
+### 5. 检查变形后网格质量
+
+```bash
+satmorph quality-report \
+  --result outputs/human-sat-120-calibrated.npz \
+  --output outputs/human-sat-120-quality.json
+```
+
+至少要求 `negative_or_zero_volume_count = 0`。`mean_ratio_quality` 越接近 1 越好；低于 0.1 的单元应重点检查。最终求解 JSON 的 `minimum_total_jacobian` 也必须大于 0。
+
+### 6. 生成统一对齐的论文级外表面对比图
+
+先对 80%、100%、120% 三个结果运行 `map-surface`，建议输出 `.npz` 以完整保留位移和标签数据，然后：
+
+```bash
+satmorph paper-figure \
+  --input outputs/human-sat-080-visual.npz \
+  --input outputs/human-sat-100-visual.npz \
+  --input outputs/human-sat-120-visual.npz \
+  --label "SAT 80%" \
+  --label "Reference" \
+  --label "SAT 120%" \
+  --color-by displacement \
+  --output outputs/human-sat-paper-comparison.png \
+  --report outputs/human-sat-paper-comparison.json \
+  --dpi 300
+```
+
+所有案例共用模型边界、正交相机、观察角度和色标，因此图片可以直接横向比较。灰色细线是未变形参考表面；使用 `--no-reference` 可关闭。输出也可使用 `.pdf`。
+
+## 第二轮高级功能
+
+### 1. 用审计报告驱动三级局部加密
+
+第一次自适应转换和 `volume-audit` 完成后，可把缺失标签和高误差标签自动送入最细层：
+
+```bash
+satmorph convert-voxel-mat-adaptive \
+  --input combined_material_label_model_001_073_1mm.mat \
+  --output outputs/human-adaptive-40-20-10.npz \
+  --report outputs/human-adaptive-40-20-10.json \
+  --coarse-stride 40 \
+  --refine-stride 20 \
+  --fine-stride 10 \
+  --refine-all-boundaries \
+  --audit-report outputs/human-volume-audit-40-20.json \
+  --volume-error-threshold 5
+```
+
+`--audit-report` 可以重复使用。程序会累计所有历史报告，关键标签集合只增不减，避免全局 Delaunay 重三角化后已恢复的小标签再次丢失：
+
+```bash
+--audit-report outputs/audit-round-1.json \
+--audit-report outputs/audit-round-2.json
+```
+
+真实模型验证结果：
+
+| 采样 | 四面体 | 平均逐标签误差 | 缺失标签 |
+|---|---:|---:|---:|
+| 规则 40 | 10,644 | 94.49% | 多个 |
+| 自适应 40/20 | 47,660 | 26.70% | 11 |
+| 审计三级 40/20/10 | 140,497 | 14.29% | 4 |
+| 累计审计 40/20/5 | 817,776 | 9.71% | 3 |
+
+最后三个缺失结构是体积只有约 `8e-9` 到 `1.6e-8 m³` 的微小脑/气道标签。它们小于当前 FEM 的有效机械分辨率；若必须保留，需要 `stride=1` 的局部嵌入网格或专门的多尺度方法。
+
+### 2. 动态有限滑移近似接触
+
+```bash
+satmorph build-contact \
+  --input outputs/human-adaptive.npz \
+  --slave-label 35 \
+  --master-label 44 \
+  --search-distance 0.02 \
+  --penalty 100000 \
+  --dynamic \
+  --output outputs/liver-spleen-dynamic-contact.json
+```
+
+然后在 `solve` 或 `calibrate-growth` 中加入：
+
+```bash
+--contact outputs/liver-spleen-dynamic-contact.json
+```
+
+动态模式每次装配都会更新最近主三角面、重心投影和当前法向，允许从一个主面滑移到另一个主面。当前切线在一次装配内冻结投影与法向，因此属于准 Newton 罚接触；`search-distance` 和 `penalty` 需要做敏感性分析。
+
+### 3. 生成并使用纤维方向场
+
+```bash
+satmorph build-fiber-field \
+  --input outputs/human-adaptive.npz \
+  --output outputs/human-adaptive-fibers.npz \
+  --report outputs/human-adaptive-fibers.json \
+  --longitudinal-axis 2
+```
+
+皮肤方向取身体表面近似环向，肌肉、肌腱和软骨方向取每个组织的主轴。当前真实网格中有 20,679 个单元获得了有效方向。默认演示材料对 `SKIN`、`MUSCLE`、`TENDON_LIGAMENT` 启用纤维增强；没有 `fiber_direction` 的网格仍退化为原来的各向同性模型。
+
+### 4. 近不可压缩锁死控制
+
+所有求解命令现在支持：
+
+```bash
+--bulk-modulus-ratio-cap 100
+```
+
+当泊松比非常接近 0.5 时，程序限制 `kappa/mu`，降低线性四面体的体积锁死。使用 `--bulk-modulus-ratio-cap 0` 可关闭。结果 JSON 中的 `locking_control.capped_cell_count` 会记录受影响的单元数。
+
+这是一种工程稳定化手段，不等同于严格的混合 `u-p` 单元。需要高精度压力场或严格不可压缩性时，应使用 FEniCSx/PETSc 的混合有限元实现。
+
+### 5. 多组织 VTP/VTM 可视化
+
+一次读取 MAT 并分别提取组织：
+
+```bash
+satmorph extract-tissue-surfaces \
+  --input combined_material_label_model_001_073_1mm.mat \
+  --output-dir outputs/tissue-surfaces \
+  --include-label 1 \
+  --include-label 2 \
+  --include-label 3 \
+  --include-label 11 \
+  --include-label 35 \
+  --include-label 52 \
+  --include-label 68 \
+  --include-label 69 \
+  --surface-stride 4 \
+  --method marching-cubes \
+  --suffix .vtp
+```
+
+输出目录中的 `tissues.vtm` 可以直接在 ParaView 打开，每个组织都是独立 block。`tissues.json` 保存标签、机械组、颜色和透明度。
+
+把同一 FEM 结果映射到所有组织：
+
+```bash
+satmorph map-tissue-surfaces \
+  --coarse-result outputs/human-sat-120.npz \
+  --manifest outputs/tissue-surfaces/tissues.json \
+  --output-dir outputs/tissue-surfaces-sat-120
+```
+
+生成不依赖 ParaView 的论文三视图：
+
+```bash
+satmorph tissue-figure \
+  --manifest outputs/tissue-surfaces/tissues.json \
+  --output outputs/tissues-paper.png \
+  --dpi 300
+```
+
+只显示肺、肝和骨骼：
+
+```bash
+satmorph tissue-figure \
+  --manifest outputs/tissue-surfaces/tissues.json \
+  --include-label 11 \
+  --include-label 35 \
+  --include-label 68 \
+  --include-label 69 \
+  --output outputs/organs-paper.png
+```
+
+程序会利用肺和肝脏的相对位置自动判断纵轴是否需要翻转。
+
+### 6. 自动形态学验证
+
+对映射后的外表面计算面积、封闭体积、位移、双向 Hausdorff/Chamfer 距离和腰围曲线：
+
+```bash
+satmorph surface-metrics \
+  --input outputs/human-sat-120-visual.npz \
+  --output outputs/human-sat-120-metrics.json \
+  --profile-csv outputs/human-sat-120-circumference.csv \
+  --longitudinal-axis 2 \
+  --slice-count 41
+```
+
+如果已有映射后的皮肤外表面和 SAT 内边界表面，可计算最近表面厚度：
+
+```bash
+satmorph sat-thickness \
+  --outer outputs/skin-120.npz \
+  --inner outputs/sat-inner-120.npz \
+  --output outputs/sat-thickness-120.json
+```
+
+这里的厚度是最近表面欧氏距离，不是严格沿皮肤法向的射线厚度；复杂褶皱区域需要进一步实现法向射线与 SAT 内表面的相交算法。
+
+### 7. 性能优化
+
+- 线搜索只需要能量和残差时，所有基础 Neo-Hookean 单元使用 NumPy 批量装配。
+- 刚度矩阵局部块改为单次 `einsum`，不再执行 16 个节点对循环。
+- 外层体积校正使用上一轮位移和生长比作为下一轮初值。
+- 动态接触只对指定从面节点进行 KD-tree 搜索。
+
+约 80 万四面体的网格可以完成转换和审计，但当前纯 Python 全 Newton 刚度装配仍不适合直接求解。正式大网格建议先使用 14 万单元版本做参数验证，再迁移到 PETSc/FEniCSx。
 
 ## 开发者入口
 
@@ -641,6 +1016,14 @@ src/satmorph/material.py          Neo-Hookean 材料模型
 src/satmorph/surface_map.py       粗网格位移到高分辨率表面映射
 src/satmorph/visual_surface.py    marching cubes / smoothing 表面提取
 src/satmorph/tissue_groups.py     73 标签、机械组、各向同性说明
+src/satmorph/audit.py             逐标签体积审计和四面体质量
+src/satmorph/calibration.py       目标体积外层校正
+src/satmorph/contact.py           节点-三角面无穿透罚接触
+src/satmorph/adaptive_voxel.py    边界感知自适应采样/局部加密
+src/satmorph/fiber.py             皮肤/肌肉/肌腱方向场
+src/satmorph/metrics.py           腰围、体积、表面距离和 SAT 厚度
+src/satmorph/tissue_surface.py    独立组织 VTP/VTM 提取与批量映射
+src/satmorph/paper_figure.py      统一视角、尺度和色标的论文图
 src/satmorph/cli.py               命令行入口
 ```
 
@@ -653,10 +1036,15 @@ tests/test_voxel_convert.py
 tests/test_surface_map.py
 tests/test_visual_surface.py
 tests/test_tissue_groups.py
+tests/test_audit.py
+tests/test_contact_calibration.py
+tests/test_adaptive_voxel.py
+tests/test_metrics.py
+tests/test_tissue_surface.py
 ```
 
 ## 当前最值得继续做的三件事
 
-1. 把 `solve` 从只支持 SAT 扩展成支持 `--target-label` 的通用器官变形。
-2. 建立真正的力学材料表，把 73 组织映射到 Young 模量、泊松比、是否各向异性。
-3. 改善体网格质量，用更接近真实边界的四面体网格替代规则方块四面体。
+1. 用 14 万四面体版本正式跑 80%/100%/120% SAT 梯级，生成体积、腰围、Hausdorff、厚度和 Jacobian 对比表。
+2. 用论文或实验数据标定纤维刚度、组织 Young 模量和泊松比，并记录参数来源和不确定性范围。
+3. 将全 Newton 装配和线性求解迁移到 FEniCSx/PETSc，实现真正混合 `u-p` 单元与百万级网格求解。按本轮要求暂不实现刚体骨架约束。

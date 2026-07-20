@@ -51,3 +51,44 @@ def neo_hookean_growth(
     tangent -= b * np.einsum("kJ,iL->iJkL", inv_ft, inv_ft)
     return float(energy), first_piola, tangent, j_total, j_elastic
 
+
+def fiber_reinforcement_growth(
+    deformation_gradient: np.ndarray,
+    growth_lambda: float,
+    fiber_direction: np.ndarray,
+    fiber_stiffness: float,
+    *,
+    tension_only: bool = True,
+) -> tuple[float, np.ndarray, np.ndarray]:
+    """Quadratic fiber reinforcement expressed in the reference direction."""
+    if fiber_stiffness <= 0.0:
+        return 0.0, np.zeros((3, 3)), np.zeros((3, 3, 3, 3))
+    direction = np.asarray(fiber_direction, dtype=float)
+    length = float(np.linalg.norm(direction))
+    if length <= 0.0:
+        return 0.0, np.zeros((3, 3)), np.zeros((3, 3, 3, 3))
+    a = direction / length
+    f = np.asarray(deformation_gradient, dtype=float)
+    v = f @ a
+    i4 = float(v @ v) / growth_lambda**2
+    strain = i4 - 1.0
+    if tension_only and strain <= 0.0:
+        return 0.0, np.zeros((3, 3)), np.zeros((3, 3, 3, 3))
+    energy = 0.5 * fiber_stiffness * strain**2
+    first_piola = (
+        2.0 * fiber_stiffness * strain / growth_lambda**2 * np.outer(v, a)
+    )
+    tangent = (
+        4.0
+        * fiber_stiffness
+        / growth_lambda**4
+        * np.einsum("i,J,k,L->iJkL", v, a, v, a)
+    )
+    tangent += (
+        2.0
+        * fiber_stiffness
+        * strain
+        / growth_lambda**2
+        * np.einsum("ik,J,L->iJkL", np.eye(3), a, a)
+    )
+    return float(energy), first_piola, tangent

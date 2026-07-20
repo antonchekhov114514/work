@@ -6,30 +6,48 @@ from pathlib import Path
 
 import numpy as np
 
+from .adaptive_voxel import convert_voxel_mat_adaptive
+from .audit import build_volume_audit, tetra_quality, write_volume_audit
+from .calibration import calibrate_target_volume
+from .contact import (
+    build_label_dynamic_contact,
+    build_label_contact_constraints,
+    load_contact_constraints,
+    save_dynamic_contact,
+    save_contact_constraints,
+)
 from .demo import BONE, SAT, SKIN, SOFT, layered_torso_mesh
+from .fiber import save_mesh_with_fibers
 from .io import load_mesh, load_result_npz, save_result_bundle
 from .mat_convert import convert_mat, describe_arrays, load_mat_arrays
+from .metrics import mapped_surface_metrics, sat_thickness_metrics, write_metrics
 from .preprocess import repair_surface
-from .solver import Material, SolverOptions, morph_sat
+from .paper_figure import render_surface_comparison, render_tissue_bundle
+from .solver import Material, SolverOptions, morph_sat, morph_target_region
+from .study import summarize_result_jsons, write_summary_csv
 from .surface_map import load_surface, map_surface, save_center_result, save_surface_result
 from .tissue_groups import DEFAULT_MECHANICAL_PARAMETERS, MECHANICAL_GROUP_NAMES
+from .tissue_surface import extract_tissue_surface_bundle, map_tissue_surface_bundle
 from .visual_surface import extract_visual_surface_from_voxel_mat
 from .voxel_convert import convert_voxel_mat
 
 
 def _options(args: argparse.Namespace) -> SolverOptions:
+    cap = getattr(args, "bulk_modulus_ratio_cap", 100.0)
     return SolverOptions(
         increments=args.increments,
         max_iterations=args.max_iterations,
         relative_tolerance=args.relative_tolerance,
         absolute_tolerance=args.absolute_tolerance,
+        bulk_modulus_ratio_cap=None if cap is not None and cap <= 0.0 else cap,
         verbose=not args.quiet,
     )
 
 
 def _target_ratio(args: argparse.Namespace) -> float:
-    if args.lambda_sat is not None:
-        return float(args.lambda_sat) ** 3
+    value = args.lambda_sat if args.lambda_sat is not None else args.lambda_target
+    if value is not None:
+        return float(value) ** 3
     return float(args.target_volume_ratio)
 
 
@@ -62,9 +80,10 @@ def _default_cell_materials(mesh) -> np.ndarray | None:
 
 
 def _print_outputs(paths, result) -> None:
-    print("\nSAT morphing completed")
+    print("\nMorphing completed")
+    print(f"  target region                     : {result.target_name}")
     print(f"  target unconstrained volume ratio : {result.target_volume_ratio:.6f}")
-    print(f"  actual SAT volume ratio           : {result.actual_volume_ratio:.6f}")
+    print(f"  actual target volume ratio        : {result.actual_volume_ratio:.6f}")
     print(f"  minimum element Jacobian          : {result.j_total.min():.6e}")
     for path in paths:
         print(f"  wrote: {path}")
@@ -93,28 +112,60 @@ def command_demo(args: argparse.Namespace) -> None:
 
 def command_solve(args: argparse.Namespace) -> None:
     mesh = load_mesh(args.input, args.cell_data)
-    sat_tag = mesh.resolve_tag(args.sat_tag)
     bone_tags = [mesh.resolve_tag(tag) for tag in args.bone_tag]
-    sat_cells = mesh.cell_tags == sat_tag
+    target_cells, target_name, target_tag = _select_target_cells(mesh, args)
     fixed_nodes = mesh.nodes_for_tags(bone_tags)
     if args.fixed_nodes:
         extra = np.loadtxt(args.fixed_nodes, dtype=np.int64, ndmin=1)
         fixed_nodes = np.unique(np.concatenate((fixed_nodes, extra)))
     default, materials = _load_materials(args.materials, mesh)
-    if sat_tag not in materials:
-        materials[sat_tag] = Material(args.young_sat, args.poisson_sat)
+    if target_tag is not None and target_tag not in materials:
+        materials[target_tag] = Material(args.young_sat, args.poisson_sat)
     cell_materials = None if args.materials else _default_cell_materials(mesh)
-    result = morph_sat(
+    contact = load_contact_constraints(args.contact, mesh) if getattr(args, "contact", None) else None
+    result = morph_target_region(
         mesh,
-        sat_cells,
+        target_cells,
         fixed_nodes,
         _target_ratio(args),
         materials=materials,
         default_material=default,
         cell_materials=cell_materials,
         options=_options(args),
+        target_name=target_name,
+        contact=contact,
     )
     _print_outputs(save_result_bundle(args.output, mesh, result), result)
+
+
+def command_solve_series(args: argparse.Namespace) -> None:
+    output_dir = Path(args.output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    print("\nRunning morphing series")
+    for ratio in args.ratio:
+        child = argparse.Namespace(**vars(args))
+        child.target_volume_ratio = float(ratio)
+        child.lambda_sat = None
+        child.lambda_target = None
+        child.output = str(output_dir / f"{args.prefix}-{_ratio_suffix(float(ratio))}")
+        command_solve(child)
+
+
+def _ratio_suffix(ratio: float) -> str:
+    return f"{int(round(ratio * 100)):03d}"
+
+
+def _select_target_cells(mesh, args: argparse.Namespace) -> tuple[np.ndarray, str, int | None]:
+    if args.sat_tag is not None:
+        tag = mesh.resolve_tag(args.sat_tag)
+        return mesh.cell_tags == tag, str(args.sat_tag), tag
+    if args.target_label:
+        if "source_label" not in mesh.cell_data:
+            raise ValueError("--target-label requires a mesh converted with source_label cell data")
+        labels = np.asarray(args.target_label, dtype=np.int64)
+        cells = np.isin(np.asarray(mesh.cell_data["source_label"], dtype=np.int64), labels)
+        return cells, "source_label:" + ",".join(str(int(value)) for value in labels), None
+    raise ValueError("one of --sat-tag or --target-label is required")
 
 
 def command_repair(args: argparse.Namespace) -> None:
@@ -156,6 +207,296 @@ def command_map_surface(args: argparse.Namespace) -> None:
         print(f"  maximum center residual     : {summary['maximum_center_residual']:.6e}")
     for path in paths:
         print(f"  wrote: {path}")
+
+
+def command_map_series(args: argparse.Namespace) -> None:
+    input_dir = Path(args.input_dir)
+    output_dir = Path(args.output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    surface = load_surface(args.surface)
+    result_paths = sorted(input_dir.glob(args.pattern))
+    if not result_paths:
+        raise ValueError(f"no result files matched {input_dir / args.pattern}")
+    print("\nSurface mapping series")
+    for coarse_result in result_paths:
+        mesh, displacement, _ = load_result_npz(coarse_result)
+        mapped = map_surface(
+            mesh,
+            displacement,
+            surface,
+            candidate_cells=args.candidate_cells,
+            outside_mode=args.outside_mode,
+            tolerance=args.tolerance,
+            map_centers=not args.no_centers,
+        )
+        output = output_dir / f"{coarse_result.stem}{args.output_suffix}"
+        save_surface_result(output, surface, mapped)
+        print(f"  {coarse_result.name} -> {output}")
+        if args.report:
+            report = output_dir / f"{coarse_result.stem}-map.json"
+            report.write_text(
+                json.dumps(mapped.summary(), indent=2, ensure_ascii=False),
+                encoding="utf-8",
+            )
+            print(f"    report -> {report}")
+
+
+def command_summarize_series(args: argparse.Namespace) -> None:
+    input_dir = Path(args.input_dir)
+    paths = sorted(input_dir.glob(args.pattern))
+    if not paths:
+        raise ValueError(f"no JSON files matched {input_dir / args.pattern}")
+    rows = summarize_result_jsons(paths)
+    write_summary_csv(args.output, rows)
+    print("\nSeries summary completed")
+    print(f"  cases: {len(rows)}")
+    print(f"  wrote: {args.output}")
+
+
+def command_calibrate(args: argparse.Namespace) -> None:
+    mesh = load_mesh(args.input, args.cell_data)
+    bone_tags = [mesh.resolve_tag(tag) for tag in args.bone_tag]
+    target_cells, target_name, target_tag = _select_target_cells(mesh, args)
+    fixed_nodes = mesh.nodes_for_tags(bone_tags)
+    if args.fixed_nodes:
+        fixed_nodes = np.unique(
+            np.concatenate((fixed_nodes, np.loadtxt(args.fixed_nodes, dtype=np.int64, ndmin=1)))
+        )
+    default, materials = _load_materials(args.materials, mesh)
+    if target_tag is not None and target_tag not in materials:
+        materials[target_tag] = Material(args.young_sat, args.poisson_sat)
+    cell_materials = None if args.materials else _default_cell_materials(mesh)
+    contact = load_contact_constraints(args.contact, mesh) if args.contact else None
+    result = calibrate_target_volume(
+        mesh,
+        target_cells,
+        fixed_nodes,
+        args.desired_volume_ratio,
+        materials=materials,
+        default_material=default,
+        cell_materials=cell_materials,
+        options=_options(args),
+        target_name=target_name,
+        tolerance=args.calibration_tolerance,
+        max_corrections=args.max_corrections,
+        relaxation=args.calibration_relaxation,
+        ratio_bounds=(args.minimum_growth_ratio, args.maximum_growth_ratio),
+        contact=contact,
+    )
+    _print_outputs(save_result_bundle(args.output, mesh, result), result)
+    print(f"  desired constrained volume ratio  : {args.desired_volume_ratio:.6f}")
+    print(f"  outer calibration solves           : {len(result.calibration_records)}")
+
+
+def command_volume_audit(args: argparse.Namespace) -> None:
+    report = build_volume_audit(
+        args.voxel_mat,
+        args.mesh,
+        result_path=args.result,
+        variable=args.variable,
+        axis_keys=tuple(args.axis_key),
+        axis_unit=args.axis_unit,
+        output_unit=args.output_unit,
+        voxel_size_mm=args.voxel_size_mm,
+    )
+    write_volume_audit(report, json_path=args.report, csv_path=args.output)
+    summary = report["summary"]
+    print("\nVolume audit completed")
+    print(f"  mean absolute label error : {summary['mean_absolute_label_volume_error_percent']:.3f}%")
+    print(f"  maximum label error       : {summary['maximum_absolute_label_volume_error_percent']:.3f}%")
+    print(f"  wrote: {args.output}")
+    if args.report:
+        print(f"  wrote: {args.report}")
+
+
+def command_quality_report(args: argparse.Namespace) -> None:
+    if args.result:
+        mesh, _, deformed = load_result_npz(args.result)
+        report = {
+            "input": args.result,
+            "reference": tetra_quality(mesh),
+            "deformed": tetra_quality(mesh, deformed),
+        }
+    else:
+        mesh = load_mesh(args.input, args.cell_data)
+        report = {"input": args.input, "reference": tetra_quality(mesh)}
+    target = Path(args.output)
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text(json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8")
+    print("\nMesh quality report completed")
+    print(f"  wrote: {target}")
+
+
+def command_build_contact(args: argparse.Namespace) -> None:
+    mesh = load_mesh(args.input, args.cell_data)
+    metadata = {
+        "mesh": args.input,
+        "slave_labels": args.slave_label,
+        "master_labels": args.master_label,
+        "search_distance": args.search_distance,
+    }
+    if args.dynamic:
+        constraints = build_label_dynamic_contact(
+            mesh,
+            args.slave_label,
+            args.master_label,
+            search_distance=args.search_distance,
+            penalty=args.penalty,
+            candidates=args.candidates,
+        )
+        save_dynamic_contact(args.output, constraints, metadata=metadata)
+    else:
+        constraints = build_label_contact_constraints(
+            mesh,
+            args.slave_label,
+            args.master_label,
+            search_distance=args.search_distance,
+            penalty=args.penalty,
+            candidates=args.candidates,
+            max_constraints=args.max_constraints,
+        )
+        save_contact_constraints(args.output, constraints, metadata=metadata)
+    print("\nContact constraints completed")
+    print(f"  constraints: {constraints.count}")
+    print(f"  wrote: {args.output}")
+
+
+def command_adaptive_convert(args: argparse.Namespace) -> None:
+    report = convert_voxel_mat_adaptive(
+        args.input,
+        args.output,
+        report_path=args.report,
+        variable=args.variable,
+        axis_keys=tuple(args.axis_key),
+        axis_unit=args.axis_unit,
+        output_unit=args.output_unit,
+        voxel_size_mm=args.voxel_size_mm,
+        coarse_stride=args.coarse_stride,
+        refine_stride=args.refine_stride,
+        fine_stride=args.fine_stride,
+        refine_labels=None if args.refine_all_boundaries else args.refine_label,
+        preserve_labels=args.preserve_label or (),
+        audit_report=args.audit_report,
+        volume_error_threshold=args.volume_error_threshold,
+        refine_halo_blocks=args.refine_halo_blocks,
+        sat_labels=args.sat_label,
+        skin_labels=args.skin_label,
+        bone_labels=args.bone_label,
+        max_points=args.max_points,
+        max_tetrahedra=args.max_tetrahedra,
+    )
+    print("\nAdaptive voxel conversion completed")
+    print(f"  points      : {report['mesh']['points']}")
+    print(f"  tetrahedra  : {report['mesh']['tetrahedra']}")
+    print(f"  wrote: {args.output}")
+
+
+def command_paper_figure(args: argparse.Namespace) -> None:
+    report = render_surface_comparison(
+        args.input,
+        args.output,
+        views=tuple(args.view),
+        color_by=args.color_by,
+        dpi=args.dpi,
+        max_triangles=args.max_triangles,
+        include_reference=not args.no_reference,
+        labels=args.label,
+    )
+    if args.report:
+        target = Path(args.report)
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8")
+    print("\nPaper figure completed")
+    print(f"  wrote: {args.output}")
+
+
+def command_build_fibers(args: argparse.Namespace) -> None:
+    report = save_mesh_with_fibers(
+        args.input,
+        args.output,
+        longitudinal_axis=args.longitudinal_axis,
+    )
+    if args.report:
+        target = Path(args.report)
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8")
+    print("\nAnatomical fiber field completed")
+    print(f"  cells with fibers: {report['cells_with_fibers']}")
+    print(f"  wrote: {args.output}")
+
+
+def command_surface_metrics(args: argparse.Namespace) -> None:
+    report = mapped_surface_metrics(
+        args.input,
+        longitudinal_axis=args.longitudinal_axis,
+        slice_count=args.slice_count,
+        slice_range=(args.slice_range[0], args.slice_range[1]),
+    )
+    write_metrics(report, args.output, profile_csv=args.profile_csv)
+    print("\nSurface validation metrics completed")
+    print(f"  waist change: {report['waist']['change_percent']:.3f}%")
+    print(f"  Hausdorff distance: {report['surface_distance']['hausdorff']:.6g}")
+    print(f"  wrote: {args.output}")
+
+
+def command_thickness_metrics(args: argparse.Namespace) -> None:
+    report = sat_thickness_metrics(args.outer, args.inner)
+    write_metrics(report, args.output)
+    print("\nSAT thickness metrics completed")
+    print(f"  mean change: {report['mean_change_percent']:.3f}%")
+    print(f"  wrote: {args.output}")
+
+
+def command_extract_tissues(args: argparse.Namespace) -> None:
+    report = extract_tissue_surface_bundle(
+        args.input,
+        args.output_dir,
+        include_labels=args.include_label,
+        variable=args.variable,
+        axis_keys=tuple(args.axis_key),
+        axis_unit=args.axis_unit,
+        output_unit=args.output_unit,
+        voxel_size_mm=args.voxel_size_mm,
+        surface_stride=args.surface_stride,
+        pre_smooth_sigma=args.pre_smooth_sigma,
+        smooth_iterations=args.smooth_iterations,
+        suffix=args.suffix,
+        method=args.method,
+    )
+    print("\nTissue surface bundle completed")
+    print(f"  tissues: {len(report['surfaces'])}")
+    print(f"  wrote: {Path(args.output_dir) / 'tissues.json'}")
+
+
+def command_map_tissues(args: argparse.Namespace) -> None:
+    report = map_tissue_surface_bundle(
+        args.coarse_result,
+        args.manifest,
+        args.output_dir,
+        candidate_cells=args.candidate_cells,
+        outside_mode=args.outside_mode,
+    )
+    print("\nTissue surface mapping completed")
+    print(f"  tissues: {len(report['surfaces'])}")
+    print(f"  wrote: {Path(args.output_dir) / 'tissues-deformed.json'}")
+
+
+def command_tissue_figure(args: argparse.Namespace) -> None:
+    report = render_tissue_bundle(
+        args.manifest,
+        args.output,
+        views=tuple(args.view),
+        dpi=args.dpi,
+        max_triangles_per_tissue=args.max_triangles_per_tissue,
+        include_labels=args.include_label,
+    )
+    if args.report:
+        target = Path(args.report)
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8")
+    print("\nTissue figure completed")
+    print(f"  tissues: {report['tissue_count']}")
+    print(f"  wrote: {args.output}")
 
 
 def command_convert_mat(args: argparse.Namespace) -> None:
@@ -264,17 +605,28 @@ def _add_solver_arguments(parser: argparse.ArgumentParser) -> None:
     target.add_argument(
         "--target-volume-ratio",
         type=float,
-        help="unconstrained target SAT volume ratio (lambda^3)",
+        help="unconstrained target region volume ratio (lambda^3)",
     )
     target.add_argument(
         "--lambda-sat",
         type=float,
-        help="prescribed isotropic linear growth factor lambda",
+        help="backward-compatible prescribed SAT linear growth factor lambda",
+    )
+    target.add_argument(
+        "--lambda-target",
+        type=float,
+        help="prescribed isotropic target-region linear growth factor lambda",
     )
     parser.add_argument("--increments", type=int, default=12)
     parser.add_argument("--max-iterations", type=int, default=30)
     parser.add_argument("--relative-tolerance", type=float, default=1.0e-7)
     parser.add_argument("--absolute-tolerance", type=float, default=1.0e-8)
+    parser.add_argument(
+        "--bulk-modulus-ratio-cap",
+        type=float,
+        default=100.0,
+        help="cap kappa/mu to reduce linear-tetra locking; use <=0 to disable",
+    )
     parser.add_argument("--quiet", action="store_true")
 
 
@@ -288,18 +640,120 @@ def build_parser() -> argparse.ArgumentParser:
     demo.add_argument("--output", default="demo-sat-morph")
     demo.set_defaults(func=command_demo)
 
-    solve = subparsers.add_parser("solve", help="morph SAT in a tetrahedral anatomical mesh")
+    solve = subparsers.add_parser(
+        "solve",
+        help="morph SAT or another selected anatomical region in a tetrahedral mesh",
+    )
     _add_solver_arguments(solve)
     solve.add_argument("--input", required=True)
     solve.add_argument("--cell-data", default=None)
-    solve.add_argument("--sat-tag", required=True)
+    selector = solve.add_mutually_exclusive_group(required=True)
+    selector.add_argument(
+        "--sat-tag",
+        default=None,
+        help="target solver-region tag, usually SAT; kept for existing workflows",
+    )
+    selector.add_argument(
+        "--target-label",
+        action="append",
+        type=int,
+        default=None,
+        help="target original 73-atlas source label; repeat to combine labels",
+    )
     solve.add_argument("--bone-tag", action="append", required=True)
     solve.add_argument("--fixed-nodes", default=None)
     solve.add_argument("--materials", default=None)
     solve.add_argument("--young-sat", type=float, default=5_000.0)
     solve.add_argument("--poisson-sat", type=float, default=0.45)
+    solve.add_argument("--contact", default=None, help="optional contact-constraint JSON")
     solve.add_argument("--output", required=True)
     solve.set_defaults(func=command_solve)
+
+    series = subparsers.add_parser(
+        "solve-series",
+        help="run the same target-region morphing problem for several volume ratios",
+    )
+    series.add_argument("--input", required=True)
+    series.add_argument("--cell-data", default=None)
+    series_selector = series.add_mutually_exclusive_group(required=True)
+    series_selector.add_argument(
+        "--sat-tag",
+        default=None,
+        help="target solver-region tag, usually SAT; kept for existing workflows",
+    )
+    series_selector.add_argument(
+        "--target-label",
+        action="append",
+        type=int,
+        default=None,
+        help="target original 73-atlas source label; repeat to combine labels",
+    )
+    series.add_argument("--bone-tag", action="append", required=True)
+    series.add_argument("--fixed-nodes", default=None)
+    series.add_argument("--materials", default=None)
+    series.add_argument("--young-sat", type=float, default=5_000.0)
+    series.add_argument("--poisson-sat", type=float, default=0.45)
+    series.add_argument("--contact", default=None, help="optional contact-constraint JSON")
+    series.add_argument("--ratio", action="append", type=float, required=True)
+    series.add_argument("--output-dir", required=True)
+    series.add_argument("--prefix", default="target")
+    series.add_argument("--increments", type=int, default=12)
+    series.add_argument("--max-iterations", type=int, default=30)
+    series.add_argument("--relative-tolerance", type=float, default=1.0e-7)
+    series.add_argument("--absolute-tolerance", type=float, default=1.0e-8)
+    series.add_argument("--bulk-modulus-ratio-cap", type=float, default=100.0)
+    series.add_argument("--quiet", action="store_true")
+    series.set_defaults(func=command_solve_series)
+
+    calibrate = subparsers.add_parser(
+        "calibrate-growth",
+        help="outer-loop correct growth until the constrained target volume is reached",
+    )
+    calibrate.add_argument("--input", required=True)
+    calibrate.add_argument("--cell-data", default=None)
+    calibrate_selector = calibrate.add_mutually_exclusive_group(required=True)
+    calibrate_selector.add_argument("--sat-tag", default=None)
+    calibrate_selector.add_argument("--target-label", action="append", type=int, default=None)
+    calibrate.add_argument("--bone-tag", action="append", required=True)
+    calibrate.add_argument("--fixed-nodes", default=None)
+    calibrate.add_argument("--materials", default=None)
+    calibrate.add_argument("--young-sat", type=float, default=5_000.0)
+    calibrate.add_argument("--poisson-sat", type=float, default=0.45)
+    calibrate.add_argument("--contact", default=None)
+    calibrate.add_argument("--desired-volume-ratio", type=float, required=True)
+    calibrate.add_argument("--calibration-tolerance", type=float, default=2.5e-3)
+    calibrate.add_argument("--max-corrections", type=int, default=4)
+    calibrate.add_argument("--calibration-relaxation", type=float, default=0.8)
+    calibrate.add_argument("--minimum-growth-ratio", type=float, default=0.1)
+    calibrate.add_argument("--maximum-growth-ratio", type=float, default=4.0)
+    calibrate.add_argument("--increments", type=int, default=12)
+    calibrate.add_argument("--max-iterations", type=int, default=30)
+    calibrate.add_argument("--relative-tolerance", type=float, default=1.0e-7)
+    calibrate.add_argument("--absolute-tolerance", type=float, default=1.0e-8)
+    calibrate.add_argument("--bulk-modulus-ratio-cap", type=float, default=100.0)
+    calibrate.add_argument("--quiet", action="store_true")
+    calibrate.add_argument("--output", required=True)
+    calibrate.set_defaults(func=command_calibrate)
+
+    contact = subparsers.add_parser(
+        "build-contact",
+        help="build node-to-triangle no-penetration constraints between source labels",
+    )
+    contact.add_argument("--input", required=True)
+    contact.add_argument("--cell-data", default=None)
+    contact.add_argument("--slave-label", action="append", type=int, required=True)
+    contact.add_argument("--master-label", action="append", type=int, required=True)
+    contact.add_argument("--search-distance", type=float, required=True)
+    contact.add_argument("--penalty", type=float, default=1.0e5)
+    contact.add_argument("--candidates", type=int, default=12)
+    contact.add_argument("--max-constraints", type=int, default=100_000)
+    contact.add_argument(
+        "--dynamic",
+        action="store_true",
+        help="update closest master face, projection, and normal at every assembly",
+    )
+    contact.add_argument("--output", required=True)
+    contact.set_defaults(func=command_build_contact)
 
     repair = subparsers.add_parser("repair-surface", help="repair a triangle mesh with PyMeshFix")
     repair.add_argument("--input", required=True)
@@ -347,6 +801,138 @@ def build_parser() -> argparse.ArgumentParser:
     )
     mapper.set_defaults(func=command_map_surface)
 
+    map_series = subparsers.add_parser(
+        "map-series",
+        help="map every coarse NPZ result in a directory to the same surface",
+    )
+    map_series.add_argument("--input-dir", required=True)
+    map_series.add_argument("--pattern", default="*.npz")
+    map_series.add_argument("--surface", required=True)
+    map_series.add_argument("--output-dir", required=True)
+    map_series.add_argument("--output-suffix", default="-visual.vtp")
+    map_series.add_argument("--report", action="store_true")
+    map_series.add_argument("--candidate-cells", type=int, default=64)
+    map_series.add_argument(
+        "--outside-mode",
+        choices=("clamp", "linear", "fail"),
+        default="clamp",
+    )
+    map_series.add_argument("--tolerance", type=float, default=1.0e-8)
+    map_series.add_argument("--no-centers", action="store_true")
+    map_series.set_defaults(func=command_map_series)
+
+    summarize = subparsers.add_parser(
+        "summarize-series",
+        help="collect result JSON files into one CSV table",
+    )
+    summarize.add_argument("--input-dir", required=True)
+    summarize.add_argument("--pattern", default="*.json")
+    summarize.add_argument("--output", required=True)
+    summarize.set_defaults(func=command_summarize_series)
+
+    audit = subparsers.add_parser(
+        "volume-audit",
+        help="compare per-label original voxel, reference mesh, and deformed volumes",
+    )
+    audit.add_argument("--voxel-mat", required=True)
+    audit.add_argument("--mesh", required=True)
+    audit.add_argument("--result", default=None)
+    audit.add_argument("--output", required=True, help="CSV table")
+    audit.add_argument("--report", default=None, help="JSON report")
+    audit.add_argument("--variable", default="MaterialLabelGrid")
+    audit.add_argument("--axis-key", action="append", default=None)
+    audit.add_argument("--axis-unit", choices=("m", "mm"), default="m")
+    audit.add_argument("--output-unit", choices=("m", "mm"), default="m")
+    audit.add_argument("--voxel-size-mm", type=float, default=1.0)
+    audit.set_defaults(func=command_volume_audit)
+
+    quality = subparsers.add_parser(
+        "quality-report",
+        help="report tetra mean-ratio quality and signed-volume checks",
+    )
+    quality_source = quality.add_mutually_exclusive_group(required=True)
+    quality_source.add_argument("--input", default=None)
+    quality_source.add_argument("--result", default=None)
+    quality.add_argument("--cell-data", default=None)
+    quality.add_argument("--output", required=True)
+    quality.set_defaults(func=command_quality_report)
+
+    fibers = subparsers.add_parser(
+        "build-fiber-field",
+        help="add approximate skin/muscle/tendon fiber directions to a labeled mesh",
+    )
+    fibers.add_argument("--input", required=True)
+    fibers.add_argument("--output", required=True)
+    fibers.add_argument("--report", default=None)
+    fibers.add_argument("--longitudinal-axis", type=int, choices=(0, 1, 2), default=2)
+    fibers.set_defaults(func=command_build_fibers)
+
+    metrics = subparsers.add_parser(
+        "surface-metrics",
+        help="measure area, enclosed volume, waist profile, displacement, and surface distances",
+    )
+    metrics.add_argument("--input", required=True, help="mapped surface NPZ")
+    metrics.add_argument("--output", required=True)
+    metrics.add_argument("--profile-csv", default=None)
+    metrics.add_argument("--longitudinal-axis", type=int, choices=(0, 1, 2), default=2)
+    metrics.add_argument("--slice-count", type=int, default=31)
+    metrics.add_argument("--slice-range", type=float, nargs=2, default=(0.35, 0.65))
+    metrics.set_defaults(func=command_surface_metrics)
+
+    thickness = subparsers.add_parser(
+        "sat-thickness",
+        help="compare nearest-surface SAT thickness between mapped outer and inner surfaces",
+    )
+    thickness.add_argument("--outer", required=True)
+    thickness.add_argument("--inner", required=True)
+    thickness.add_argument("--output", required=True)
+    thickness.set_defaults(func=command_thickness_metrics)
+
+    tissues = subparsers.add_parser(
+        "extract-tissue-surfaces",
+        help="extract independent labeled tissue surfaces and a ParaView VTM collection",
+    )
+    tissues.add_argument("--input", required=True)
+    tissues.add_argument("--output-dir", required=True)
+    tissues.add_argument("--include-label", action="append", type=int, default=None)
+    tissues.add_argument("--variable", default="MaterialLabelGrid")
+    tissues.add_argument("--axis-key", action="append", default=None)
+    tissues.add_argument("--axis-unit", choices=("m", "mm"), default="m")
+    tissues.add_argument("--output-unit", choices=("m", "mm"), default="m")
+    tissues.add_argument("--voxel-size-mm", type=float, default=1.0)
+    tissues.add_argument("--surface-stride", type=int, default=2)
+    tissues.add_argument("--method", choices=("marching-cubes", "blocks"), default="marching-cubes")
+    tissues.add_argument("--pre-smooth-sigma", type=float, default=0.0)
+    tissues.add_argument("--smooth-iterations", type=int, default=15)
+    tissues.add_argument("--suffix", choices=(".vtp", ".npz"), default=".vtp")
+    tissues.set_defaults(func=command_extract_tissues)
+
+    map_tissues = subparsers.add_parser(
+        "map-tissue-surfaces",
+        help="map one FEM result to every surface in a tissue bundle",
+    )
+    map_tissues.add_argument("--coarse-result", required=True)
+    map_tissues.add_argument("--manifest", required=True)
+    map_tissues.add_argument("--output-dir", required=True)
+    map_tissues.add_argument("--candidate-cells", type=int, default=64)
+    map_tissues.add_argument("--outside-mode", choices=("clamp", "linear", "fail"), default="clamp")
+    map_tissues.set_defaults(func=command_map_tissues)
+
+    tissue_figure = subparsers.add_parser(
+        "tissue-figure",
+        help="render aligned publication-style views of a tissue surface bundle",
+    )
+    tissue_figure.add_argument("--manifest", required=True)
+    tissue_figure.add_argument("--output", required=True)
+    tissue_figure.add_argument("--report", default=None)
+    tissue_figure.add_argument(
+        "--view", action="append", choices=("front", "side", "back", "oblique"), default=None
+    )
+    tissue_figure.add_argument("--dpi", type=int, default=300)
+    tissue_figure.add_argument("--max-triangles-per-tissue", type=int, default=20_000)
+    tissue_figure.add_argument("--include-label", action="append", type=int, default=None)
+    tissue_figure.set_defaults(func=command_tissue_figure)
+
     converter = subparsers.add_parser(
         "convert-mat", help="convert MATLAB mesh arrays to satmorph NPZ inputs"
     )
@@ -391,6 +977,43 @@ def build_parser() -> argparse.ArgumentParser:
     voxel.add_argument("--skin-label", action="append", type=int, default=None)
     voxel.add_argument("--bone-label", action="append", type=int, default=None)
     voxel.set_defaults(func=command_convert_voxel_mat)
+
+    adaptive = subparsers.add_parser(
+        "convert-voxel-mat-adaptive",
+        help="boundary-aware adaptive Delaunay conversion of a labeled voxel atlas",
+    )
+    adaptive.add_argument("--input", required=True)
+    adaptive.add_argument("--output", required=True)
+    adaptive.add_argument("--report", default=None)
+    adaptive.add_argument("--variable", default="MaterialLabelGrid")
+    adaptive.add_argument("--axis-key", action="append", default=None)
+    adaptive.add_argument("--axis-unit", choices=("m", "mm"), default="m")
+    adaptive.add_argument("--output-unit", choices=("m", "mm"), default="m")
+    adaptive.add_argument("--voxel-size-mm", type=float, default=1.0)
+    adaptive.add_argument("--coarse-stride", type=int, default=20)
+    adaptive.add_argument("--refine-stride", type=int, default=5)
+    adaptive.add_argument("--fine-stride", type=int, default=None)
+    adaptive.add_argument("--refine-label", action="append", type=int, default=None)
+    adaptive.add_argument(
+        "--refine-all-boundaries",
+        action="store_true",
+        help="refine every mixed tissue/body block instead of selected labels only",
+    )
+    adaptive.add_argument("--refine-halo-blocks", type=int, default=1)
+    adaptive.add_argument(
+        "--audit-report",
+        action="append",
+        default=None,
+        help="previous volume-audit JSON used to select missing/high-error labels",
+    )
+    adaptive.add_argument("--volume-error-threshold", type=float, default=5.0)
+    adaptive.add_argument("--preserve-label", action="append", type=int, default=None)
+    adaptive.add_argument("--sat-label", action="append", type=int, default=None)
+    adaptive.add_argument("--skin-label", action="append", type=int, default=None)
+    adaptive.add_argument("--bone-label", action="append", type=int, default=None)
+    adaptive.add_argument("--max-points", type=int, default=250_000)
+    adaptive.add_argument("--max-tetrahedra", type=int, default=1_500_000)
+    adaptive.set_defaults(func=command_adaptive_convert)
 
     visual = subparsers.add_parser(
         "extract-visual-surface",
@@ -439,6 +1062,26 @@ def build_parser() -> argparse.ArgumentParser:
         help="extract only the selected source label; repeat for multiple labels",
     )
     visual.set_defaults(func=command_extract_visual_surface)
+
+    figure = subparsers.add_parser(
+        "paper-figure",
+        help="render aligned publication-style views from mapped surface NPZ cases",
+    )
+    figure.add_argument("--input", action="append", required=True)
+    figure.add_argument("--output", required=True)
+    figure.add_argument("--report", default=None)
+    figure.add_argument("--label", action="append", default=None)
+    figure.add_argument(
+        "--view",
+        action="append",
+        choices=("front", "side", "back", "oblique"),
+        default=None,
+    )
+    figure.add_argument("--color-by", default="displacement")
+    figure.add_argument("--dpi", type=int, default=300)
+    figure.add_argument("--max-triangles", type=int, default=45_000)
+    figure.add_argument("--no-reference", action="store_true")
+    figure.set_defaults(func=command_paper_figure)
     return parser
 
 
@@ -451,10 +1094,31 @@ def main(argv: list[str] | None = None) -> None:
         args.sat_label = args.sat_label or [1]
         args.skin_label = args.skin_label or [2]
         args.bone_label = args.bone_label or [19, 68, 69]
+    if args.command == "convert-voxel-mat-adaptive":
+        args.axis_key = args.axis_key or ["Axis0", "Axis1", "Axis2"]
+        if len(args.axis_key) != 3:
+            raise ValueError("--axis-key must be provided exactly three times")
+        if not args.refine_all_boundaries:
+            args.refine_label = args.refine_label or [1, 2]
+        args.sat_label = args.sat_label or [1]
+        args.skin_label = args.skin_label or [2]
+        args.bone_label = args.bone_label or [19, 68, 69]
+    if args.command == "volume-audit":
+        args.axis_key = args.axis_key or ["Axis0", "Axis1", "Axis2"]
+        if len(args.axis_key) != 3:
+            raise ValueError("--axis-key must be provided exactly three times")
     if args.command == "extract-visual-surface":
         args.axis_key = args.axis_key or ["Axis0", "Axis1", "Axis2"]
         if len(args.axis_key) != 3:
             raise ValueError("--axis-key must be provided exactly three times")
+    if args.command == "extract-tissue-surfaces":
+        args.axis_key = args.axis_key or ["Axis0", "Axis1", "Axis2"]
+        if len(args.axis_key) != 3:
+            raise ValueError("--axis-key must be provided exactly three times")
+    if args.command == "paper-figure":
+        args.view = args.view or ["front", "side", "oblique"]
+    if args.command == "tissue-figure":
+        args.view = args.view or ["front", "side", "oblique"]
     args.func(args)
 
 
