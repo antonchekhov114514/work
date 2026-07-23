@@ -7,6 +7,12 @@ from pathlib import Path
 import numpy as np
 
 from .adaptive_voxel import convert_voxel_mat_adaptive
+from .adaptive_growth import (
+    coarsen_morph_result,
+    literature_cell_materials,
+    remesh_morph_result,
+    solve_incremental_with_remeshing,
+)
 from .audit import build_volume_audit, tetra_quality, write_volume_audit
 from .calibration import calibrate_target_volume
 from .contact import (
@@ -18,11 +24,13 @@ from .contact import (
 )
 from .demo import BONE, SAT, SKIN, SOFT, layered_torso_mesh
 from .fiber import save_mesh_with_fibers
-from .io import load_mesh, load_result_npz, save_result_bundle
+from .io import load_mesh, load_result_npz, save_mesh_vtu, save_npz, save_result_bundle
+from .material_library import load_physical_materials, material_table, write_material_table
 from .mat_convert import convert_mat, describe_arrays, load_mat_arrays
 from .metrics import mapped_surface_metrics, sat_thickness_metrics, write_metrics
 from .preprocess import repair_surface
 from .paper_figure import render_surface_comparison, render_tissue_bundle
+from .physical_properties import attach_physical_properties, mass_report, write_json_report
 from .solver import Material, SolverOptions, morph_sat, morph_target_region
 from .study import summarize_result_jsons, write_summary_csv
 from .surface_map import load_surface, map_surface, save_center_result, save_surface_result
@@ -65,6 +73,8 @@ def _load_materials(path: str | None, mesh) -> tuple[Material, dict[int, Materia
 
 
 def _default_cell_materials(mesh) -> np.ndarray | None:
+    if "source_label" in mesh.cell_data:
+        return literature_cell_materials(mesh)
     group_ids = mesh.cell_data.get("mechanical_group_id")
     if group_ids is None:
         return None
@@ -325,6 +335,172 @@ def command_quality_report(args: argparse.Namespace) -> None:
     target.write_text(json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8")
     print("\nMesh quality report completed")
     print(f"  wrote: {target}")
+
+
+def command_material_table(args: argparse.Namespace) -> None:
+    physical = load_physical_materials(args.physical_materials) if args.physical_materials else None
+    rows = material_table(physical)
+    write_material_table(rows, args.output, json_path=args.json_output)
+    print("\nMaterial table completed")
+    print(f"  labels: {len(rows)}")
+    print(f"  wrote: {args.output}")
+    if args.json_output:
+        print(f"  wrote: {args.json_output}")
+
+
+def command_attach_properties(args: argparse.Namespace) -> None:
+    mesh = load_mesh(args.input, args.cell_data)
+    output, report = attach_physical_properties(mesh, args.materials)
+    target = Path(args.output)
+    target.parent.mkdir(parents=True, exist_ok=True)
+    save_npz(target, output)
+    vtu = Path(args.vtu_output) if args.vtu_output else target.with_suffix(".vtu")
+    save_mesh_vtu(vtu, output)
+    if args.report:
+        write_json_report(report, args.report)
+    print("\nPhysical/EM property mapping completed")
+    print(f"  source labels: {report['source_labels']}")
+    print(f"  wrote: {target}")
+    print(f"  wrote: {vtu}")
+    if args.report:
+        print(f"  wrote: {args.report}")
+
+
+def command_mass_report(args: argparse.Namespace) -> None:
+    path = Path(args.input)
+    with np.load(path, allow_pickle=False) as data:
+        is_result = "deformed_points" in data.files and "growth_lambda" in data.files
+        growth_lambda = np.asarray(data["growth_lambda"], dtype=float) if is_result else None
+    if is_result:
+        mesh, _, current_points = load_result_npz(path)
+    else:
+        mesh = load_mesh(path, args.cell_data)
+        current_points = None
+    if args.materials:
+        mesh, _ = attach_physical_properties(mesh, args.materials)
+    material_reference = mesh.cell_data.get("material_reference_volume")
+    accumulated_growth = mesh.cell_data.get("accumulated_growth_J")
+    if accumulated_growth is None:
+        accumulated_growth = np.ones(mesh.n_cells, dtype=float)
+    else:
+        accumulated_growth = np.asarray(accumulated_growth, dtype=float)
+    growth_j = accumulated_growth
+    if growth_lambda is not None:
+        growth_j = growth_j * growth_lambda**3
+    report = mass_report(
+        mesh,
+        current_points=current_points,
+        growth_j=growth_j,
+        material_reference_volume=material_reference,
+        length_unit=args.length_unit,
+    )
+    write_json_report(report, args.output)
+    summary = report["summary"]
+    print("\nMass report completed")
+    print(f"  initial mass             : {summary['initial_mass_kg']:.6f} kg")
+    print(f"  growth-accounted mass    : {summary['growth_accounted_mass_kg']:.6f} kg")
+    print(f"  growth mass change       : {summary['growth_mass_change_kg']:.6f} kg")
+    print(f"  wrote: {args.output}")
+
+
+def command_refine_result(args: argparse.Namespace) -> None:
+    mesh, _, deformed = load_result_npz(args.input)
+    with np.load(args.input, allow_pickle=False) as data:
+        growth = np.asarray(data["growth_lambda"], dtype=float)
+        j_total = np.asarray(data["j_total"], dtype=float)
+        j_elastic = np.asarray(data["j_elastic"], dtype=float)
+    refined, report = remesh_morph_result(
+        mesh,
+        deformed,
+        growth,
+        j_total,
+        j_elastic,
+        target_labels=args.target_label or [1],
+        max_edges=args.max_edges,
+        interface_mode=args.interface_mode,
+    )
+    if args.physical_materials:
+        refined, property_report = attach_physical_properties(refined, args.physical_materials)
+        report["physical_property_mapping"] = property_report
+    output = Path(args.output)
+    output.parent.mkdir(parents=True, exist_ok=True)
+    save_npz(output, refined)
+    vtu = Path(args.vtu_output) if args.vtu_output else output.with_suffix(".vtu")
+    save_mesh_vtu(vtu, refined)
+    write_json_report(report, args.report)
+    print("\nLabel-preserving result remeshing completed")
+    print(f"  selected edges      : {report['selected_edges']}")
+    print(f"  tetrahedra before   : {report['tetrahedra_before']}")
+    print(f"  tetrahedra after    : {report['tetrahedra_after']}")
+    print(f"  labels preserved    : {report['label_set_preserved']}")
+    print(f"  wrote: {output}")
+    print(f"  wrote: {vtu}")
+    print(f"  wrote: {args.report}")
+
+
+def command_coarsen_result(args: argparse.Namespace) -> None:
+    mesh, _, deformed = load_result_npz(args.input)
+    with np.load(args.input, allow_pickle=False) as data:
+        growth = np.asarray(data["growth_lambda"], dtype=float)
+        j_total = np.asarray(data["j_total"], dtype=float)
+        j_elastic = np.asarray(data["j_elastic"], dtype=float)
+    coarsened, report = coarsen_morph_result(
+        mesh,
+        deformed,
+        growth,
+        j_total,
+        j_elastic,
+        target_labels=args.target_label or [1],
+        max_collapses=args.max_collapses,
+        max_local_volume_drift=args.max_local_volume_drift,
+    )
+    if args.physical_materials:
+        coarsened, property_report = attach_physical_properties(
+            coarsened, args.physical_materials
+        )
+        report["physical_property_mapping"] = property_report
+    output = Path(args.output)
+    output.parent.mkdir(parents=True, exist_ok=True)
+    save_npz(output, coarsened)
+    vtu = Path(args.vtu_output) if args.vtu_output else output.with_suffix(".vtu")
+    save_mesh_vtu(vtu, coarsened)
+    write_json_report(report, args.report)
+    print("\nLabel-preserving result coarsening completed")
+    print(f"  selected collapses : {report['selected_collapses']}")
+    print(f"  tetrahedra before  : {report['tetrahedra_before']}")
+    print(f"  tetrahedra after   : {report['tetrahedra_after']}")
+    print(f"  labels preserved   : {report['label_set_preserved']}")
+    print(f"  wrote: {output}")
+    print(f"  wrote: {vtu}")
+    print(f"  wrote: {args.report}")
+
+
+def command_solve_remesh(args: argparse.Namespace) -> None:
+    mesh = load_mesh(args.input, args.cell_data)
+    if args.physical_materials:
+        mesh, _ = attach_physical_properties(mesh, args.physical_materials)
+    bone_tags = [mesh.resolve_tag(value) for value in args.bone_tag]
+    summary = solve_incremental_with_remeshing(
+        mesh,
+        target_labels=args.target_label or [1],
+        bone_tags=bone_tags,
+        target_growth_volume_ratio=args.target_growth_volume_ratio,
+        stages=args.stages,
+        max_edges_per_stage=args.max_edges_per_stage,
+        interface_mode=args.interface_mode,
+        output_dir=args.output_dir,
+        options=_options(args),
+        max_collapses_per_stage=args.max_collapses_per_stage,
+        remesh_mode=args.remesh_mode,
+        max_local_volume_drift=args.max_local_volume_drift,
+    )
+    print("\nIncremental growth/remeshing completed")
+    print(f"  tetrahedra before   : {summary['tetrahedra_before']}")
+    print(f"  tetrahedra after    : {summary['tetrahedra_after']}")
+    print(f"  target cells before : {summary['target_cells_before']}")
+    print(f"  target cells after  : {summary['target_cells_after']}")
+    print(f"  labels preserved    : {summary['source_labels_preserved']}")
+    print(f"  wrote: {summary['summary_path']}")
 
 
 def command_build_contact(args: argparse.Namespace) -> None:
@@ -856,6 +1032,99 @@ def build_parser() -> argparse.ArgumentParser:
     quality.add_argument("--cell-data", default=None)
     quality.add_argument("--output", required=True)
     quality.set_defaults(func=command_quality_report)
+
+    material_table_parser = subparsers.add_parser(
+        "material-table",
+        help="write the literature-informed 73-label mechanical and physical property table",
+    )
+    material_table_parser.add_argument("--physical-materials", default=None)
+    material_table_parser.add_argument("--output", required=True, help="CSV table")
+    material_table_parser.add_argument("--json-output", default=None)
+    material_table_parser.set_defaults(func=command_material_table)
+
+    attach = subparsers.add_parser(
+        "attach-physical-properties",
+        help="attach density and EM fields to every tetrahedron using immutable source_label",
+    )
+    attach.add_argument("--input", required=True)
+    attach.add_argument("--cell-data", default=None)
+    attach.add_argument("--materials", required=True, help="s4l_materials_unified.json")
+    attach.add_argument("--output", required=True, help="output NPZ mesh")
+    attach.add_argument("--vtu-output", default=None)
+    attach.add_argument("--report", default=None)
+    attach.set_defaults(func=command_attach_properties)
+
+    mass = subparsers.add_parser(
+        "mass-report",
+        help="compute initial, deformed-geometric, and growth-accounted body mass",
+    )
+    mass.add_argument("--input", required=True, help="mesh or solve-result NPZ")
+    mass.add_argument("--cell-data", default=None)
+    mass.add_argument("--materials", default=None, help="optional s4l_materials_unified.json")
+    mass.add_argument("--length-unit", choices=("m", "mm"), default="m")
+    mass.add_argument("--output", required=True)
+    mass.set_defaults(func=command_mass_report)
+
+    refine_result = subparsers.add_parser(
+        "refine-result",
+        help="conformingly add tetrahedra to a deformed target tissue without changing labels",
+    )
+    refine_result.add_argument("--input", required=True, help="solve-result NPZ")
+    refine_result.add_argument("--target-label", action="append", type=int, default=None)
+    refine_result.add_argument("--max-edges", type=int, default=1_000)
+    refine_result.add_argument(
+        "--interface-mode", choices=("propagate", "interior-only"), default="propagate"
+    )
+    refine_result.add_argument("--physical-materials", default=None)
+    refine_result.add_argument("--output", required=True, help="remeshed NPZ")
+    refine_result.add_argument("--vtu-output", default=None)
+    refine_result.add_argument("--report", required=True)
+    refine_result.set_defaults(func=command_refine_result)
+
+    coarsen_result = subparsers.add_parser(
+        "coarsen-result",
+        help="safely collapse target-tissue edges without changing source labels",
+    )
+    coarsen_result.add_argument("--input", required=True, help="solve-result NPZ")
+    coarsen_result.add_argument("--target-label", action="append", type=int, default=None)
+    coarsen_result.add_argument("--max-collapses", type=int, default=500)
+    coarsen_result.add_argument("--max-local-volume-drift", type=float, default=0.01)
+    coarsen_result.add_argument("--physical-materials", default=None)
+    coarsen_result.add_argument("--output", required=True, help="coarsened NPZ")
+    coarsen_result.add_argument("--vtu-output", default=None)
+    coarsen_result.add_argument("--report", required=True)
+    coarsen_result.set_defaults(func=command_coarsen_result)
+
+    solve_remesh = subparsers.add_parser(
+        "solve-remesh",
+        help="incrementally grow/shrink SAT with label-preserving remeshing after each stage",
+    )
+    solve_remesh.add_argument("--input", required=True)
+    solve_remesh.add_argument("--cell-data", default=None)
+    solve_remesh.add_argument("--target-label", action="append", type=int, default=None)
+    solve_remesh.add_argument("--bone-tag", action="append", required=True)
+    solve_remesh.add_argument("--target-growth-volume-ratio", type=float, required=True)
+    solve_remesh.add_argument("--stages", type=int, default=3)
+    solve_remesh.add_argument("--max-edges-per-stage", type=int, default=1_000)
+    solve_remesh.add_argument("--max-collapses-per-stage", type=int, default=500)
+    solve_remesh.add_argument(
+        "--remesh-mode",
+        choices=("auto", "refine", "coarsen", "none"),
+        default="auto",
+    )
+    solve_remesh.add_argument("--max-local-volume-drift", type=float, default=0.01)
+    solve_remesh.add_argument(
+        "--interface-mode", choices=("propagate", "interior-only"), default="propagate"
+    )
+    solve_remesh.add_argument("--physical-materials", default=None)
+    solve_remesh.add_argument("--output-dir", required=True)
+    solve_remesh.add_argument("--increments", type=int, default=6)
+    solve_remesh.add_argument("--max-iterations", type=int, default=30)
+    solve_remesh.add_argument("--relative-tolerance", type=float, default=1.0e-7)
+    solve_remesh.add_argument("--absolute-tolerance", type=float, default=1.0e-8)
+    solve_remesh.add_argument("--bulk-modulus-ratio-cap", type=float, default=100.0)
+    solve_remesh.add_argument("--quiet", action="store_true")
+    solve_remesh.set_defaults(func=command_solve_remesh)
 
     fibers = subparsers.add_parser(
         "build-fiber-field",

@@ -75,7 +75,10 @@ def load_mesh(path: str | Path, cell_data_name: str | None = None) -> TetMesh:
                 if len(values) == len(block.data):
                     selected_blocks.append(values)
         if selected_blocks:
-            extra_cell_data[str(data_name)] = np.concatenate(selected_blocks)
+            combined = np.concatenate(selected_blocks)
+            if str(data_name) == "elastic_history_F" and combined.shape[1:] == (9,):
+                combined = combined.reshape((-1, 3, 3))
+            extra_cell_data[str(data_name)] = combined
 
     return TetMesh(
         np.asarray(source.points[:, :3], dtype=float),
@@ -147,36 +150,31 @@ def _ascii(array: np.ndarray) -> str:
     return " ".join(f"{float(value):.16g}" for value in flat)
 
 
-def save_vtu(path: str | Path, mesh: TetMesh, result: MorphResult) -> None:
-    """Write a dependency-free ASCII VTU file for inspection in ParaView."""
+def _write_vtu(
+    path: str | Path,
+    points: np.ndarray,
+    tetra: np.ndarray,
+    point_data: dict[str, np.ndarray],
+    cell_data: dict[str, np.ndarray],
+) -> None:
+    """Write a dependency-free ASCII tetrahedral VTU."""
     path = Path(path)
-    connectivity = mesh.tetra.astype(np.int64)
-    offsets = np.arange(1, mesh.n_cells + 1, dtype=np.int64) * 4
-    types = np.full(mesh.n_cells, 10, dtype=np.uint8)  # VTK_TETRA
-    point_data = {
-        "displacement": result.displacement,
-        "displacement_magnitude": np.linalg.norm(result.displacement, axis=1),
-    }
-    cell_data = {
-        "region": mesh.cell_tags,
-        "growth_lambda": result.growth_lambda,
-        "J_total": result.j_total,
-        "J_elastic": result.j_elastic,
-    }
-    for name, values in mesh.cell_data.items():
-        if name not in cell_data:
-            cell_data[name] = values
+    points = np.asarray(points, dtype=float)
+    connectivity = np.asarray(tetra, dtype=np.int64)
+    n_cells = len(connectivity)
+    offsets = np.arange(1, n_cells + 1, dtype=np.int64) * 4
+    types = np.full(n_cells, 10, dtype=np.uint8)  # VTK_TETRA
 
     lines = [
         '<?xml version="1.0"?>',
         '<VTKFile type="UnstructuredGrid" version="0.1" byte_order="LittleEndian">',
         "  <UnstructuredGrid>",
-        f'    <Piece NumberOfPoints="{mesh.n_points}" NumberOfCells="{mesh.n_cells}">',
+        f'    <Piece NumberOfPoints="{len(points)}" NumberOfCells="{n_cells}">',
         "      <PointData>",
     ]
     for name, values in point_data.items():
         values = np.asarray(values)
-        components = values.shape[1] if values.ndim == 2 else 1
+        components = int(np.prod(values.shape[1:])) if values.ndim > 1 else 1
         lines.append(
             f'        <DataArray type="Float64" Name="{escape(name)}" '
             f'NumberOfComponents="{components}" format="ascii">{_ascii(values)}</DataArray>'
@@ -185,7 +183,7 @@ def save_vtu(path: str | Path, mesh: TetMesh, result: MorphResult) -> None:
     for name, values in cell_data.items():
         vtk_type = "Int64" if np.issubdtype(np.asarray(values).dtype, np.integer) else "Float64"
         values = np.asarray(values)
-        components = values.shape[1] if values.ndim == 2 else 1
+        components = int(np.prod(values.shape[1:])) if values.ndim > 1 else 1
         lines.append(
             f'        <DataArray type="{vtk_type}" Name="{escape(name)}" '
             f'NumberOfComponents="{components}" format="ascii">{_ascii(values)}</DataArray>'
@@ -194,7 +192,7 @@ def save_vtu(path: str | Path, mesh: TetMesh, result: MorphResult) -> None:
         [
             "      </CellData>",
             "      <Points>",
-            f'        <DataArray type="Float64" NumberOfComponents="3" format="ascii">{_ascii(result.points)}</DataArray>',
+            f'        <DataArray type="Float64" NumberOfComponents="3" format="ascii">{_ascii(points)}</DataArray>',
             "      </Points>",
             "      <Cells>",
             f'        <DataArray type="Int64" Name="connectivity" format="ascii">{_ascii(connectivity)}</DataArray>',
@@ -207,6 +205,32 @@ def save_vtu(path: str | Path, mesh: TetMesh, result: MorphResult) -> None:
         ]
     )
     path.write_text("\n".join(lines), encoding="utf-8")
+
+
+def save_mesh_vtu(path: str | Path, mesh: TetMesh) -> None:
+    cell_data = {"region": mesh.cell_tags}
+    for name, values in mesh.cell_data.items():
+        if name not in cell_data:
+            cell_data[name] = np.asarray(values)
+    _write_vtu(path, mesh.points, mesh.tetra, {}, cell_data)
+
+
+def save_vtu(path: str | Path, mesh: TetMesh, result: MorphResult) -> None:
+    """Write a dependency-free ASCII VTU result for inspection in ParaView."""
+    point_data = {
+        "displacement": result.displacement,
+        "displacement_magnitude": np.linalg.norm(result.displacement, axis=1),
+    }
+    cell_data = {
+        "region": mesh.cell_tags,
+        "growth_lambda": result.growth_lambda,
+        "J_total": result.j_total,
+        "J_elastic": result.j_elastic,
+    }
+    for name, values in mesh.cell_data.items():
+        if name not in cell_data:
+            cell_data[name] = np.asarray(values)
+    _write_vtu(path, result.points, mesh.tetra, point_data, cell_data)
 
 
 def save_result_bundle(base_path: str | Path, mesh: TetMesh, result: MorphResult) -> tuple[Path, Path, Path]:

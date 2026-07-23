@@ -149,6 +149,26 @@ class _Assembler:
         self.fiber_tension_only = np.ones(mesh.n_cells, dtype=bool)
         self.fiber_direction = np.zeros((mesh.n_cells, 3), dtype=float)
         mesh_fibers = mesh.cell_data.get("fiber_direction")
+        raw_history = mesh.cell_data.get("elastic_history_F")
+        self.elastic_history = (
+            np.repeat(np.eye(3)[None, :, :], mesh.n_cells, axis=0)
+            if raw_history is None
+            else np.asarray(raw_history, dtype=float)
+        )
+        if self.elastic_history.shape != (mesh.n_cells, 3, 3):
+            raise ValueError("elastic_history_F must have shape (n_cells, 3, 3)")
+        if np.any(np.linalg.det(self.elastic_history) <= 0.0):
+            raise ValueError("elastic_history_F must have positive determinants")
+        raw_material_volume = mesh.cell_data.get("material_reference_volume")
+        self.integration_volumes = (
+            self.volumes.copy()
+            if raw_material_volume is None
+            else np.asarray(raw_material_volume, dtype=float)
+        )
+        if self.integration_volumes.shape != (mesh.n_cells,):
+            raise ValueError("material_reference_volume must contain one value per cell")
+        if np.any(self.integration_volumes <= 0.0):
+            raise ValueError("material_reference_volume must be positive")
         self.bulk_modulus_capped_cells = 0
         for cell, tag in enumerate(mesh.cell_tags):
             material = cell_materials[cell] if cell_materials is not None else materials.get(int(tag), default_material)
@@ -197,7 +217,11 @@ class _Assembler:
             x = current[nodes]
             f = x.T @ self.grads[cell]
             w, p, tangent, jt, je = neo_hookean_growth(
-                f, float(growth[cell]), self.mu[cell], self.kappa[cell]
+                f,
+                float(growth[cell]),
+                self.mu[cell],
+                self.kappa[cell],
+                elastic_history=self.elastic_history[cell],
             )
             if self.fiber_stiffness[cell] > 0.0:
                 wf, pf, af = fiber_reinforcement_growth(
@@ -206,11 +230,12 @@ class _Assembler:
                     self.fiber_direction[cell],
                     self.fiber_stiffness[cell],
                     tension_only=bool(self.fiber_tension_only[cell]),
+                    elastic_history=self.elastic_history[cell],
                 )
                 w += wf
                 p += pf
                 tangent += af
-            volume = self.volumes[cell]
+            volume = self.integration_volumes[cell]
             energy_total += volume * w
             j_total[cell] = jt
             j_elastic[cell] = je
@@ -259,10 +284,11 @@ class _Assembler:
         x = current[self.mesh.tetra]
         deformation = np.einsum("eai,eaj->eij", x, self.grads, optimize=True)
         j_total = np.linalg.det(deformation)
-        j_elastic = j_total / growth**3
+        history_increment = self.elastic_history / growth[:, None, None]
+        fe = np.einsum("eij,ejk->eik", deformation, history_increment, optimize=True)
+        j_elastic = np.linalg.det(fe)
         if np.any(j_total <= 0.0) or np.any(j_elastic <= 0.0):
             raise FloatingPointError("inverted element")
-        fe = deformation / growth[:, None, None]
         log_j = np.log(j_elastic)
         i1 = np.sum(fe * fe, axis=(1, 2))
         energy_density = (
@@ -270,12 +296,14 @@ class _Assembler:
             - self.mu * log_j
             + 0.5 * self.kappa * log_j**2
         )
-        inv_ft = np.linalg.inv(deformation).transpose(0, 2, 1)
-        coefficient_a = self.mu / growth**2
+        inv_fe_t = np.linalg.inv(fe).transpose(0, 2, 1)
         coefficient_b = -self.mu + self.kappa * log_j
-        stress = (
-            coefficient_a[:, None, None] * deformation
-            + coefficient_b[:, None, None] * inv_ft
+        elastic_stress = (
+            self.mu[:, None, None] * fe
+            + coefficient_b[:, None, None] * inv_fe_t
+        )
+        stress = np.einsum(
+            "eik,ejk->eij", elastic_stress, history_increment, optimize=True
         )
         for cell in np.flatnonzero(self.fiber_stiffness > 0.0):
             wf, pf, _ = fiber_reinforcement_growth(
@@ -284,15 +312,16 @@ class _Assembler:
                 self.fiber_direction[cell],
                 self.fiber_stiffness[cell],
                 tension_only=bool(self.fiber_tension_only[cell]),
+                elastic_history=self.elastic_history[cell],
             )
             energy_density[cell] += wf
             stress[cell] += pf
-        local_residual = self.volumes[:, None, None] * np.einsum(
+        local_residual = self.integration_volumes[:, None, None] * np.einsum(
             "eij,eaj->eai", stress, self.grads, optimize=True
         )
         residual = np.zeros(self.n_dof, dtype=float)
         np.add.at(residual, self.element_dofs.ravel(), local_residual.ravel())
-        energy = float(np.dot(self.volumes, energy_density))
+        energy = float(np.dot(self.integration_volumes, energy_density))
         if self.contact is not None:
             contact_energy, contact_residual, _ = self._assemble_contact(current, False)
             energy += contact_energy
