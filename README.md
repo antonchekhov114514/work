@@ -606,20 +606,30 @@ map-surface
 
 ### 求解不收敛
 
-可以尝试：
+当前 `calibrate-growth` 会自动细分失败的载荷增量。更新代码并重新安装可编辑包：
 
 ```bash
-satmorph solve \
-  --input outputs/human-coarse.npz \
-  --target-label 1 \
-  --bone-tag BONE \
-  --target-volume-ratio 1.2 \
-  --increments 24 \
-  --max-iterations 50 \
-  --output outputs/human-sat-120
+cd /home/yirongxu/sat-morphing-fem/work
+source .venv/bin/activate
+python -m pip install -e .
 ```
 
-也可以先把目标比例调小，例如 `1.05` 或 `0.95`。
+然后重新运行原命令即可。旧版本的临时绕过方式是：
+
+```bash
+satmorph calibrate-growth \
+  --input outputs/human-adaptive.npz \
+  --target-label 1 \
+  --bone-tag BONE \
+  --desired-volume-ratio 1.2 \
+  --increments 24 \
+  --max-iterations 50 \
+  --relative-tolerance 2e-7 \
+  --output outputs/human-sat-120-calibrated
+```
+
+日志中的 `min(J)` 必须始终大于0。若增加到48或96个增量后仍在远高于收敛阈值的位置失败，
+应先运行 `quality-report`，或改用 `solve-remesh` 分阶段增长，而不是继续放宽容差。
 
 ### 模型太大
 
@@ -791,17 +801,27 @@ satmorph calibrate-growth \
   --desired-volume-ratio 1.20 \
   --calibration-tolerance 0.0025 \
   --max-corrections 4 \
+  --adaptive-increment-retries 3 \
+  --increment-retry-factor 2 \
+  --stagnation-tolerance-factor 5 \
   --contact outputs/liver-stomach-contact.json \
   --output outputs/human-sat-120-calibrated
 ```
 
 外层循环会重复调用非线性 FEM，并用乘法更新/割线更新调整内部的 `growth_lambda^3`，直到约束后的实际 SAT 体积比接近 1.20。结果 JSON 中：
 
+如果某轮内部求解在线搜索、最大Newton次数或非下降方向处失败，校正器会自动把载荷增量数
+从12增加到24、48、96后重试。若线搜索仅在严格收敛阈值附近因浮点精度停滞，且所有单元
+Jacobian仍为正，则允许在 `stagnation_tolerance_factor × tolerance` 内接受当前平衡状态。
+这不会接受明显未收敛或已经翻转的网格。
+
 ```text
 desired_target_volume_ratio       真正希望达到的 SAT 体积比
 target_volume_ratio_unconstrained 最后一次施加的自由生长体积比
 actual_target_volume_ratio        FEM 平衡后的实际 SAT 体积比
 calibration_iterations            每轮校正历史
+calibration_iterations[].solver_increments 该轮实际使用的载荷增量数
+calibration_iterations[].solver_retries    该轮内部求解重试次数
 contact                           接触激活和穿透统计
 ```
 
@@ -1180,3 +1200,76 @@ satmorph mass-report \
 
 弹性压缩 `J_elastic` 不应被解释为组织质量消失。对于粗体素网格，体重误差首先受原始标签体积误差影响，
 必须结合 `volume-audit` 使用，不能只看 `mass-report` 的小数位。
+## 73 标签到二级网格域的整合
+
+现在代码采用四层标签体系：
+
+```text
+source_label          原始 0-73 组织标签，永久保留，用于追踪、EM 参数赋值和分组织可视化
+mesh_domain_tag       二级网格/界面域，用于决定哪些组织可粗合并、哪些界面要保护
+mechanical_group_id   力学材料组，用于给 FEM 求解器选择等效材料参数
+cell_tags / region    SAT、SKIN、BONE、SOFT 四类求解角色，用于快速选目标和固定骨
+```
+
+截图里的合并策略已经被整理为 19 个 `mesh_domain_tag`：
+
+```text
+0  BACKGROUND_EXTERNAL
+1  SAT
+2  SKIN
+3  ADIPOSE_OTHER
+4  INTERNAL_VOID_LUMEN
+5  AIRWAY_WALL
+6  PASSIVE_MUSCLE
+7  HEART_MUSCLE
+8  GENERAL_SOFT_ORGAN
+9  INTERNAL_FLUID_PLACEHOLDER
+10 CSF
+11 EYE_STRUCTURES
+12 NERVE
+13 CNS_PARENCHYMA
+14 TOOTH
+15 CORTICAL_BONE
+16 CANCELLOUS_BONE
+17 YELLOW_MARROW
+18 CONNECTIVE_CARTILAGE
+```
+
+注意：`mesh_domain_tag` 不是新的材料参数，也不会覆盖 `source_label`。例如 SAT 仍只有 `source_label=1` 会主动增减；普通脂肪 `source_label=3` 和黄骨髓 `source_label=70` 保持被动组织。心肌、CSF、神经、皮质骨、松质骨也被单独保留为网格域，避免过度合并。
+
+转换 `.mat` 后，`.npz/.vtu` 会自动带有：
+
+```text
+cell_data__source_label
+cell_data__material_id
+cell_data__mechanical_group_id
+cell_data__mesh_domain_tag
+```
+
+在 ParaView 中可以这样看：
+
+```text
+Coloring = source_label          查看 73 个原始组织
+Coloring = mesh_domain_tag       查看二级网格合并域
+Coloring = mechanical_group_id   查看力学材料分组
+Coloring = region                查看 SAT/SKIN/BONE/SOFT 求解角色
+```
+
+导出这套合并策略表：
+
+```bash
+satmorph mesh-domain-table --output docs/mesh-domain-policy.csv
+satmorph mesh-domain-table --output docs/mesh-domain-policy.json
+```
+
+分组织表面 bundle 也会写入 `mesh_domain_tag`：
+
+```bash
+satmorph extract-tissue-surfaces \
+  --input combined_material_label_model_001_073_1mm.mat \
+  --output-dir outputs/tissue-surfaces \
+  --method marching-cubes \
+  --surface-stride 2
+```
+
+这样后续既能按 73 个组织单独看，也能按 19 个网格域做论文图和质量审计。
