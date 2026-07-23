@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Iterable
+from typing import Iterable, Mapping
 
 import numpy as np
 from scipy.io import loadmat
@@ -11,11 +11,20 @@ from .demo import BONE, SAT, SKIN, SOFT
 from .io import save_npz
 from .mesh import TetMesh
 from .surface_map import SurfaceMesh
+from .tissue_groups import (
+    MECHANICAL_GROUP_NAMES,
+    MESH_DOMAIN_NAMES,
+    atlas_report,
+    labels_to_material_ids,
+    labels_to_mechanical_group_ids,
+    labels_to_mesh_domain_ids,
+    mesh_domain_report,
+)
 
 
 DEFAULT_SAT_LABELS = (1,)
 DEFAULT_SKIN_LABELS = (2,)
-DEFAULT_BONE_LABELS = (19, 68, 69, 70)
+DEFAULT_BONE_LABELS = (19, 68, 69)
 TAG_NAMES = {"BONE": BONE, "SOFT": SOFT, "SAT": SAT, "SKIN": SKIN}
 
 _TET_PATTERN = np.asarray(
@@ -194,6 +203,25 @@ def _block_occupancy(labels: np.ndarray, stride: int) -> np.ndarray:
     return occupied
 
 
+def _block_label_majority(labels: np.ndarray, stride: int) -> np.ndarray:
+    if stride < 1:
+        raise ValueError("stride must be at least 1")
+    nx, ny, nz = labels.shape
+    shape = tuple((value + stride - 1) // stride for value in labels.shape)
+    maximum = int(labels.max())
+    counts = np.zeros((maximum + 1, *shape), dtype=np.uint32)
+    pad_y = shape[1] * stride - ny
+    pad_z = shape[2] * stride - nz
+    for i in range(shape[0]):
+        slab = labels[i * stride : min((i + 1) * stride, nx)]
+        pad_x = stride - slab.shape[0]
+        padded = np.pad(slab, ((0, pad_x), (0, pad_y), (0, pad_z)))
+        blocks = padded.reshape(stride, shape[1], stride, shape[2], stride)
+        for label_id in range(1, maximum + 1):
+            counts[label_id, i] = np.count_nonzero(blocks == label_id, axis=(0, 2, 4))
+    return np.argmax(counts, axis=0).astype(np.int16)
+
+
 def _coarse_edges(axis: np.ndarray, size: int, stride: int) -> np.ndarray:
     indices = np.append(np.arange(0, size, stride, dtype=np.int64), size)
     return axis[indices]
@@ -204,6 +232,7 @@ def tetrahedralize_blocks(
     axes: tuple[np.ndarray, np.ndarray, np.ndarray],
     *,
     max_tetrahedra: int = 500_000,
+    cell_data_blocks: Mapping[str, np.ndarray] | None = None,
 ) -> TetMesh:
     cells = np.argwhere(region_blocks != 0)
     tetrahedron_count = int(len(cells) * len(_TET_PATTERN))
@@ -227,7 +256,11 @@ def tetrahedralize_blocks(
         (axes[0][index[:, 0]], axes[1][index[:, 1]], axes[2][index[:, 2]])
     )
     tags = np.repeat(region_blocks[tuple(cells.T)], len(_TET_PATTERN))
-    return TetMesh(points, inverse.reshape(-1, 4), tags, TAG_NAMES)
+    cell_data = {}
+    if cell_data_blocks is not None:
+        for name, blocks in cell_data_blocks.items():
+            cell_data[str(name)] = np.repeat(np.asarray(blocks)[tuple(cells.T)], len(_TET_PATTERN))
+    return TetMesh(points, inverse.reshape(-1, 4), tags, TAG_NAMES, cell_data)
 
 
 def surface_from_blocks(
@@ -307,18 +340,30 @@ def convert_voxel_mat(
     regions = map_anatomical_regions(
         labels, sat_labels=sat_labels, skin_labels=skin_labels, bone_labels=bone_labels
     )
+    source_label_blocks = _block_label_majority(labels, stride)
     region_blocks = _block_region_majority(
         regions,
         stride,
         envelope_fraction=envelope_fraction,
         skin_fraction=skin_fraction,
     )
+    material_id_blocks = labels_to_material_ids(source_label_blocks)
+    mechanical_group_blocks = labels_to_mechanical_group_ids(source_label_blocks)
+    mesh_domain_blocks = labels_to_mesh_domain_ids(source_label_blocks)
     coarse_axes = tuple(
         _coarse_edges(axis, labels.shape[index], stride)
         for index, axis in enumerate(source_axes)
     )
     mesh = tetrahedralize_blocks(
-        region_blocks, coarse_axes, max_tetrahedra=max_tetrahedra
+        region_blocks,
+        coarse_axes,
+        max_tetrahedra=max_tetrahedra,
+        cell_data_blocks={
+            "source_label": source_label_blocks,
+            "material_id": material_id_blocks,
+            "mechanical_group_id": mechanical_group_blocks,
+            "mesh_domain_tag": mesh_domain_blocks,
+        },
     )
     output = Path(output_path)
     output.parent.mkdir(parents=True, exist_ok=True)
@@ -348,6 +393,7 @@ def convert_voxel_mat(
                 name: float(volumes[mesh.cell_tags == tag].sum())
                 for name, tag in mesh.tag_names.items()
             },
+            "extra_cell_data": sorted(mesh.cell_data),
         },
         "source_label_groups": {
             "SAT": [int(value) for value in sat_labels],
@@ -355,6 +401,10 @@ def convert_voxel_mat(
             "BONE": [int(value) for value in bone_labels],
             "SOFT": "all other non-zero labels",
         },
+        "mechanical_groups": MECHANICAL_GROUP_NAMES,
+        "mesh_domains": MESH_DOMAIN_NAMES,
+        "mesh_domain_policy": mesh_domain_report(),
+        "atlas_labels": atlas_report(),
     }
 
     if surface_output is not None:

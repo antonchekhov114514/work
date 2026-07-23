@@ -12,12 +12,17 @@ class TetMesh:
     tetra: np.ndarray
     cell_tags: np.ndarray
     tag_names: dict[str, int] = field(default_factory=dict)
+    cell_data: Mapping[str, np.ndarray] = field(default_factory=dict)
 
     def __post_init__(self) -> None:
         self.points = np.asarray(self.points, dtype=float)
         self.tetra = np.asarray(self.tetra, dtype=np.int64)
         self.cell_tags = np.asarray(self.cell_tags, dtype=np.int64)
         self.tag_names = {str(k): int(v) for k, v in self.tag_names.items()}
+        self.cell_data = {
+            str(name): np.asarray(values)
+            for name, values in dict(self.cell_data).items()
+        }
 
         if self.points.ndim != 2 or self.points.shape[1] != 3:
             raise ValueError("points must have shape (N, 3)")
@@ -25,6 +30,9 @@ class TetMesh:
             raise ValueError("tetra must have shape (M, 4)")
         if self.cell_tags.shape != (len(self.tetra),):
             raise ValueError("cell_tags must have one value per tetrahedron")
+        for name, values in self.cell_data.items():
+            if values.shape[0] != len(self.tetra):
+                raise ValueError(f"cell_data[{name!r}] must have one value per tetrahedron")
         if self.tetra.size and (self.tetra.min() < 0 or self.tetra.max() >= len(self.points)):
             raise ValueError("tetra contains an invalid point index")
 
@@ -89,5 +97,10 @@ class TetMesh:
         return np.linalg.det(ds) / 6.0
 
     def copy_with_points(self, points: np.ndarray) -> "TetMesh":
-        return TetMesh(points, self.tetra.copy(), self.cell_tags.copy(), self.tag_names.copy())
-
+        return TetMesh(
+            points,
+            self.tetra.copy(),
+            self.cell_tags.copy(),
+            self.tag_names.copy(),
+            {name: values.copy() for name, values in self.cell_data.items()},
+        )

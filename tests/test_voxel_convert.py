@@ -39,6 +39,13 @@ class VoxelConvertTests(unittest.TestCase):
             self.assertEqual(mesh.n_cells, 12)
             self.assertEqual(np.count_nonzero(mesh.cell_tags == SAT), 6)
             self.assertEqual(np.count_nonzero(mesh.cell_tags == BONE), 6)
+            self.assertIn("source_label", mesh.cell_data)
+            self.assertIn("mechanical_group_id", mesh.cell_data)
+            self.assertIn("mesh_domain_tag", mesh.cell_data)
+            self.assertEqual(np.count_nonzero(mesh.cell_data["source_label"] == 1), 6)
+            self.assertEqual(np.count_nonzero(mesh.cell_data["source_label"] == 68), 6)
+            self.assertIn("mesh_domains", report)
+            self.assertIn("mesh_domain_policy", report)
             self.assertEqual(mesh.n_points, 12)
             self.assertEqual(report["surface"]["triangles"], 20)
             with np.load(surface) as data:

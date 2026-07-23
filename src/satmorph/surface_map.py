@@ -58,6 +58,8 @@ class SurfaceMapResult:
     center_barycentric: np.ndarray | None = None
     center_inside: np.ndarray | None = None
     center_residual: np.ndarray | None = None
+    point_cell_data: dict[str, np.ndarray] | None = None
+    center_cell_data: dict[str, np.ndarray] | None = None
 
     def summary(self) -> dict[str, object]:
         payload: dict[str, object] = {
@@ -108,6 +110,12 @@ def load_surface(path: str | Path) -> SurfaceMesh:
                 triangles = np.empty((0, 3), dtype=np.int64)
         return SurfaceMesh(points, triangles)
 
+    if path.suffix.lower() == ".vtp":
+        try:
+            return _load_ascii_vtp(path)
+        except (ValueError, KeyError):
+            pass
+
     try:
         import meshio
     except ImportError as exc:
@@ -130,6 +138,26 @@ def load_surface(path: str | Path) -> SurfaceMesh:
     return SurfaceMesh(np.asarray(source.points[:, :3], dtype=float), triangles)
 
 
+def _load_ascii_vtp(path: Path) -> SurfaceMesh:
+    import xml.etree.ElementTree as ET
+
+    root = ET.parse(path).getroot()
+    piece = root.find(".//Piece")
+    if piece is None:
+        raise ValueError("VTP has no Piece element")
+    points_array = piece.find("./Points/DataArray")
+    connectivity = piece.find("./Polys/DataArray[@Name='connectivity']")
+    offsets = piece.find("./Polys/DataArray[@Name='offsets']")
+    if points_array is None or connectivity is None or offsets is None:
+        raise ValueError("VTP is missing points or polygon connectivity")
+    points = np.fromstring(points_array.text or "", sep=" ", dtype=float).reshape(-1, 3)
+    flat = np.fromstring(connectivity.text or "", sep=" ", dtype=np.int64)
+    polygon_offsets = np.fromstring(offsets.text or "", sep=" ", dtype=np.int64)
+    if len(polygon_offsets) and not np.all(np.diff(np.concatenate(([0], polygon_offsets))) == 3):
+        raise ValueError("only triangular ASCII VTP surfaces are supported without meshio")
+    return SurfaceMesh(points, flat.reshape(-1, 3))
+
+
 def save_surface_result(
     path: str | Path,
     surface: SurfaceMesh,
@@ -139,8 +167,7 @@ def save_surface_result(
     path.parent.mkdir(parents=True, exist_ok=True)
     if path.suffix.lower() == ".npz":
         deformed_normals = _compute_point_normals(result.points, surface.triangles)
-        np.savez_compressed(
-            path,
+        payload = dict(
             points=surface.points,
             triangles=surface.triangles,
             deformed_points=result.points,
@@ -181,6 +208,28 @@ def save_surface_result(
                 else result.center_residual
             ),
         )
+        for name, values in (result.point_cell_data or {}).items():
+            payload[f"mapped_{name}"] = values
+        for name, values in (result.center_cell_data or {}).items():
+            payload[f"center_{name}"] = values
+        np.savez_compressed(path, **payload)
+        return
+
+    if path.suffix.lower() == ".vtp":
+        from .surface_ops import save_surface_vtp
+
+        deformed_normals = _compute_point_normals(result.points, surface.triangles)
+        point_data = {
+            "displacement": result.displacement,
+            "displacement_magnitude": np.linalg.norm(result.displacement, axis=1),
+            "mapped_cell": result.cell_index,
+            "inside_tet": result.inside.astype(np.int8),
+            "map_residual": result.residual,
+            "Normals": deformed_normals,
+        }
+        for name, values in (result.point_cell_data or {}).items():
+            point_data[f"mapped_{name}"] = values
+        save_surface_vtp(path, result.points, surface.triangles, point_data)
         return
 
     try:
@@ -197,6 +246,8 @@ def save_surface_result(
         "map_residual": result.residual,
         "Normals": deformed_normals,
     }
+    for name, values in (result.point_cell_data or {}).items():
+        point_data[f"mapped_{name}"] = values
     suffix = path.suffix.lower()
     if suffix in {".stl", ".obj", ".ply"}:
         point_data = {}
@@ -217,6 +268,10 @@ def save_center_result(path: str | Path, result: SurfaceMapResult) -> None:
         center_barycentric=result.center_barycentric,
         center_inside=result.center_inside,
         center_residual=result.center_residual,
+        **{
+            f"center_{name}": values
+            for name, values in (result.center_cell_data or {}).items()
+        },
     )
 
 
@@ -262,7 +317,16 @@ def map_surface(
         center_barycentric=None if center_map is None else center_map.barycentric,
         center_inside=None if center_map is None else center_map.inside,
         center_residual=None if center_map is None else center_map.residual,
+        point_cell_data=_sample_cell_data(mesh, point_map.cell_index),
+        center_cell_data=None if center_map is None else _sample_cell_data(mesh, center_map.cell_index),
     )
+
+
+def _sample_cell_data(mesh: TetMesh, cell_index: np.ndarray) -> dict[str, np.ndarray]:
+    sampled = {"region": mesh.cell_tags[cell_index]}
+    for name, values in mesh.cell_data.items():
+        sampled[name] = np.asarray(values)[cell_index]
+    return sampled
 
 
 @dataclass
