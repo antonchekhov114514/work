@@ -1024,6 +1024,10 @@ src/satmorph/fiber.py             皮肤/肌肉/肌腱方向场
 src/satmorph/metrics.py           腰围、体积、表面距离和 SAT 厚度
 src/satmorph/tissue_surface.py    独立组织 VTP/VTM 提取与批量映射
 src/satmorph/paper_figure.py      统一视角、尺度和色标的论文图
+src/satmorph/material_library.py  73 标签文献力学参数与来源注册表
+src/satmorph/physical_properties.py 标签到密度/电磁参数映射及质量核算
+src/satmorph/remesh.py            标签保持的共形 edge-star 四面体二分
+src/satmorph/adaptive_growth.py   分阶段有限生长、重网格和历史量转移
 src/satmorph/cli.py               命令行入口
 ```
 
@@ -1041,6 +1045,7 @@ tests/test_contact_calibration.py
 tests/test_adaptive_voxel.py
 tests/test_metrics.py
 tests/test_tissue_surface.py
+tests/test_material_remesh_mass.py
 ```
 
 ## 当前最值得继续做的三件事
@@ -1048,3 +1053,130 @@ tests/test_tissue_surface.py
 1. 用 14 万四面体版本正式跑 80%/100%/120% SAT 梯级，生成体积、腰围、Hausdorff、厚度和 Jacobian 对比表。
 2. 用论文或实验数据标定纤维刚度、组织 Young 模量和泊松比，并记录参数来源和不确定性范围。
 3. 将全 Newton 装配和线性求解迁移到 FEniCSx/PETSc，实现真正混合 `u-p` 单元与百万级网格求解。按本轮要求暂不实现刚体骨架约束。
+
+## 文献参数、动态加密、质量与电磁标签
+
+### 1. 生成73标签参数表
+
+项目已经整理出可追溯的准静态力学参数，并可与移交材料中的密度和电磁参数合并：
+
+```bash
+satmorph material-table \
+  --physical-materials "C:/path/to/s4l_materials_unified.json" \
+  --output docs/mechanical-parameters-73.csv \
+  --json-output docs/mechanical-parameters-73.json
+```
+
+现成结果位于 `docs/mechanical-parameters-73.csv/.json`，来源和适用边界见
+`docs/mechanical-parameters-sources.md`。`young_pa` 是当前求解器的准静态有效值；
+`reference_low_pa/reference_high_pa` 是文献量级。骨、牙和肌腱在求解值中有意软化，
+不能把它们当成临床材料参数。
+
+### 2. 给网格重新附着密度和电磁参数
+
+```bash
+satmorph attach-physical-properties \
+  --input outputs/human-adaptive-audit-40-20-10.npz \
+  --materials "C:/path/to/s4l_materials_unified.json" \
+  --output outputs/human-physical.npz \
+  --vtu-output outputs/human-physical.vtu \
+  --report outputs/human-physical.json
+```
+
+程序只通过不可变的 `source_label` 查找材料，生成：
+
+```text
+mass_density_kg_per_m3
+conductivity_s_per_m
+relative_permittivity
+em_frequency_hz
+```
+
+网格加密后可以再次运行该命令。器官标签不会转换，电磁材料会按原标签重新赋值。
+
+### 3. 对已有SAT求解结果增加四面体
+
+```bash
+satmorph refine-result \
+  --input outputs/human-sat-120.npz \
+  --target-label 1 \
+  --max-edges 1000 \
+  --interface-mode propagate \
+  --physical-materials "C:/path/to/s4l_materials_unified.json" \
+  --output outputs/human-sat-120-remeshed.npz \
+  --vtu-output outputs/human-sat-120-remeshed.vtu \
+  --report outputs/human-sat-120-remeshed.json
+```
+
+算法选取SAT单元的最长边，并在该边的整个四面体星域同步二分。这样没有悬挂节点：
+
+- SAT父单元的子单元仍为 `source_label=1`；
+- 界面邻居可能为了共形被同步细分，但继承原器官标签；
+- `material_id`、`mechanical_group_id`、纤维方向和电磁字段均继承父单元；
+- 每种组织的几何体积在二分前后守恒；
+- `material_reference_volume` 作为广延量按子单元保守分配。
+
+`--interface-mode interior-only` 只细分星域全部属于目标组织的内部边，可避免增加器官单元，
+但SAT层很薄时可能找不到足够的内部边。
+
+### 4. 对减脂结果安全减少四面体
+
+```bash
+satmorph coarsen-result \
+  --input outputs/human-sat-080.npz \
+  --target-label 1 \
+  --max-collapses 500 \
+  --max-local-volume-drift 0.01 \
+  --output outputs/human-sat-080-coarsened.npz \
+  --vtu-output outputs/human-sat-080-coarsened.vtu \
+  --report outputs/human-sat-080-coarsened.json
+```
+
+边塌缩必须同时通过端点标签邻域一致、边界类型、四面体 link condition、局部逐标签体积漂移、
+重复单元和正 Jacobian 检查。删除单元的 `material_reference_volume` 只在同标签局部单元中
+保守重分配，`source_label` 永不改写。严格检查可能使很薄或分辨率不足的SAT层没有可接受候选边，
+这属于安全拒绝，不应通过放宽标签检查强行塌缩。
+
+### 5. 分步增长/减脂并自动重网格
+
+```bash
+satmorph solve-remesh \
+  --input outputs/human-physical.npz \
+  --target-label 1 \
+  --bone-tag BONE \
+  --target-growth-volume-ratio 1.20 \
+  --stages 4 \
+  --max-edges-per-stage 1000 \
+  --max-collapses-per-stage 500 \
+  --remesh-mode auto \
+  --interface-mode propagate \
+  --output-dir outputs/human-sat-120-remesh
+```
+
+`--remesh-mode auto` 在增脂时采用共形 edge-star 二分，在减脂时采用标签安全边塌缩，
+目标比为1时只传递状态。单元数量变化只调整离散分辨率；真实增减质量来自 `J_growth` 和密度。
+
+重网格后会保留累计质量生长 `accumulated_growth_J`，并把累计弹性变形梯度存入
+`elastic_history_F`。下一阶段使用
+`F_elastic = F_incremental @ elastic_history_F / growth_lambda_incremental`，
+因此不会再把所有组织当成无应力状态。二分时子单元精确继承父状态；塌缩时在同标签局部区域
+按参考材料体积投影，报告会记录守恒误差。接触乘子和摩擦历史尚不传递，重网格后需要重建接触。
+
+### 6. 体重报告
+
+```bash
+satmorph mass-report \
+  --input outputs/human-sat-120.npz \
+  --materials "C:/path/to/s4l_materials_unified.json" \
+  --length-unit m \
+  --output outputs/human-sat-120-mass.json
+```
+
+报告同时给出：
+
+- `initial_mass_kg`：初始各标签体积乘密度；
+- `growth_accounted_mass_kg`：按 `rho * V_reference * J_growth` 计算的生物增长质量；
+- `geometric_constant_density_mass_kg`：变形后几何体积乘密度，仅用于几何核查。
+
+弹性压缩 `J_elastic` 不应被解释为组织质量消失。对于粗体素网格，体重误差首先受原始标签体积误差影响，
+必须结合 `volume-audit` 使用，不能只看 `mass-report` 的小数位。
