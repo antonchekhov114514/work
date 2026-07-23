@@ -1,0 +1,20 @@
+﻿mesh_domain_tag,mesh_domain,source_labels,mesh_policy,interface_policy,description
+0,BACKGROUND_EXTERNAL,,excluded,body_envelope,outside air/background; not tetrahedralized
+1,SAT,1,protected_growth_domain,protected,subcutaneous adipose tissue; target domain for SAT growth/shrink
+2,SKIN,2,thin_shell_like_solid,protected,outer body boundary; keep separate from SAT for surface mapping
+3,ADIPOSE_OTHER,3,passive_adipose_domain,mergeable_with_soft_organs_only_when_coarse,non-subcutaneous fat; not converted into SAT during morphing
+4,INTERNAL_VOID_LUMEN,5;15;16;25;28;36;38,cavity_placeholder,cavity_wall,air/intestinal/stomach/esophagus lumens; structural placeholder
+5,AIRWAY_WALL,8;11;12;13;14,compressible_airway_lung_domain,protected,"lung, bronchi, trachea and related airway walls"
+6,PASSIVE_MUSCLE,17;18;52,passive_fiber_domain,protected_at_large_interfaces,skeletal/passive muscle-like tissue
+7,HEART_MUSCLE,55,passive_myocardium_domain,protected,myocardium kept separate from skeletal muscle
+8,GENERAL_SOFT_ORGAN,4;6;7;10;21;22;23;26;27;29;30;31;34;35;37;39;40;41;42;43;44;45;61;63,organ_surrogate_domain,protected_for_named_organs,named soft organs; keep source_label for material and visualization
+9,INTERNAL_FLUID_PLACEHOLDER,9;32;53;54,low_shear_placeholder,cavity_or_vessel_wall,"blood, urine, bile and heart lumen placeholders"
+10,CSF,24,low_shear_csf_placeholder,protected,cerebrospinal fluid kept separate from blood-like fluids
+11,EYE_STRUCTURES,47;48;49;51,eye_domain,protected_for_source_labels,"sclera, vitreous, cornea and lens; source labels remain distinct"
+12,NERVE,50,nerve_domain,protected,peripheral nerve separate from CNS parenchyma
+13,CNS_PARENCHYMA,46;56;57;58;59;60;62;64;65;66;67,brain_spinal_tissue_domain,protected,brain and related CNS tissue labels
+14,TOOTH,19,rigid_anchor_like_domain,protected,"tooth, treated as rigid/fixed for whole-body morphing"
+15,CORTICAL_BONE,69,rigid_anchor_like_domain,protected,"cortical bone, usually fixed or near-rigid"
+16,CANCELLOUS_BONE,68,rigid_anchor_like_domain,protected,"cancellous bone, usually fixed or near-rigid"
+17,YELLOW_MARROW,70,fat_like_inside_bone,protected,yellow marrow remains source label 70 and is not SAT
+18,CONNECTIVE_CARTILAGE,20;33;71;72;73,fiber_reinforced_connective_domain,protected,"tendon, ligament, dura, disc, meniscus and cartilage"

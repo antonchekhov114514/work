@@ -1,0 +1,249 @@
+{
+  "schema": "satmorph-mesh-domain-policy-v1",
+  "purpose": "A meshing/interface hierarchy layered above immutable 73-label source_label data and below label-specific material assignment.",
+  "domains": [
+    {
+      "mesh_domain": "BACKGROUND_EXTERNAL",
+      "mesh_domain_tag": 0,
+      "source_labels": [],
+      "mesh_policy": "excluded",
+      "interface_policy": "body_envelope",
+      "description": "outside air/background; not tetrahedralized"
+    },
+    {
+      "mesh_domain": "SAT",
+      "mesh_domain_tag": 1,
+      "source_labels": [
+        1
+      ],
+      "mesh_policy": "protected_growth_domain",
+      "interface_policy": "protected",
+      "description": "subcutaneous adipose tissue; target domain for SAT growth/shrink"
+    },
+    {
+      "mesh_domain": "SKIN",
+      "mesh_domain_tag": 2,
+      "source_labels": [
+        2
+      ],
+      "mesh_policy": "thin_shell_like_solid",
+      "interface_policy": "protected",
+      "description": "outer body boundary; keep separate from SAT for surface mapping"
+    },
+    {
+      "mesh_domain": "ADIPOSE_OTHER",
+      "mesh_domain_tag": 3,
+      "source_labels": [
+        3
+      ],
+      "mesh_policy": "passive_adipose_domain",
+      "interface_policy": "mergeable_with_soft_organs_only_when_coarse",
+      "description": "non-subcutaneous fat; not converted into SAT during morphing"
+    },
+    {
+      "mesh_domain": "INTERNAL_VOID_LUMEN",
+      "mesh_domain_tag": 4,
+      "source_labels": [
+        5,
+        15,
+        16,
+        25,
+        28,
+        36,
+        38
+      ],
+      "mesh_policy": "cavity_placeholder",
+      "interface_policy": "cavity_wall",
+      "description": "air/intestinal/stomach/esophagus lumens; structural placeholder"
+    },
+    {
+      "mesh_domain": "AIRWAY_WALL",
+      "mesh_domain_tag": 5,
+      "source_labels": [
+        8,
+        11,
+        12,
+        13,
+        14
+      ],
+      "mesh_policy": "compressible_airway_lung_domain",
+      "interface_policy": "protected",
+      "description": "lung, bronchi, trachea and related airway walls"
+    },
+    {
+      "mesh_domain": "PASSIVE_MUSCLE",
+      "mesh_domain_tag": 6,
+      "source_labels": [
+        17,
+        18,
+        52
+      ],
+      "mesh_policy": "passive_fiber_domain",
+      "interface_policy": "protected_at_large_interfaces",
+      "description": "skeletal/passive muscle-like tissue"
+    },
+    {
+      "mesh_domain": "HEART_MUSCLE",
+      "mesh_domain_tag": 7,
+      "source_labels": [
+        55
+      ],
+      "mesh_policy": "passive_myocardium_domain",
+      "interface_policy": "protected",
+      "description": "myocardium kept separate from skeletal muscle"
+    },
+    {
+      "mesh_domain": "GENERAL_SOFT_ORGAN",
+      "mesh_domain_tag": 8,
+      "source_labels": [
+        4,
+        6,
+        7,
+        10,
+        21,
+        22,
+        23,
+        26,
+        27,
+        29,
+        30,
+        31,
+        34,
+        35,
+        37,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        61,
+        63
+      ],
+      "mesh_policy": "organ_surrogate_domain",
+      "interface_policy": "protected_for_named_organs",
+      "description": "named soft organs; keep source_label for material and visualization"
+    },
+    {
+      "mesh_domain": "INTERNAL_FLUID_PLACEHOLDER",
+      "mesh_domain_tag": 9,
+      "source_labels": [
+        9,
+        32,
+        53,
+        54
+      ],
+      "mesh_policy": "low_shear_placeholder",
+      "interface_policy": "cavity_or_vessel_wall",
+      "description": "blood, urine, bile and heart lumen placeholders"
+    },
+    {
+      "mesh_domain": "CSF",
+      "mesh_domain_tag": 10,
+      "source_labels": [
+        24
+      ],
+      "mesh_policy": "low_shear_csf_placeholder",
+      "interface_policy": "protected",
+      "description": "cerebrospinal fluid kept separate from blood-like fluids"
+    },
+    {
+      "mesh_domain": "EYE_STRUCTURES",
+      "mesh_domain_tag": 11,
+      "source_labels": [
+        47,
+        48,
+        49,
+        51
+      ],
+      "mesh_policy": "eye_domain",
+      "interface_policy": "protected_for_source_labels",
+      "description": "sclera, vitreous, cornea and lens; source labels remain distinct"
+    },
+    {
+      "mesh_domain": "NERVE",
+      "mesh_domain_tag": 12,
+      "source_labels": [
+        50
+      ],
+      "mesh_policy": "nerve_domain",
+      "interface_policy": "protected",
+      "description": "peripheral nerve separate from CNS parenchyma"
+    },
+    {
+      "mesh_domain": "CNS_PARENCHYMA",
+      "mesh_domain_tag": 13,
+      "source_labels": [
+        46,
+        56,
+        57,
+        58,
+        59,
+        60,
+        62,
+        64,
+        65,
+        66,
+        67
+      ],
+      "mesh_policy": "brain_spinal_tissue_domain",
+      "interface_policy": "protected",
+      "description": "brain and related CNS tissue labels"
+    },
+    {
+      "mesh_domain": "TOOTH",
+      "mesh_domain_tag": 14,
+      "source_labels": [
+        19
+      ],
+      "mesh_policy": "rigid_anchor_like_domain",
+      "interface_policy": "protected",
+      "description": "tooth, treated as rigid/fixed for whole-body morphing"
+    },
+    {
+      "mesh_domain": "CORTICAL_BONE",
+      "mesh_domain_tag": 15,
+      "source_labels": [
+        69
+      ],
+      "mesh_policy": "rigid_anchor_like_domain",
+      "interface_policy": "protected",
+      "description": "cortical bone, usually fixed or near-rigid"
+    },
+    {
+      "mesh_domain": "CANCELLOUS_BONE",
+      "mesh_domain_tag": 16,
+      "source_labels": [
+        68
+      ],
+      "mesh_policy": "rigid_anchor_like_domain",
+      "interface_policy": "protected",
+      "description": "cancellous bone, usually fixed or near-rigid"
+    },
+    {
+      "mesh_domain": "YELLOW_MARROW",
+      "mesh_domain_tag": 17,
+      "source_labels": [
+        70
+      ],
+      "mesh_policy": "fat_like_inside_bone",
+      "interface_policy": "protected",
+      "description": "yellow marrow remains source label 70 and is not SAT"
+    },
+    {
+      "mesh_domain": "CONNECTIVE_CARTILAGE",
+      "mesh_domain_tag": 18,
+      "source_labels": [
+        20,
+        33,
+        71,
+        72,
+        73
+      ],
+      "mesh_policy": "fiber_reinforced_connective_domain",
+      "interface_policy": "protected",
+      "description": "tendon, ligament, dura, disc, meniscus and cartilage"
+    }
+  ]
+}
