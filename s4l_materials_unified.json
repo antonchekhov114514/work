@@ -1,0 +1,4916 @@
+{
+  "schema_version": "1.0.0",
+  "source_scope": {
+    "materials_from": "D:\\gpt proj\\FDFD\\S4L\\before_AutoRun251206.ipynb",
+    "tissue_models_from": "D:\\gpt proj\\FDFD\\S4L\\tissue",
+    "description": "Unified export of S4L material assignments and partial tissue model inventory."
+  },
+  "simulation_metadata": {
+    "source_notebook": "D:\\gpt proj\\FDFD\\S4L\\before_AutoRun251206.ipynb",
+    "simulation_type": "MagnetoQuasiStaticSimulation",
+    "frequency_hz": 316.0,
+    "vector_potential_file": "C:\\\\JTH\\\\S4L model\\\\coil\\\\GZ_new_40mT.txt",
+    "manual_grid_resolution_mm": [
+      10.0,
+      10.0,
+      10.0
+    ],
+    "solver_processes": 5,
+    "material_count": 73,
+    "entity_count_with_material_assignment": 1186
+  },
+  "materials": [
+    {
+      "material_id": "skin",
+      "display_name": "Skin",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Skin",
+      "source_cell_index": 8,
+      "properties": {
+        "mass_density_kg_per_m3": 1109.0,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 0.1482971014492752,
+          "relative_permittivity": 1135.8488261472214
+        },
+        "value_origin": {
+          "mass_density": "fallback_in_notebook",
+          "conductivity": "fallback_in_notebook",
+          "relative_permittivity": "explicit_in_notebook"
+        }
+      },
+      "assignment": {
+        "entity_count": 3,
+        "entities": [
+          "Ear_skin_left",
+          "Ear_skin_right",
+          "Skin"
+        ]
+      }
+    },
+    {
+      "material_id": "fat",
+      "display_name": "Fat",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Fat",
+      "source_cell_index": 10,
+      "properties": {
+        "mass_density_kg_per_m3": 911.0,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 0.07762127305463426,
+          "relative_permittivity": 44970.54684825236
+        },
+        "value_origin": {
+          "mass_density": "fallback_in_notebook",
+          "conductivity": "fallback_in_notebook",
+          "relative_permittivity": "explicit_in_notebook"
+        }
+      },
+      "assignment": {
+        "entity_count": 1,
+        "entities": [
+          "Fat"
+        ]
+      }
+    },
+    {
+      "material_id": "sat_subcutaneous_fat",
+      "display_name": "SAT (Subcutaneous Fat)",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "SAT (Subcutaneous Fat)",
+      "source_cell_index": 12,
+      "properties": {
+        "mass_density_kg_per_m3": 911.0,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 0.07762127305463426,
+          "relative_permittivity": 44970.54684825236
+        },
+        "value_origin": {
+          "mass_density": "fallback_in_notebook",
+          "conductivity": "fallback_in_notebook",
+          "relative_permittivity": "explicit_in_notebook"
+        }
+      },
+      "assignment": {
+        "entity_count": 1,
+        "entities": [
+          "SAT"
+        ]
+      }
+    },
+    {
+      "material_id": "bile",
+      "display_name": "Bile",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Bile",
+      "source_cell_index": 14,
+      "properties": {
+        "mass_density_kg_per_m3": 928.0,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 1.461900144673252,
+          "relative_permittivity": 119.99999980772527
+        },
+        "value_origin": {
+          "mass_density": "fallback_in_notebook",
+          "conductivity": "fallback_in_notebook",
+          "relative_permittivity": "explicit_in_notebook"
+        }
+      },
+      "assignment": {
+        "entity_count": 1,
+        "entities": [
+          "Gallbladder_bile"
+        ]
+      }
+    },
+    {
+      "material_id": "ductus_deferens",
+      "display_name": "Ductus Deferens",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Ductus Deferens",
+      "source_cell_index": 16,
+      "properties": {
+        "mass_density_kg_per_m3": 1101.5,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 0.2319716049382717,
+          "relative_permittivity": 989878.6095836987
+        },
+        "value_origin": {
+          "mass_density": "fallback_in_notebook",
+          "conductivity": "fallback_in_notebook",
+          "relative_permittivity": "explicit_in_notebook"
+        }
+      },
+      "assignment": {
+        "entity_count": 2,
+        "entities": [
+          "Ductus_deferens_left",
+          "Ductus_deferens_right"
+        ]
+      }
+    },
+    {
+      "material_id": "epididymis",
+      "display_name": "Epididymis",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Epididymis",
+      "source_cell_index": 18,
+      "properties": {
+        "mass_density_kg_per_m3": 1082.0,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 0.3660666666666667,
+          "relative_permittivity": 125048.90601597697
+        },
+        "value_origin": {
+          "mass_density": "fallback_in_notebook",
+          "conductivity": "fallback_in_notebook",
+          "relative_permittivity": "explicit_in_notebook"
+        }
+      },
+      "assignment": {
+        "entity_count": 2,
+        "entities": [
+          "Epididymis_left",
+          "Epididymis_right"
+        ]
+      }
+    },
+    {
+      "material_id": "esophagus",
+      "display_name": "Esophagus",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Esophagus",
+      "source_cell_index": 20,
+      "properties": {
+        "mass_density_kg_per_m3": 1040.0,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 0.163535918367347,
+          "relative_permittivity": 122054.34288050572
+        },
+        "value_origin": {
+          "mass_density": "fallback_in_notebook",
+          "conductivity": "fallback_in_notebook",
+          "relative_permittivity": "explicit_in_notebook"
+        }
+      },
+      "assignment": {
+        "entity_count": 1,
+        "entities": [
+          "Esophagus_wall"
+        ]
+      }
+    },
+    {
+      "material_id": "cerebrospinal_fluid",
+      "display_name": "Cerebrospinal Fluid",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Cerebrospinal Fluid",
+      "source_cell_index": 22,
+      "properties": {
+        "mass_density_kg_per_m3": 1007.0,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 1.878999709695023,
+          "relative_permittivity": 108.99999903121135
+        },
+        "value_origin": {
+          "mass_density": "fallback_in_notebook",
+          "conductivity": "fallback_in_notebook",
+          "relative_permittivity": "explicit_in_notebook"
+        }
+      },
+      "assignment": {
+        "entity_count": 1,
+        "entities": [
+          "Cerebrospinal_fluid"
+        ]
+      }
+    },
+    {
+      "material_id": "dura",
+      "display_name": "Dura",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Dura",
+      "source_cell_index": 24,
+      "properties": {
+        "mass_density_kg_per_m3": 1174.0,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 0.06,
+          "relative_permittivity": 9241.53784590718
+        },
+        "value_origin": {
+          "mass_density": "fallback_in_notebook",
+          "conductivity": "fallback_in_notebook",
+          "relative_permittivity": "explicit_in_notebook"
+        }
+      },
+      "assignment": {
+        "entity_count": 1,
+        "entities": [
+          "Dura_mater"
+        ]
+      }
+    },
+    {
+      "material_id": "gallbladder",
+      "display_name": "Gallbladder",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Gallbladder",
+      "source_cell_index": 26,
+      "properties": {
+        "mass_density_kg_per_m3": 1070.5,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 0.3146706388369769,
+          "relative_permittivity": 908.7087289664358
+        },
+        "value_origin": {
+          "mass_density": "fallback_in_notebook",
+          "conductivity": "fallback_in_notebook",
+          "relative_permittivity": "explicit_in_notebook"
+        }
+      },
+      "assignment": {
+        "entity_count": 1,
+        "entities": [
+          "Gallbladder_wall"
+        ]
+      }
+    },
+    {
+      "material_id": "esophagus_lumen",
+      "display_name": "Esophagus Lumen",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Esophagus Lumen",
+      "source_cell_index": 28,
+      "properties": {
+        "mass_density_kg_per_m3": 1.16409,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 0.0,
+          "relative_permittivity": 1.0
+        },
+        "magnetic": {
+          "conductivity_ohm_per_m": 0.0
+        },
+        "value_origin": {
+          "mass_density": "user_supplied_2026-07-14",
+          "conductivity": "user_supplied_2026-07-14",
+          "relative_permittivity": "user_supplied_2026-07-14",
+          "magnetic_conductivity": "user_supplied_2026-07-14"
+        }
+      },
+      "assignment": {
+        "entity_count": 1,
+        "entities": [
+          "Esophagus_lumen"
+        ]
+      }
+    },
+    {
+      "material_id": "diaphragm",
+      "display_name": "Diaphragm",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Diaphragm",
+      "source_cell_index": 30,
+      "properties": {
+        "mass_density_kg_per_m3": 1090.4,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 0.4610075264456888,
+          "relative_permittivity": 1981158.4996976736
+        },
+        "value_origin": {
+          "mass_density": "fallback_in_notebook",
+          "conductivity": "fallback_in_notebook",
+          "relative_permittivity": "explicit_in_notebook"
+        }
+      },
+      "assignment": {
+        "entity_count": 1,
+        "entities": [
+          "Diaphragm"
+        ]
+      }
+    },
+    {
+      "material_id": "urinary_bladder_wall",
+      "display_name": "Urinary Bladder Wall",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Urinary Bladder Wall",
+      "source_cell_index": 32,
+      "properties": {
+        "mass_density_kg_per_m3": 1086.0,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 0.3146706388369769,
+          "relative_permittivity": 90393.84895813862
+        },
+        "value_origin": {
+          "mass_density": "fallback_in_notebook",
+          "conductivity": "fallback_in_notebook",
+          "relative_permittivity": "explicit_in_notebook"
+        }
+      },
+      "assignment": {
+        "entity_count": 1,
+        "entities": [
+          "Bladder_wall"
+        ]
+      }
+    },
+    {
+      "material_id": "bronchi_lumen",
+      "display_name": "Bronchi lumen",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Bronchi lumen",
+      "source_cell_index": 34,
+      "properties": {
+        "mass_density_kg_per_m3": 1.16409,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 0.0,
+          "relative_permittivity": 1.0
+        },
+        "magnetic": {
+          "conductivity_ohm_per_m": 0.0
+        },
+        "value_origin": {
+          "mass_density": "user_supplied_2026-07-14",
+          "conductivity": "user_supplied_2026-07-14",
+          "relative_permittivity": "user_supplied_2026-07-14",
+          "magnetic_conductivity": "user_supplied_2026-07-14"
+        }
+      },
+      "assignment": {
+        "entity_count": 1,
+        "entities": [
+          "Bronchus_lumen"
+        ]
+      }
+    },
+    {
+      "material_id": "bronchi",
+      "display_name": "Bronchi",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Bronchi",
+      "source_cell_index": 36,
+      "properties": {
+        "mass_density_kg_per_m3": 1101.5,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 0.557625,
+          "relative_permittivity": 50316.17995465445
+        },
+        "value_origin": {
+          "mass_density": "fallback_in_notebook",
+          "conductivity": "fallback_in_notebook",
+          "relative_permittivity": "explicit_in_notebook"
+        }
+      },
+      "assignment": {
+        "entity_count": 1,
+        "entities": [
+          "Bronchus_wall"
+        ]
+      }
+    },
+    {
+      "material_id": "kidney_cortex",
+      "display_name": "Kidney (Cortex)",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Kidney (Cortex)",
+      "source_cell_index": 38,
+      "properties": {
+        "mass_density_kg_per_m3": 1049.0,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 0.3415180816449628,
+          "relative_permittivity": 589111.380606015
+        },
+        "value_origin": {
+          "mass_density": "fallback_in_notebook",
+          "conductivity": "fallback_in_notebook",
+          "relative_permittivity": "explicit_in_notebook"
+        }
+      },
+      "assignment": {
+        "entity_count": 2,
+        "entities": [
+          "Kidney_cortex_left",
+          "Kidney_cortex_right"
+        ]
+      }
+    },
+    {
+      "material_id": "lymphnode",
+      "display_name": "Lymphnode",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Lymphnode",
+      "source_cell_index": 40,
+      "properties": {
+        "mass_density_kg_per_m3": 1035.0,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 0.220522377026335,
+          "relative_permittivity": 145.09999799753626
+        },
+        "value_origin": {
+          "mass_density": "fallback_in_notebook",
+          "conductivity": "fallback_in_notebook",
+          "relative_permittivity": "explicit_in_notebook"
+        }
+      },
+      "assignment": {
+        "entity_count": 1,
+        "entities": [
+          "Lymph_node"
+        ]
+      }
+    },
+    {
+      "material_id": "liver",
+      "display_name": "Liver",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Liver",
+      "source_cell_index": 42,
+      "properties": {
+        "mass_density_kg_per_m3": 1078.75,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 0.1850383525287677,
+          "relative_permittivity": 184491.2514920599
+        },
+        "value_origin": {
+          "mass_density": "fallback_in_notebook",
+          "conductivity": "fallback_in_notebook",
+          "relative_permittivity": "explicit_in_notebook"
+        }
+      },
+      "assignment": {
+        "entity_count": 1,
+        "entities": [
+          "Liver"
+        ]
+      }
+    },
+    {
+      "material_id": "mucous_membrane",
+      "display_name": "Mucous Membrane",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Mucous Membrane",
+      "source_cell_index": 44,
+      "properties": {
+        "mass_density_kg_per_m3": 1102.0,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 0.4610075264456888,
+          "relative_permittivity": 1981158.4996976736
+        },
+        "value_origin": {
+          "mass_density": "fallback_in_notebook",
+          "conductivity": "fallback_in_notebook",
+          "relative_permittivity": "explicit_in_notebook"
+        }
+      },
+      "assignment": {
+        "entity_count": 1,
+        "entities": [
+          "Mucosa"
+        ]
+      }
+    },
+    {
+      "material_id": "lung",
+      "display_name": "Lung",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Lung",
+      "source_cell_index": 46,
+      "properties": {
+        "mass_density_kg_per_m3": 394.0,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 0.1014128681927712,
+          "relative_permittivity": 360027.7475656747
+        },
+        "value_origin": {
+          "mass_density": "fallback_in_notebook",
+          "conductivity": "fallback_in_notebook",
+          "relative_permittivity": "explicit_in_notebook"
+        }
+      },
+      "assignment": {
+        "entity_count": 2,
+        "entities": [
+          "Lung_left",
+          "Lung_right"
+        ]
+      }
+    },
+    {
+      "material_id": "larynx",
+      "display_name": "Larynx",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Larynx",
+      "source_cell_index": 48,
+      "properties": {
+        "mass_density_kg_per_m3": 1099.5,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 0.7392595578616339,
+          "relative_permittivity": 109650.9291883721
+        },
+        "value_origin": {
+          "mass_density": "fallback_in_notebook",
+          "conductivity": "fallback_in_notebook",
+          "relative_permittivity": "explicit_in_notebook"
+        }
+      },
+      "assignment": {
+        "entity_count": 1,
+        "entities": [
+          "Larynx"
+        ]
+      }
+    },
+    {
+      "material_id": "large_intestine",
+      "display_name": "Large Intestine",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Large Intestine",
+      "source_cell_index": 50,
+      "properties": {
+        "mass_density_kg_per_m3": 1088.0,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 0.163535918367347,
+          "relative_permittivity": 3722279.852578453
+        },
+        "value_origin": {
+          "mass_density": "fallback_in_notebook",
+          "conductivity": "fallback_in_notebook",
+          "relative_permittivity": "explicit_in_notebook"
+        }
+      },
+      "assignment": {
+        "entity_count": 1,
+        "entities": [
+          "Large_intestine_wall"
+        ]
+      }
+    },
+    {
+      "material_id": "kidney_medulla",
+      "display_name": "Kidney (Medulla)",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Kidney (Medulla)",
+      "source_cell_index": 52,
+      "properties": {
+        "mass_density_kg_per_m3": 1044.0,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 0.3415180816449628,
+          "relative_permittivity": 589111.380606015
+        },
+        "value_origin": {
+          "mass_density": "fallback_in_notebook",
+          "conductivity": "fallback_in_notebook",
+          "relative_permittivity": "explicit_in_notebook"
+        }
+      },
+      "assignment": {
+        "entity_count": 2,
+        "entities": [
+          "Kidney_medulla_left",
+          "Kidney_medulla_right"
+        ]
+      }
+    },
+    {
+      "material_id": "large_intestine_lumen",
+      "display_name": "Large Intestine Lumen",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Large Intestine Lumen",
+      "source_cell_index": 54,
+      "properties": {
+        "mass_density_kg_per_m3": 1045.2,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 0.4610075264456888,
+          "relative_permittivity": 1981158.4996976736
+        },
+        "value_origin": {
+          "mass_density": "fallback_in_notebook",
+          "conductivity": "fallback_in_notebook",
+          "relative_permittivity": "explicit_in_notebook"
+        }
+      },
+      "assignment": {
+        "entity_count": 1,
+        "entities": [
+          "Large_intestine_lumen"
+        ]
+      }
+    },
+    {
+      "material_id": "seminal_vesicle",
+      "display_name": "Seminal vesicle",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Seminal vesicle",
+      "source_cell_index": 56,
+      "properties": {
+        "mass_density_kg_per_m3": 1045.0,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 0.5585997222608695,
+          "relative_permittivity": 125048.90601597697
+        },
+        "value_origin": {
+          "mass_density": "fallback_in_notebook",
+          "conductivity": "fallback_in_notebook",
+          "relative_permittivity": "explicit_in_notebook"
+        }
+      },
+      "assignment": {
+        "entity_count": 2,
+        "entities": [
+          "Seminal_vesicle_left",
+          "Seminal_vesicle_right"
+        ]
+      }
+    },
+    {
+      "material_id": "small_intestine",
+      "display_name": "Small Intestine",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Small Intestine",
+      "source_cell_index": 58,
+      "properties": {
+        "mass_density_kg_per_m3": 1030.0,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 0.163535918367347,
+          "relative_permittivity": 449924.8327966194
+        },
+        "value_origin": {
+          "mass_density": "fallback_in_notebook",
+          "conductivity": "fallback_in_notebook",
+          "relative_permittivity": "explicit_in_notebook"
+        }
+      },
+      "assignment": {
+        "entity_count": 1,
+        "entities": [
+          "Small_intestine_wall"
+        ]
+      }
+    },
+    {
+      "material_id": "small_intestine_lumen",
+      "display_name": "Small Intestine Lumen",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Small Intestine Lumen",
+      "source_cell_index": 60,
+      "properties": {
+        "mass_density_kg_per_m3": 1045.2,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 0.4610075264456888,
+          "relative_permittivity": 1981158.4996976736
+        },
+        "value_origin": {
+          "mass_density": "fallback_in_notebook",
+          "conductivity": "fallback_in_notebook",
+          "relative_permittivity": "explicit_in_notebook"
+        }
+      },
+      "assignment": {
+        "entity_count": 1,
+        "entities": [
+          "Small_intestine_lumen"
+        ]
+      }
+    },
+    {
+      "material_id": "stomach_lumen",
+      "display_name": "Stomach Lumen",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Stomach Lumen",
+      "source_cell_index": 62,
+      "properties": {
+        "mass_density_kg_per_m3": 1045.2,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 0.4610075264456888,
+          "relative_permittivity": 1981158.4996976736
+        },
+        "value_origin": {
+          "mass_density": "fallback_in_notebook",
+          "conductivity": "fallback_in_notebook",
+          "relative_permittivity": "explicit_in_notebook"
+        }
+      },
+      "assignment": {
+        "entity_count": 1,
+        "entities": [
+          "Stomach_lumen"
+        ]
+      }
+    },
+    {
+      "material_id": "penis",
+      "display_name": "Penis",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Penis",
+      "source_cell_index": 64,
+      "properties": {
+        "mass_density_kg_per_m3": 1101.5,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 0.2319716049382717,
+          "relative_permittivity": 989878.6095836987
+        },
+        "value_origin": {
+          "mass_density": "fallback_in_notebook",
+          "conductivity": "fallback_in_notebook",
+          "relative_permittivity": "explicit_in_notebook"
+        }
+      },
+      "assignment": {
+        "entity_count": 1,
+        "entities": [
+          "Penis"
+        ]
+      }
+    },
+    {
+      "material_id": "salivary_gland",
+      "display_name": "Salivary Gland",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Salivary Gland",
+      "source_cell_index": 66,
+      "properties": {
+        "mass_density_kg_per_m3": 1048.0,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 0.5585997222608695,
+          "relative_permittivity": 136.79999728552806
+        },
+        "value_origin": {
+          "mass_density": "fallback_in_notebook",
+          "conductivity": "fallback_in_notebook",
+          "relative_permittivity": "explicit_in_notebook"
+        }
+      },
+      "assignment": {
+        "entity_count": 2,
+        "entities": [
+          "Salivary_gland_left",
+          "Salivary_gland_right"
+        ]
+      }
+    },
+    {
+      "material_id": "prostate",
+      "display_name": "Prostate",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Prostate",
+      "source_cell_index": 68,
+      "properties": {
+        "mass_density_kg_per_m3": 1045.0,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 0.5585997222608695,
+          "relative_permittivity": 125048.90601597697
+        },
+        "value_origin": {
+          "mass_density": "fallback_in_notebook",
+          "conductivity": "fallback_in_notebook",
+          "relative_permittivity": "explicit_in_notebook"
+        }
+      },
+      "assignment": {
+        "entity_count": 1,
+        "entities": [
+          "Prostate"
+        ]
+      }
+    },
+    {
+      "material_id": "pancreas",
+      "display_name": "Pancreas",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Pancreas",
+      "source_cell_index": 70,
+      "properties": {
+        "mass_density_kg_per_m3": 1086.5,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 0.1449350649350649,
+          "relative_permittivity": 122549.18389408203
+        },
+        "value_origin": {
+          "mass_density": "fallback_in_notebook",
+          "conductivity": "fallback_in_notebook",
+          "relative_permittivity": "explicit_in_notebook"
+        }
+      },
+      "assignment": {
+        "entity_count": 1,
+        "entities": [
+          "Pancreas"
+        ]
+      }
+    },
+    {
+      "material_id": "stomach",
+      "display_name": "Stomach",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Stomach",
+      "source_cell_index": 72,
+      "properties": {
+        "mass_density_kg_per_m3": 1088.0,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 0.163535918367347,
+          "relative_permittivity": 122054.34288050572
+        },
+        "value_origin": {
+          "mass_density": "fallback_in_notebook",
+          "conductivity": "fallback_in_notebook",
+          "relative_permittivity": "explicit_in_notebook"
+        }
+      },
+      "assignment": {
+        "entity_count": 1,
+        "entities": [
+          "Stomach_wall"
+        ]
+      }
+    },
+    {
+      "material_id": "spleen",
+      "display_name": "Spleen",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Spleen",
+      "source_cell_index": 74,
+      "properties": {
+        "mass_density_kg_per_m3": 1089.0,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 0.220522377026335,
+          "relative_permittivity": 446872.05822444544
+        },
+        "value_origin": {
+          "mass_density": "fallback_in_notebook",
+          "conductivity": "fallback_in_notebook",
+          "relative_permittivity": "explicit_in_notebook"
+        }
+      },
+      "assignment": {
+        "entity_count": 1,
+        "entities": [
+          "Spleen"
+        ]
+      }
+    },
+    {
+      "material_id": "tongue",
+      "display_name": "Tongue",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Tongue",
+      "source_cell_index": 76,
+      "properties": {
+        "mass_density_kg_per_m3": 1090.4,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 0.4610075264456888,
+          "relative_permittivity": 124044.01716729347
+        },
+        "value_origin": {
+          "mass_density": "fallback_in_notebook",
+          "conductivity": "fallback_in_notebook",
+          "relative_permittivity": "explicit_in_notebook"
+        }
+      },
+      "assignment": {
+        "entity_count": 1,
+        "entities": [
+          "Tongue"
+        ]
+      }
+    },
+    {
+      "material_id": "ureter_urethra",
+      "display_name": "Ureter\\\\Urethra",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Ureter\\\\Urethra",
+      "source_cell_index": 78,
+      "properties": {
+        "mass_density_kg_per_m3": 1101.5,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 0.2319716049382717,
+          "relative_permittivity": 989878.6095836987
+        },
+        "value_origin": {
+          "mass_density": "fallback_in_notebook",
+          "conductivity": "fallback_in_notebook",
+          "relative_permittivity": "explicit_in_notebook"
+        }
+      },
+      "assignment": {
+        "entity_count": 3,
+        "entities": [
+          "Ureter_left",
+          "Ureter_right",
+          "Urethra"
+        ]
+      }
+    },
+    {
+      "material_id": "testis",
+      "display_name": "Testis",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Testis",
+      "source_cell_index": 80,
+      "properties": {
+        "mass_density_kg_per_m3": 1082.0,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 0.3660666666666667,
+          "relative_permittivity": 125048.90601597697
+        },
+        "value_origin": {
+          "mass_density": "fallback_in_notebook",
+          "conductivity": "fallback_in_notebook",
+          "relative_permittivity": "explicit_in_notebook"
+        }
+      },
+      "assignment": {
+        "entity_count": 2,
+        "entities": [
+          "Testis_left",
+          "Testis_right"
+        ]
+      }
+    },
+    {
+      "material_id": "urine",
+      "display_name": "Urine",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Urine",
+      "source_cell_index": 82,
+      "properties": {
+        "mass_density_kg_per_m3": 1023.61320427124,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 2.441203954109114,
+          "relative_permittivity": 96.89999999964526
+        },
+        "value_origin": {
+          "mass_density": "fallback_in_notebook",
+          "conductivity": "fallback_in_notebook",
+          "relative_permittivity": "explicit_in_notebook"
+        }
+      },
+      "assignment": {
+        "entity_count": 1,
+        "entities": [
+          "Urine"
+        ]
+      }
+    },
+    {
+      "material_id": "trachea",
+      "display_name": "Trachea",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Trachea",
+      "source_cell_index": 84,
+      "properties": {
+        "mass_density_kg_per_m3": 1080.0,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 0.3419866666666667,
+          "relative_permittivity": 50316.17995465445
+        },
+        "value_origin": {
+          "mass_density": "fallback_in_notebook",
+          "conductivity": "fallback_in_notebook",
+          "relative_permittivity": "explicit_in_notebook"
+        }
+      },
+      "assignment": {
+        "entity_count": 1,
+        "entities": [
+          "Trachea_wall"
+        ]
+      }
+    },
+    {
+      "material_id": "tendon_ligament",
+      "display_name": "Tendon\\\\Ligament",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Tendon\\\\Ligament",
+      "source_cell_index": 86,
+      "properties": {
+        "mass_density_kg_per_m3": 1142.0,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 0.3675772277227722,
+          "relative_permittivity": 2559543.9836680708
+        },
+        "value_origin": {
+          "mass_density": "fallback_in_notebook",
+          "conductivity": "fallback_in_notebook",
+          "relative_permittivity": "explicit_in_notebook"
+        }
+      },
+      "assignment": {
+        "entity_count": 1,
+        "entities": [
+          "Tendon_ligament"
+        ]
+      }
+    },
+    {
+      "material_id": "trachea_lumen",
+      "display_name": "Trachea Lumen",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Trachea Lumen",
+      "source_cell_index": 88,
+      "properties": {
+        "mass_density_kg_per_m3": 1.16409,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 0.0,
+          "relative_permittivity": 1.0
+        },
+        "magnetic": {
+          "conductivity_ohm_per_m": 0.0
+        },
+        "value_origin": {
+          "mass_density": "user_supplied_2026-07-14",
+          "conductivity": "user_supplied_2026-07-14",
+          "relative_permittivity": "user_supplied_2026-07-14",
+          "magnetic_conductivity": "user_supplied_2026-07-14"
+        }
+      },
+      "assignment": {
+        "entity_count": 1,
+        "entities": [
+          "Trachea_lumen"
+        ]
+      }
+    },
+    {
+      "material_id": "thyroid_gland",
+      "display_name": "Thyroid Gland",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Thyroid Gland",
+      "source_cell_index": 90,
+      "properties": {
+        "mass_density_kg_per_m3": 1050.0,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 0.4811,
+          "relative_permittivity": 122549.18389408203
+        },
+        "value_origin": {
+          "mass_density": "fallback_in_notebook",
+          "conductivity": "fallback_in_notebook",
+          "relative_permittivity": "explicit_in_notebook"
+        }
+      },
+      "assignment": {
+        "entity_count": 1,
+        "entities": [
+          "Thyroid_gland"
+        ]
+      }
+    },
+    {
+      "material_id": "adrenal_gland",
+      "display_name": "Adrenal Gland",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Adrenal Gland",
+      "source_cell_index": 92,
+      "properties": {
+        "mass_density_kg_per_m3": 1027.5,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 0.4811,
+          "relative_permittivity": 103.2999951137234
+        },
+        "value_origin": {
+          "mass_density": "fallback_in_notebook",
+          "conductivity": "fallback_in_notebook",
+          "relative_permittivity": "explicit_in_notebook"
+        }
+      },
+      "assignment": {
+        "entity_count": 2,
+        "entities": [
+          "Adrenal_gland_left",
+          "Adrenal_gland_right"
+        ]
+      }
+    },
+    {
+      "material_id": "air",
+      "display_name": "Air",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Air",
+      "source_cell_index": 94,
+      "properties": {
+        "mass_density_kg_per_m3": 1.205,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 0.0,
+          "relative_permittivity": 1.0
+        },
+        "magnetic": {
+          "conductivity_ohm_per_m": 0.0
+        },
+        "value_origin": {
+          "mass_density": "user_supplied_2026-07-14",
+          "conductivity": "user_supplied_2026-07-14",
+          "relative_permittivity": "user_supplied_2026-07-14",
+          "magnetic_conductivity": "user_supplied_2026-07-14"
+        }
+      },
+      "assignment": {
+        "entity_count": 1,
+        "entities": [
+          "Air_internal"
+        ]
+      }
+    },
+    {
+      "material_id": "tooth",
+      "display_name": "Tooth",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Tooth",
+      "source_cell_index": 96,
+      "properties": {
+        "mass_density_kg_per_m3": 2180.0,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 0.00630199709513435,
+          "relative_permittivity": 4291.018033214009
+        },
+        "value_origin": {
+          "mass_density": "fallback_in_notebook",
+          "conductivity": "fallback_in_notebook",
+          "relative_permittivity": "explicit_in_notebook"
+        }
+      },
+      "assignment": {
+        "entity_count": 1,
+        "entities": [
+          "Tooth"
+        ]
+      }
+    },
+    {
+      "material_id": "cartilage",
+      "display_name": "Cartilage",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Cartilage",
+      "source_cell_index": 98,
+      "properties": {
+        "mass_density_kg_per_m3": 1099.5,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 0.7392595578616339,
+          "relative_permittivity": 109650.9291883721
+        },
+        "value_origin": {
+          "mass_density": "fallback_in_notebook",
+          "conductivity": "fallback_in_notebook",
+          "relative_permittivity": "explicit_in_notebook"
+        }
+      },
+      "assignment": {
+        "entity_count": 3,
+        "entities": [
+          "Cartilage",
+          "Ear_cartilage_left",
+          "Ear_cartilage_right"
+        ]
+      }
+    },
+    {
+      "material_id": "eye_lens",
+      "display_name": "Eye (Lens)",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Eye (Lens)",
+      "source_cell_index": 100,
+      "properties": {
+        "mass_density_kg_per_m3": 1075.5,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 0.3453333333333333,
+          "relative_permittivity": 1117.5008420968768
+        },
+        "value_origin": {
+          "mass_density": "fallback_in_notebook",
+          "conductivity": "fallback_in_notebook",
+          "relative_permittivity": "explicit_in_notebook"
+        }
+      },
+      "assignment": {
+        "entity_count": 2,
+        "entities": [
+          "Eye_lens_left",
+          "Eye_lens_right"
+        ]
+      }
+    },
+    {
+      "material_id": "commissura_anterior",
+      "display_name": "Commissura Anterior",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Commissura Anterior",
+      "source_cell_index": 102,
+      "properties": {
+        "mass_density_kg_per_m3": 1041.0,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 0.3479543931346832,
+          "relative_permittivity": 263797.07939937734
+        },
+        "value_origin": {
+          "mass_density": "fallback_in_notebook",
+          "conductivity": "fallback_in_notebook",
+          "relative_permittivity": "explicit_in_notebook"
+        }
+      },
+      "assignment": {
+        "entity_count": 1,
+        "entities": [
+          "Commissura_anterior"
+        ]
+      }
+    },
+    {
+      "material_id": "eye_sclera",
+      "display_name": "Eye (Sclera)",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Eye (Sclera)",
+      "source_cell_index": 104,
+      "properties": {
+        "mass_density_kg_per_m3": 1032.0,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 0.62,
+          "relative_permittivity": 89026.43742083298
+        },
+        "value_origin": {
+          "mass_density": "fallback_in_notebook",
+          "conductivity": "fallback_in_notebook",
+          "relative_permittivity": "explicit_in_notebook"
+        }
+      },
+      "assignment": {
+        "entity_count": 2,
+        "entities": [
+          "Eye_sclera_left",
+          "Eye_sclera_right"
+        ]
+      }
+    },
+    {
+      "material_id": "heart_lumen",
+      "display_name": "Heart Lumen",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Heart Lumen",
+      "source_cell_index": 106,
+      "properties": {
+        "mass_density_kg_per_m3": 1049.75,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 0.6624597361833767,
+          "relative_permittivity": 5259.509799864509
+        },
+        "value_origin": {
+          "mass_density": "fallback_in_notebook",
+          "conductivity": "fallback_in_notebook",
+          "relative_permittivity": "explicit_in_notebook"
+        }
+      },
+      "assignment": {
+        "entity_count": 4,
+        "entities": [
+          "Heart_atrium_left",
+          "Heart_atrium_right",
+          "Heart_ventricle_left",
+          "Heart_ventricle_right"
+        ]
+      }
+    },
+    {
+      "material_id": "hypophysis",
+      "display_name": "Hypophysis",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Hypophysis",
+      "source_cell_index": 108,
+      "properties": {
+        "mass_density_kg_per_m3": 1053.0,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 1.051624,
+          "relative_permittivity": 122549.18389408203
+        },
+        "value_origin": {
+          "mass_density": "fallback_in_notebook",
+          "conductivity": "fallback_in_notebook",
+          "relative_permittivity": "explicit_in_notebook"
+        }
+      },
+      "assignment": {
+        "entity_count": 1,
+        "entities": [
+          "Hypophysis"
+        ]
+      }
+    },
+    {
+      "material_id": "brain_grey_matter",
+      "display_name": "Brain (Grey Matter)",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Brain (Grey Matter)",
+      "source_cell_index": 110,
+      "properties": {
+        "mass_density_kg_per_m3": 1044.5,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 0.4190548817650446,
+          "relative_permittivity": 573176.1234301236
+        },
+        "value_origin": {
+          "mass_density": "fallback_in_notebook",
+          "conductivity": "fallback_in_notebook",
+          "relative_permittivity": "explicit_in_notebook"
+        }
+      },
+      "assignment": {
+        "entity_count": 56,
+        "entities": [
+          "Caudate_nucleus_left",
+          "Caudate_nucleus_right",
+          "Cerebrum_grey_matter",
+          "Globus_pallidus_left",
+          "Globus_pallidus_right",
+          "Insula_left",
+          "Insula_right",
+          "Putamen_left",
+          "Putamen_right",
+          "Spinal_cord_grey_matter",
+          "Sympathetic_ganglion_eighth_thoracic_left",
+          "Sympathetic_ganglion_eighth_thoracic_right",
+          "Sympathetic_ganglion_eleventh_thoracic_left",
+          "Sympathetic_ganglion_eleventh_thoracic_right",
+          "Sympathetic_ganglion_fifth_sacral_left",
+          "Sympathetic_ganglion_fifth_thoracic_left",
+          "Sympathetic_ganglion_fifth_thoracic_right",
+          "Sympathetic_ganglion_first_lumbar_left",
+          "Sympathetic_ganglion_first_lumbar_right",
+          "Sympathetic_ganglion_first_sacral_left",
+          "Sympathetic_ganglion_first_sacral_right",
+          "Sympathetic_ganglion_fourth_lumbar_left",
+          "Sympathetic_ganglion_fourth_lumbar_right",
+          "Sympathetic_ganglion_fourth_sacral_left",
+          "Sympathetic_ganglion_fourth_sacral_right",
+          "Sympathetic_ganglion_fourth_thoracic_left",
+          "Sympathetic_ganglion_fourth_thoracic_right",
+          "Sympathetic_ganglion_impar",
+          "Sympathetic_ganglion_middle_cervical_left",
+          "Sympathetic_ganglion_middle_cervical_right",
+          "Sympathetic_ganglion_ninth_thoracic_left",
+          "Sympathetic_ganglion_ninth_thoracic_right",
+          "Sympathetic_ganglion_second_lumbar_left",
+          "Sympathetic_ganglion_second_lumbar_right",
+          "Sympathetic_ganglion_second_sacral_left",
+          "Sympathetic_ganglion_second_sacral_right",
+          "Sympathetic_ganglion_second_thoracic_left",
+          "Sympathetic_ganglion_second_thoracic_right",
+          "Sympathetic_ganglion_seventh_thoracic_left",
+          "Sympathetic_ganglion_seventh_thoracic_right",
+          "Sympathetic_ganglion_sixth_thoracic_left",
+          "Sympathetic_ganglion_sixth_thoracic_right",
+          "Sympathetic_ganglion_stellate_left",
+          "Sympathetic_ganglion_stellate_right",
+          "Sympathetic_ganglion_superior_cervical_left",
+          "Sympathetic_ganglion_superior_cervical_right",
+          "Sympathetic_ganglion_tenth_thoracic_left",
+          "Sympathetic_ganglion_tenth_thoracic_right",
+          "Sympathetic_ganglion_third_lumbar_left",
+          "Sympathetic_ganglion_third_lumbar_right",
+          "Sympathetic_ganglion_third_sacral_left",
+          "Sympathetic_ganglion_third_sacral_right",
+          "Sympathetic_ganglion_third_thoracic_left",
+          "Sympathetic_ganglion_third_thoracic_right",
+          "Sympathetic_ganglion_twelfth_thoracic_left",
+          "Sympathetic_ganglion_twelfth_thoracic_right"
+        ]
+      }
+    },
+    {
+      "material_id": "intervertebral_disc",
+      "display_name": "Intervertebral Disc",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Intervertebral Disc",
+      "source_cell_index": 112,
+      "properties": {
+        "mass_density_kg_per_m3": 1099.5,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 0.7392595578616339,
+          "relative_permittivity": 60.985855932729315
+        },
+        "value_origin": {
+          "mass_density": "fallback_in_notebook",
+          "conductivity": "fallback_in_notebook",
+          "relative_permittivity": "explicit_in_notebook"
+        }
+      },
+      "assignment": {
+        "entity_count": 23,
+        "entities": [
+          "Intervertebral_disc_C2_C3",
+          "Intervertebral_disc_C3_C4",
+          "Intervertebral_disc_C4_C5",
+          "Intervertebral_disc_C5_C6",
+          "Intervertebral_disc_C6_C7",
+          "Intervertebral_disc_C7_T1",
+          "Intervertebral_disc_L1_L2",
+          "Intervertebral_disc_L2_L3",
+          "Intervertebral_disc_L3_L4",
+          "Intervertebral_disc_L4_L5",
+          "Intervertebral_disc_L5_sacrum",
+          "Intervertebral_disc_T10_T11",
+          "Intervertebral_disc_T11_T12",
+          "Intervertebral_disc_T12_L1",
+          "Intervertebral_disc_T1_T2",
+          "Intervertebral_disc_T2_T3",
+          "Intervertebral_disc_T3_T4",
+          "Intervertebral_disc_T4_T5",
+          "Intervertebral_disc_T5_T6",
+          "Intervertebral_disc_T6_T7",
+          "Intervertebral_disc_T7_T8",
+          "Intervertebral_disc_T8_T9",
+          "Intervertebral_disc_T9_T10"
+        ]
+      }
+    },
+    {
+      "material_id": "brain_white_matter",
+      "display_name": "Brain (White Matter)",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Brain (White Matter)",
+      "source_cell_index": 114,
+      "properties": {
+        "mass_density_kg_per_m3": 1041.0,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 0.3479543931346832,
+          "relative_permittivity": 263797.07939937734
+        },
+        "value_origin": {
+          "mass_density": "fallback_in_notebook",
+          "conductivity": "fallback_in_notebook",
+          "relative_permittivity": "explicit_in_notebook"
+        }
+      },
+      "assignment": {
+        "entity_count": 3,
+        "entities": [
+          "Cerebrum_white_matter",
+          "Corpus_callosum",
+          "Spinal_cord_white_matter"
+        ]
+      }
+    },
+    {
+      "material_id": "heart_muscle",
+      "display_name": "Heart Muscle",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Heart Muscle",
+      "source_cell_index": 116,
+      "properties": {
+        "mass_density_kg_per_m3": 1080.8,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 0.3853541615486846,
+          "relative_permittivity": 708041.2471143564
+        },
+        "value_origin": {
+          "mass_density": "fallback_in_notebook",
+          "conductivity": "fallback_in_notebook",
+          "relative_permittivity": "explicit_in_notebook"
+        }
+      },
+      "assignment": {
+        "entity_count": 1,
+        "entities": [
+          "Heart_muscle"
+        ]
+      }
+    },
+    {
+      "material_id": "hypothalamus",
+      "display_name": "Hypothalamus",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Hypothalamus",
+      "source_cell_index": 118,
+      "properties": {
+        "mass_density_kg_per_m3": 1044.5,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 0.4190548817650446,
+          "relative_permittivity": 573176.1234301236
+        },
+        "value_origin": {
+          "mass_density": "fallback_in_notebook",
+          "conductivity": "fallback_in_notebook",
+          "relative_permittivity": "explicit_in_notebook"
+        }
+      },
+      "assignment": {
+        "entity_count": 1,
+        "entities": [
+          "Hypothalamus"
+        ]
+      }
+    },
+    {
+      "material_id": "cerebellum",
+      "display_name": "Cerebellum",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Cerebellum",
+      "source_cell_index": 120,
+      "properties": {
+        "mass_density_kg_per_m3": 1045.0,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 0.5766124444444444,
+          "relative_permittivity": 573471.1129522359
+        },
+        "value_origin": {
+          "mass_density": "fallback_in_notebook",
+          "conductivity": "fallback_in_notebook",
+          "relative_permittivity": "explicit_in_notebook"
+        }
+      },
+      "assignment": {
+        "entity_count": 1,
+        "entities": [
+          "Cerebellum"
+        ]
+      }
+    },
+    {
+      "material_id": "eye_cornea",
+      "display_name": "Eye (Cornea)",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Eye (Cornea)",
+      "source_cell_index": 122,
+      "properties": {
+        "mass_density_kg_per_m3": 1061.645540354,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 0.62,
+          "relative_permittivity": 141822.3361056804
+        },
+        "value_origin": {
+          "mass_density": "fallback_in_notebook",
+          "conductivity": "fallback_in_notebook",
+          "relative_permittivity": "explicit_in_notebook"
+        }
+      },
+      "assignment": {
+        "entity_count": 2,
+        "entities": [
+          "Eye_cornea_left",
+          "Eye_cornea_right"
+        ]
+      }
+    },
+    {
+      "material_id": "hippocampus",
+      "display_name": "Hippocampus",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Hippocampus",
+      "source_cell_index": 124,
+      "properties": {
+        "mass_density_kg_per_m3": 1044.5,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 0.4190548817650446,
+          "relative_permittivity": 573176.1234301236
+        },
+        "value_origin": {
+          "mass_density": "fallback_in_notebook",
+          "conductivity": "fallback_in_notebook",
+          "relative_permittivity": "explicit_in_notebook"
+        }
+      },
+      "assignment": {
+        "entity_count": 2,
+        "entities": [
+          "Hippocampus_left",
+          "Hippocampus_right"
+        ]
+      }
+    },
+    {
+      "material_id": "eye_vitreous_humor",
+      "display_name": "Eye (Vitreous Humor)",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Eye (Vitreous Humor)",
+      "source_cell_index": 126,
+      "properties": {
+        "mass_density_kg_per_m3": 1004.5,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 2.164857,
+          "relative_permittivity": 98.99666546273917
+        },
+        "value_origin": {
+          "mass_density": "fallback_in_notebook",
+          "conductivity": "fallback_in_notebook",
+          "relative_permittivity": "explicit_in_notebook"
+        }
+      },
+      "assignment": {
+        "entity_count": 2,
+        "entities": [
+          "Eye_vitreous_humor_left",
+          "Eye_vitreous_humor_right"
+        ]
+      }
+    },
+    {
+      "material_id": "commissura_posterior",
+      "display_name": "Commissura Posterior",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Commissura Posterior",
+      "source_cell_index": 128,
+      "properties": {
+        "mass_density_kg_per_m3": 1041.0,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 0.3479543931346832,
+          "relative_permittivity": 263797.07939937734
+        },
+        "value_origin": {
+          "mass_density": "fallback_in_notebook",
+          "conductivity": "fallback_in_notebook",
+          "relative_permittivity": "explicit_in_notebook"
+        }
+      },
+      "assignment": {
+        "entity_count": 1,
+        "entities": [
+          "Commissura_posterior"
+        ]
+      }
+    },
+    {
+      "material_id": "blood",
+      "display_name": "Blood",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Blood",
+      "source_cell_index": 130,
+      "properties": {
+        "mass_density_kg_per_m3": 1049.75,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 0.6624597361833767,
+          "relative_permittivity": 5259.509799864509
+        },
+        "value_origin": {
+          "mass_density": "fallback_in_notebook",
+          "conductivity": "fallback_in_notebook",
+          "relative_permittivity": "explicit_in_notebook"
+        }
+      },
+      "assignment": {
+        "entity_count": 197,
+        "entities": [
+          "Aorta_arch",
+          "Aorta_ascending",
+          "Aorta_descending",
+          "Artery_anterior_cerebral_left",
+          "Artery_anterior_cerebral_right",
+          "Artery_anterior_interventricular",
+          "Artery_anterior_tibial_left",
+          "Artery_anterior_tibial_right",
+          "Artery_atrioventricular_nodal",
+          "Artery_axillary_left",
+          "Artery_axillary_right",
+          "Artery_basilar",
+          "Artery_brachial_left",
+          "Artery_brachial_right",
+          "Artery_brachiocephalic",
+          "Artery_celiac",
+          "Artery_circumflex",
+          "Artery_common_carotid_left",
+          "Artery_common_carotid_right",
+          "Artery_common_hepatic",
+          "Artery_common_iliac_left",
+          "Artery_common_iliac_right",
+          "Artery_coronary_left",
+          "Artery_coronary_right",
+          "Artery_deep_brachial_left",
+          "Artery_deep_brachial_right",
+          "Artery_deep_femoral_left",
+          "Artery_deep_femoral_right",
+          "Artery_external_carotid_left",
+          "Artery_external_carotid_right",
+          "Artery_external_iliac_left",
+          "Artery_external_iliac_right",
+          "Artery_facial_left",
+          "Artery_facial_right",
+          "Artery_femoral_left",
+          "Artery_femoral_right",
+          "Artery_gastric_left",
+          "Artery_gastroduodenal",
+          "Artery_inferior_gluteal_left",
+          "Artery_inferior_gluteal_right",
+          "Artery_inferior_mesenteric",
+          "Artery_inferior_vesical_left",
+          "Artery_inferior_vesical_right",
+          "Artery_internal_carotid_left",
+          "Artery_internal_carotid_right",
+          "Artery_internal_iliac_left",
+          "Artery_internal_iliac_right",
+          "Artery_internal_pudendal_left",
+          "Artery_internal_pudendal_right",
+          "Artery_internal_thoracic_left",
+          "Artery_internal_thoracic_right",
+          "Artery_lingual_left",
+          "Artery_lingual_right",
+          "Artery_main_pulmonary",
+          "Artery_marginal_left",
+          "Artery_maxillary_left",
+          "Artery_maxillary_right",
+          "Artery_obturator_left",
+          "Artery_obturator_right",
+          "Artery_peroneal_left",
+          "Artery_peroneal_right",
+          "Artery_popliteal_left",
+          "Artery_popliteal_right",
+          "Artery_posterior_cerebral_left",
+          "Artery_posterior_cerebral_right",
+          "Artery_posterior_interventricular",
+          "Artery_posterior_tibial_left",
+          "Artery_posterior_tibial_right",
+          "Artery_proper_hepatic",
+          "Artery_pulmonary_left",
+          "Artery_pulmonary_right",
+          "Artery_radial_left",
+          "Artery_radial_right",
+          "Artery_renal_left",
+          "Artery_renal_right",
+          "Artery_splenic",
+          "Artery_subclavian_left",
+          "Artery_subclavian_right",
+          "Artery_superficial_temporal_left",
+          "Artery_superficial_temporal_right",
+          "Artery_superior_gluteal_left",
+          "Artery_superior_gluteal_right",
+          "Artery_superior_mesenteric",
+          "Artery_superior_thyroid_left",
+          "Artery_superior_thyroid_right",
+          "Artery_ulnar_left",
+          "Artery_ulnar_right",
+          "Artery_vertebral_left",
+          "Artery_vertebral_right",
+          "Vein_accessory_hemi_azygos",
+          "Vein_anterior_tibial_left",
+          "Vein_anterior_tibial_right",
+          "Vein_ascending_lumbar_left",
+          "Vein_ascending_lumbar_right",
+          "Vein_axillary_left",
+          "Vein_axillary_right",
+          "Vein_azygos",
+          "Vein_basilic_left",
+          "Vein_basilic_right",
+          "Vein_brachial_left",
+          "Vein_brachial_right",
+          "Vein_brachiocephalic",
+          "Vein_cephalic_left",
+          "Vein_cephalic_right",
+          "Vein_common_iliac",
+          "Vein_confluence_of_sinuses",
+          "Vein_coronary_sinus",
+          "Vein_deep_cervical_left",
+          "Vein_deep_cervical_right",
+          "Vein_deep_femoral_left",
+          "Vein_deep_femoral_right",
+          "Vein_external_iliac_left",
+          "Vein_external_iliac_right",
+          "Vein_external_jugular_left",
+          "Vein_external_jugular_right",
+          "Vein_femoral_left",
+          "Vein_femoral_right",
+          "Vein_gastrocnemius_left",
+          "Vein_gastrocnemius_right",
+          "Vein_genicular_left",
+          "Vein_genicular_right",
+          "Vein_gonadal_left",
+          "Vein_gonadal_right",
+          "Vein_great_cardiac",
+          "Vein_great_saphenous_left",
+          "Vein_great_saphenous_right",
+          "Vein_hemi_azygos",
+          "Vein_hepatic_left",
+          "Vein_hepatic_right",
+          "Vein_inferior_mesenteric",
+          "Vein_inferior_pulmonary_left",
+          "Vein_inferior_pulmonary_right",
+          "Vein_inferior_sagittal",
+          "Vein_inferior_thyroid",
+          "Vein_internal_iliac_left",
+          "Vein_internal_iliac_right",
+          "Vein_internal_jugular_left",
+          "Vein_internal_jugular_right",
+          "Vein_long_thoracic_left",
+          "Vein_long_thoracic_right",
+          "Vein_median_cubital_left",
+          "Vein_median_cubital_right",
+          "Vein_middle_cardiac",
+          "Vein_middle_hepatic",
+          "Vein_pericardiacophrenic_left",
+          "Vein_pericardiacophrenic_right",
+          "Vein_peroneal_left",
+          "Vein_peroneal_right",
+          "Vein_plexus_uro-genital",
+          "Vein_popliteal_left",
+          "Vein_popliteal_right",
+          "Vein_portal",
+          "Vein_posterior_external_jugular_left",
+          "Vein_posterior_external_jugular_right",
+          "Vein_posterior_tibial_left",
+          "Vein_posterior_tibial_right",
+          "Vein_radial_left",
+          "Vein_radial_right",
+          "Vein_renal_left",
+          "Vein_renal_right",
+          "Vein_sigmoid_sinus_left",
+          "Vein_sigmoid_sinus_right",
+          "Vein_small_cardiac",
+          "Vein_small_saphenous_left",
+          "Vein_small_saphenous_right",
+          "Vein_soleal_left",
+          "Vein_soleal_right",
+          "Vein_splenic",
+          "Vein_straight_sinus",
+          "Vein_subclavian_left",
+          "Vein_subclavian_right",
+          "Vein_superficial_arm_hand_left",
+          "Vein_superficial_arm_hand_right",
+          "Vein_superficial_epigastric_left",
+          "Vein_superficial_epigastric_right",
+          "Vein_superficial_head_neck",
+          "Vein_superficial_leg_foot_left",
+          "Vein_superficial_leg_foot_right",
+          "Vein_superficial_torso_abdomen",
+          "Vein_superior_mesenteric",
+          "Vein_superior_pulmonary_left",
+          "Vein_superior_pulmonary_right",
+          "Vein_superior_sagittal",
+          "Vein_suprascapular_left",
+          "Vein_suprascapular_right",
+          "Vein_thoracoepigastric_left",
+          "Vein_thoracoepigastric_right",
+          "Vein_transverse_cervical_left",
+          "Vein_transverse_cervical_right",
+          "Vein_transverse_sinus_left",
+          "Vein_transverse_sinus_right",
+          "Vein_ulnar_left",
+          "Vein_ulnar_right",
+          "Vein_vertebral_left",
+          "Vein_vertebral_right",
+          "Vena_cava_inferior",
+          "Vena_cava_superior"
+        ]
+      }
+    },
+    {
+      "material_id": "nerve",
+      "display_name": "Nerve",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Nerve",
+      "source_cell_index": 132,
+      "properties": {
+        "mass_density_kg_per_m3": 1075.0,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 0.3479543931346832,
+          "relative_permittivity": 108975.27931602212
+        },
+        "value_origin": {
+          "mass_density": "fallback_in_notebook",
+          "conductivity": "fallback_in_notebook",
+          "relative_permittivity": "explicit_in_notebook"
+        }
+      },
+      "assignment": {
+        "entity_count": 240,
+        "entities": [
+          "Brachial_plexus_left",
+          "Brachial_plexus_right",
+          "Nerve_axillary_left",
+          "Nerve_axillary_right",
+          "Nerve_common_fibular_left",
+          "Nerve_common_fibular_right",
+          "Nerve_cranial_I_olfactory",
+          "Nerve_cranial_II_optic",
+          "Nerve_cranial_III_oculomotor_left",
+          "Nerve_cranial_III_oculomotor_right",
+          "Nerve_cranial_IV_trochlear_left",
+          "Nerve_cranial_IV_trochlear_right",
+          "Nerve_cranial_IX_glossopharyngeal_left",
+          "Nerve_cranial_IX_glossopharyngeal_right",
+          "Nerve_cranial_V_trigeminal_left",
+          "Nerve_cranial_V_trigeminal_right",
+          "Nerve_cranial_VI_abducent_left",
+          "Nerve_cranial_VI_abducent_right",
+          "Nerve_cranial_VII_facial_left",
+          "Nerve_cranial_VII_facial_right",
+          "Nerve_cranial_VIII_vestibulocochlear_left",
+          "Nerve_cranial_VIII_vestibulocochlear_right",
+          "Nerve_cranial_X_vagus_left",
+          "Nerve_cranial_X_vagus_right",
+          "Nerve_cranial_XI_accessory_left",
+          "Nerve_cranial_XI_accessory_right",
+          "Nerve_cranial_XII_hypoglossal_left",
+          "Nerve_cranial_XII_hypoglossal_right",
+          "Nerve_deep_fibular_left",
+          "Nerve_deep_fibular_right",
+          "Nerve_dorsal_root_C1_left",
+          "Nerve_dorsal_root_C1_right",
+          "Nerve_dorsal_root_C2_left",
+          "Nerve_dorsal_root_C2_right",
+          "Nerve_dorsal_root_C3_left",
+          "Nerve_dorsal_root_C3_right",
+          "Nerve_dorsal_root_C4_left",
+          "Nerve_dorsal_root_C4_right",
+          "Nerve_dorsal_root_C5_left",
+          "Nerve_dorsal_root_C5_right",
+          "Nerve_dorsal_root_C6_left",
+          "Nerve_dorsal_root_C6_right",
+          "Nerve_dorsal_root_C7_left",
+          "Nerve_dorsal_root_C7_right",
+          "Nerve_dorsal_root_C8_left",
+          "Nerve_dorsal_root_C8_right",
+          "Nerve_dorsal_root_L1_left",
+          "Nerve_dorsal_root_L1_right",
+          "Nerve_dorsal_root_L2_left",
+          "Nerve_dorsal_root_L2_right",
+          "Nerve_dorsal_root_T10_left",
+          "Nerve_dorsal_root_T10_right",
+          "Nerve_dorsal_root_T11_left",
+          "Nerve_dorsal_root_T11_right",
+          "Nerve_dorsal_root_T12_left",
+          "Nerve_dorsal_root_T12_right",
+          "Nerve_dorsal_root_T1_left",
+          "Nerve_dorsal_root_T1_right",
+          "Nerve_dorsal_root_T2_left",
+          "Nerve_dorsal_root_T2_right",
+          "Nerve_dorsal_root_T3_left",
+          "Nerve_dorsal_root_T3_right",
+          "Nerve_dorsal_root_T4_left",
+          "Nerve_dorsal_root_T4_right",
+          "Nerve_dorsal_root_T5_left",
+          "Nerve_dorsal_root_T5_right",
+          "Nerve_dorsal_root_T6_left",
+          "Nerve_dorsal_root_T6_right",
+          "Nerve_dorsal_root_T7_left",
+          "Nerve_dorsal_root_T7_right",
+          "Nerve_dorsal_root_T8_left",
+          "Nerve_dorsal_root_T8_right",
+          "Nerve_dorsal_root_T9_left",
+          "Nerve_dorsal_root_T9_right",
+          "Nerve_femoral_left",
+          "Nerve_femoral_right",
+          "Nerve_inferior_gluteal_left",
+          "Nerve_inferior_gluteal_right",
+          "Nerve_inferior_rectal_left",
+          "Nerve_inferior_rectal_right",
+          "Nerve_intermediate_femoral_cutaneous_left",
+          "Nerve_intermediate_femoral_cutaneous_right",
+          "Nerve_lateral_femoral_cutaneous_left",
+          "Nerve_lateral_femoral_cutaneous_right",
+          "Nerve_medial_arm_cutaneous_left",
+          "Nerve_medial_arm_cutaneous_right",
+          "Nerve_medial_femoral_cutaneous_left",
+          "Nerve_medial_femoral_cutaneous_right",
+          "Nerve_median_left",
+          "Nerve_median_right",
+          "Nerve_muscolocutaneous_left",
+          "Nerve_muscolocutaneous_right",
+          "Nerve_obturator_left",
+          "Nerve_obturator_right",
+          "Nerve_perineal_left",
+          "Nerve_perineal_right",
+          "Nerve_phrenic_left",
+          "Nerve_phrenic_right",
+          "Nerve_posterior_femoral_cutaneous_left",
+          "Nerve_posterior_femoral_cutaneous_right",
+          "Nerve_pudendal_left",
+          "Nerve_pudendal_right",
+          "Nerve_radial_left",
+          "Nerve_radial_right",
+          "Nerve_root_L3_left",
+          "Nerve_root_L3_right",
+          "Nerve_root_L4_left",
+          "Nerve_root_L4_right",
+          "Nerve_root_L5_left",
+          "Nerve_root_L5_right",
+          "Nerve_root_S1_left",
+          "Nerve_root_S1_right",
+          "Nerve_root_S2_left",
+          "Nerve_root_S2_right",
+          "Nerve_root_S3_left",
+          "Nerve_root_S3_right",
+          "Nerve_root_S4_left",
+          "Nerve_root_S4_right",
+          "Nerve_saphenous_left",
+          "Nerve_saphenous_right",
+          "Nerve_sciatic_left",
+          "Nerve_sciatic_right",
+          "Nerve_spinal_C1_left",
+          "Nerve_spinal_C1_right",
+          "Nerve_spinal_C2_left",
+          "Nerve_spinal_C2_right",
+          "Nerve_spinal_C3_left",
+          "Nerve_spinal_C3_right",
+          "Nerve_spinal_C4_left",
+          "Nerve_spinal_C4_right",
+          "Nerve_spinal_C5_left",
+          "Nerve_spinal_C5_right",
+          "Nerve_spinal_C6_left",
+          "Nerve_spinal_C6_right",
+          "Nerve_spinal_C7_left",
+          "Nerve_spinal_C7_right",
+          "Nerve_spinal_C8_left",
+          "Nerve_spinal_C8_right",
+          "Nerve_spinal_L1_left",
+          "Nerve_spinal_L1_right",
+          "Nerve_spinal_L2_left",
+          "Nerve_spinal_L2_right",
+          "Nerve_spinal_L3_left",
+          "Nerve_spinal_L3_right",
+          "Nerve_spinal_L4_left",
+          "Nerve_spinal_L4_right",
+          "Nerve_spinal_L5_left",
+          "Nerve_spinal_L5_right",
+          "Nerve_spinal_S1_left",
+          "Nerve_spinal_S1_right",
+          "Nerve_spinal_S2_left",
+          "Nerve_spinal_S2_right",
+          "Nerve_spinal_S3_left",
+          "Nerve_spinal_S3_right",
+          "Nerve_spinal_S4_left",
+          "Nerve_spinal_S4_right",
+          "Nerve_spinal_T10_left",
+          "Nerve_spinal_T10_right",
+          "Nerve_spinal_T11_left",
+          "Nerve_spinal_T11_right",
+          "Nerve_spinal_T12_left",
+          "Nerve_spinal_T12_right",
+          "Nerve_spinal_T1_left",
+          "Nerve_spinal_T1_right",
+          "Nerve_spinal_T2_left",
+          "Nerve_spinal_T2_right",
+          "Nerve_spinal_T3_left",
+          "Nerve_spinal_T3_right",
+          "Nerve_spinal_T4_left",
+          "Nerve_spinal_T4_right",
+          "Nerve_spinal_T5_left",
+          "Nerve_spinal_T5_right",
+          "Nerve_spinal_T6_left",
+          "Nerve_spinal_T6_right",
+          "Nerve_spinal_T7_left",
+          "Nerve_spinal_T7_right",
+          "Nerve_spinal_T8_left",
+          "Nerve_spinal_T8_right",
+          "Nerve_spinal_T9_left",
+          "Nerve_spinal_T9_right",
+          "Nerve_superficial_fibular_left",
+          "Nerve_superficial_fibular_right",
+          "Nerve_superior_gluteal_left",
+          "Nerve_superior_gluteal_right",
+          "Nerve_suprascapular_left",
+          "Nerve_suprascapular_right",
+          "Nerve_thoracodorsal_left",
+          "Nerve_thoracodorsal_right",
+          "Nerve_tibial_left",
+          "Nerve_tibial_right",
+          "Nerve_ulnar_left",
+          "Nerve_ulnar_right",
+          "Nerve_ventral_root_C1_left",
+          "Nerve_ventral_root_C1_right",
+          "Nerve_ventral_root_C2_left",
+          "Nerve_ventral_root_C2_right",
+          "Nerve_ventral_root_C3_left",
+          "Nerve_ventral_root_C3_right",
+          "Nerve_ventral_root_C4_left",
+          "Nerve_ventral_root_C4_right",
+          "Nerve_ventral_root_C5_left",
+          "Nerve_ventral_root_C5_right",
+          "Nerve_ventral_root_C6_left",
+          "Nerve_ventral_root_C6_right",
+          "Nerve_ventral_root_C7_left",
+          "Nerve_ventral_root_C7_right",
+          "Nerve_ventral_root_C8_left",
+          "Nerve_ventral_root_C8_right",
+          "Nerve_ventral_root_L1_left",
+          "Nerve_ventral_root_L1_right",
+          "Nerve_ventral_root_L2_left",
+          "Nerve_ventral_root_L2_right",
+          "Nerve_ventral_root_T10_left",
+          "Nerve_ventral_root_T10_right",
+          "Nerve_ventral_root_T11_left",
+          "Nerve_ventral_root_T11_right",
+          "Nerve_ventral_root_T12_left",
+          "Nerve_ventral_root_T12_right",
+          "Nerve_ventral_root_T1_left",
+          "Nerve_ventral_root_T1_right",
+          "Nerve_ventral_root_T2_left",
+          "Nerve_ventral_root_T2_right",
+          "Nerve_ventral_root_T3_left",
+          "Nerve_ventral_root_T3_right",
+          "Nerve_ventral_root_T4_left",
+          "Nerve_ventral_root_T4_right",
+          "Nerve_ventral_root_T5_left",
+          "Nerve_ventral_root_T5_right",
+          "Nerve_ventral_root_T6_left",
+          "Nerve_ventral_root_T6_right",
+          "Nerve_ventral_root_T7_left",
+          "Nerve_ventral_root_T7_right",
+          "Nerve_ventral_root_T8_left",
+          "Nerve_ventral_root_T8_right",
+          "Nerve_ventral_root_T9_left",
+          "Nerve_ventral_root_T9_right",
+          "Ramus_communicans_left",
+          "Ramus_communicans_right",
+          "Sympathetic_trunk_left",
+          "Sympathetic_trunk_right"
+        ]
+      }
+    },
+    {
+      "material_id": "medulla_oblongata",
+      "display_name": "Medulla Oblongata",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Medulla Oblongata",
+      "source_cell_index": 134,
+      "properties": {
+        "mass_density_kg_per_m3": 1045.5,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 0.357,
+          "relative_permittivity": 573471.1129522359
+        },
+        "value_origin": {
+          "mass_density": "fallback_in_notebook",
+          "conductivity": "fallback_in_notebook",
+          "relative_permittivity": "explicit_in_notebook"
+        }
+      },
+      "assignment": {
+        "entity_count": 1,
+        "entities": [
+          "Medulla_oblongata"
+        ]
+      }
+    },
+    {
+      "material_id": "muscle",
+      "display_name": "Muscle",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Muscle",
+      "source_cell_index": 136,
+      "properties": {
+        "mass_density_kg_per_m3": 1090.4,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 0.4610075264456888,
+          "relative_permittivity": 1981158.4996976736
+        },
+        "value_origin": {
+          "mass_density": "fallback_in_notebook",
+          "conductivity": "fallback_in_notebook",
+          "relative_permittivity": "explicit_in_notebook"
+        }
+      },
+      "assignment": {
+        "entity_count": 334,
+        "entities": [
+          "Muscle_abductor_digiti_minimi_foot_left",
+          "Muscle_abductor_digiti_minimi_foot_right",
+          "Muscle_abductor_digiti_minimi_left",
+          "Muscle_abductor_digiti_minimi_right",
+          "Muscle_abductor_hallucis_left",
+          "Muscle_abductor_hallucis_right",
+          "Muscle_abductor_pollicis_brevis_left",
+          "Muscle_abductor_pollicis_brevis_right",
+          "Muscle_abductor_pollicis_longus_left",
+          "Muscle_abductor_pollicis_longus_right",
+          "Muscle_adductor_brevis_left",
+          "Muscle_adductor_brevis_right",
+          "Muscle_adductor_hallucis_oblique_head_left",
+          "Muscle_adductor_hallucis_oblique_head_right",
+          "Muscle_adductor_hallucis_transverse_head_left",
+          "Muscle_adductor_hallucis_transverse_head_right",
+          "Muscle_adductor_longus_left",
+          "Muscle_adductor_longus_right",
+          "Muscle_adductor_magnus_left",
+          "Muscle_adductor_magnus_right",
+          "Muscle_adductor_pollicis_left",
+          "Muscle_adductor_pollicis_right",
+          "Muscle_anconeus_left",
+          "Muscle_anconeus_right",
+          "Muscle_anterior_rectus_capitis_left",
+          "Muscle_anterior_rectus_capitis_right",
+          "Muscle_anterior_scalenus_left",
+          "Muscle_anterior_scalenus_right",
+          "Muscle_anterior_serratus_left",
+          "Muscle_anterior_serratus_right",
+          "Muscle_anterior_tibialis_left",
+          "Muscle_anterior_tibialis_right",
+          "Muscle_biceps_brachii_left",
+          "Muscle_biceps_brachii_right",
+          "Muscle_biceps_femoris_left",
+          "Muscle_biceps_femoris_right",
+          "Muscle_brachialis_left",
+          "Muscle_brachialis_right",
+          "Muscle_brachioradialis_left",
+          "Muscle_brachioradialis_right",
+          "Muscle_buccinator_left",
+          "Muscle_buccinator_right",
+          "Muscle_bulbospongiosus",
+          "Muscle_coccygeus_left",
+          "Muscle_coccygeus_right",
+          "Muscle_constrictor",
+          "Muscle_coracobrachialis_left",
+          "Muscle_coracobrachialis_right",
+          "Muscle_cricothyroid_left",
+          "Muscle_cricothyroid_right",
+          "Muscle_deep_transverse_perineal",
+          "Muscle_deltoid_left",
+          "Muscle_deltoid_right",
+          "Muscle_depressor_anguli_oris_left",
+          "Muscle_depressor_anguli_oris_right",
+          "Muscle_digastric_left",
+          "Muscle_digastric_right",
+          "Muscle_dorsal_interosseous_left",
+          "Muscle_dorsal_interosseous_right",
+          "Muscle_erector_spinae_left",
+          "Muscle_erector_spinae_right",
+          "Muscle_extensor_carpi_radialis_brevis_left",
+          "Muscle_extensor_carpi_radialis_brevis_right",
+          "Muscle_extensor_carpi_radialis_longus_left",
+          "Muscle_extensor_carpi_radialis_longus_right",
+          "Muscle_extensor_carpi_ulnaris_left",
+          "Muscle_extensor_carpi_ulnaris_right",
+          "Muscle_extensor_digiti_minimi_left",
+          "Muscle_extensor_digiti_minimi_right",
+          "Muscle_extensor_digitorum_brevis_left",
+          "Muscle_extensor_digitorum_brevis_right",
+          "Muscle_extensor_digitorum_left",
+          "Muscle_extensor_digitorum_longus_left",
+          "Muscle_extensor_digitorum_longus_right",
+          "Muscle_extensor_digitorum_right",
+          "Muscle_extensor_hallucis_longus_left",
+          "Muscle_extensor_hallucis_longus_right",
+          "Muscle_extensor_indicis_left",
+          "Muscle_extensor_indicis_right",
+          "Muscle_extensor_pollicis_brevis_left",
+          "Muscle_extensor_pollicis_brevis_right",
+          "Muscle_extensor_pollicis_longus_left",
+          "Muscle_extensor_pollicis_longus_right",
+          "Muscle_external_anal_sphincter",
+          "Muscle_external_oblique_abdominal_left",
+          "Muscle_external_oblique_abdominal_right",
+          "Muscle_external_urethral_sphincter",
+          "Muscle_fibularis_brevis_left",
+          "Muscle_fibularis_brevis_right",
+          "Muscle_fibularis_longus_left",
+          "Muscle_fibularis_longus_right",
+          "Muscle_flexor_carpi_radialis_left",
+          "Muscle_flexor_carpi_radialis_right",
+          "Muscle_flexor_carpi_ulnaris_left",
+          "Muscle_flexor_carpi_ulnaris_right",
+          "Muscle_flexor_digiti_minimi_brevis_foot_left",
+          "Muscle_flexor_digiti_minimi_brevis_foot_right",
+          "Muscle_flexor_digiti_minimi_left",
+          "Muscle_flexor_digiti_minimi_right",
+          "Muscle_flexor_digitorum_brevi_left",
+          "Muscle_flexor_digitorum_brevi_right",
+          "Muscle_flexor_digitorum_longus_left",
+          "Muscle_flexor_digitorum_longus_right",
+          "Muscle_flexor_digitorum_profundus_left",
+          "Muscle_flexor_digitorum_profundus_right",
+          "Muscle_flexor_digitorum_superficialis_left",
+          "Muscle_flexor_digitorum_superficialis_right",
+          "Muscle_flexor_hallucis_brevis_left",
+          "Muscle_flexor_hallucis_brevis_right",
+          "Muscle_flexor_hallucis_longus_left",
+          "Muscle_flexor_hallucis_longus_right",
+          "Muscle_flexor_pollicis_brevis_left",
+          "Muscle_flexor_pollicis_brevis_right",
+          "Muscle_flexor_pollicis_longus_left",
+          "Muscle_flexor_pollicis_longus_right",
+          "Muscle_gastrocnemius_left",
+          "Muscle_gastrocnemius_right",
+          "Muscle_genioglossus_left",
+          "Muscle_genioglossus_right",
+          "Muscle_geniohyoid_left",
+          "Muscle_geniohyoid_right",
+          "Muscle_gluteus_maximus_left",
+          "Muscle_gluteus_maximus_right",
+          "Muscle_gluteus_medius_left",
+          "Muscle_gluteus_medius_right",
+          "Muscle_gluteus_minimus_left",
+          "Muscle_gluteus_minimus_right",
+          "Muscle_gracilis_left",
+          "Muscle_gracilis_right",
+          "Muscle_hyoglossus_left",
+          "Muscle_hyoglossus_right",
+          "Muscle_iliacus_left",
+          "Muscle_iliacus_right",
+          "Muscle_iliocostalis_left",
+          "Muscle_iliocostalis_lumborum_left",
+          "Muscle_iliocostalis_lumborum_right",
+          "Muscle_iliocostalis_right",
+          "Muscle_iliopsoas_left",
+          "Muscle_iliopsoas_right",
+          "Muscle_inferior_gemellus_left",
+          "Muscle_inferior_gemellus_right",
+          "Muscle_inferior_oblique_left",
+          "Muscle_inferior_oblique_right",
+          "Muscle_inferior_obliquus_capitis_left",
+          "Muscle_inferior_obliquus_capitis_right",
+          "Muscle_inferior_rectus_left",
+          "Muscle_inferior_rectus_right",
+          "Muscle_infraspinatus_left",
+          "Muscle_infraspinatus_right",
+          "Muscle_intercostal_left",
+          "Muscle_intercostal_right",
+          "Muscle_internal_oblique_abdominal_left",
+          "Muscle_internal_oblique_abdominal_right",
+          "Muscle_ischiocavernosus_left",
+          "Muscle_ischiocavernosus_right",
+          "Muscle_lateral_crico_arytenoid_left",
+          "Muscle_lateral_crico_arytenoid_right",
+          "Muscle_lateral_pterygoid_left",
+          "Muscle_lateral_pterygoid_right",
+          "Muscle_lateral_rectus_left",
+          "Muscle_lateral_rectus_right",
+          "Muscle_latissimus_dorsi_left",
+          "Muscle_latissimus_dorsi_right",
+          "Muscle_levator_ani",
+          "Muscle_levator_palpebrae_superioris_left",
+          "Muscle_levator_palpebrae_superioris_right",
+          "Muscle_levator_scapulae_left",
+          "Muscle_levator_scapulae_right",
+          "Muscle_levator_veli_palatini",
+          "Muscle_longissimus_capitis_left",
+          "Muscle_longissimus_capitis_right",
+          "Muscle_longissimus_cervicis_left",
+          "Muscle_longissimus_cervicis_right",
+          "Muscle_longissimus_left",
+          "Muscle_longissimus_right",
+          "Muscle_longissimus_thoracis_left",
+          "Muscle_longissimus_thoracis_right",
+          "Muscle_longus_capitis_left",
+          "Muscle_longus_capitis_right",
+          "Muscle_longus_colli_left",
+          "Muscle_longus_colli_right",
+          "Muscle_lumbrical_left",
+          "Muscle_lumbrical_right",
+          "Muscle_masseter_left",
+          "Muscle_masseter_right",
+          "Muscle_medial_pterygoid_left",
+          "Muscle_medial_pterygoid_right",
+          "Muscle_medial_rectus_left",
+          "Muscle_medial_rectus_right",
+          "Muscle_middle_scalenus_left",
+          "Muscle_middle_scalenus_right",
+          "Muscle_mylohyoid_left",
+          "Muscle_mylohyoid_right",
+          "Muscle_obturator_externus_left",
+          "Muscle_obturator_externus_right",
+          "Muscle_obturator_internus_left",
+          "Muscle_obturator_internus_right",
+          "Muscle_occipitofrontalis_left",
+          "Muscle_occipitofrontalis_right",
+          "Muscle_omohyoid_left",
+          "Muscle_omohyoid_right",
+          "Muscle_opponens_digiti_minimi_left",
+          "Muscle_opponens_digiti_minimi_right",
+          "Muscle_opponens_pollicis_left",
+          "Muscle_opponens_pollicis_right",
+          "Muscle_palatoglossus_left",
+          "Muscle_palatoglossus_right",
+          "Muscle_palmar_interosseous_left",
+          "Muscle_palmar_interosseous_right",
+          "Muscle_palmaris_brevis_left",
+          "Muscle_palmaris_brevis_right",
+          "Muscle_palmaris_longus_left",
+          "Muscle_palmaris_longus_right",
+          "Muscle_pectineus_left",
+          "Muscle_pectineus_right",
+          "Muscle_pectoralis_major_left",
+          "Muscle_pectoralis_major_right",
+          "Muscle_pectoralis_minor_left",
+          "Muscle_pectoralis_minor_right",
+          "Muscle_piriformis_left",
+          "Muscle_piriformis_right",
+          "Muscle_plantar_interosseous_left",
+          "Muscle_plantar_interosseous_right",
+          "Muscle_plantaris_left",
+          "Muscle_plantaris_right",
+          "Muscle_popliteus_left",
+          "Muscle_popliteus_right",
+          "Muscle_posterior_crico_arytenoid_left",
+          "Muscle_posterior_crico_arytenoid_right",
+          "Muscle_posterior_rectus_capitis_major_left",
+          "Muscle_posterior_rectus_capitis_major_right",
+          "Muscle_posterior_rectus_capitis_minor_left",
+          "Muscle_posterior_rectus_capitis_minor_right",
+          "Muscle_posterior_scalenus_left",
+          "Muscle_posterior_scalenus_right",
+          "Muscle_posterior_superior_serratus_left",
+          "Muscle_posterior_superior_serratus_right",
+          "Muscle_posterior_tibialis_left",
+          "Muscle_posterior_tibialis_right",
+          "Muscle_pronator_quadratus_left",
+          "Muscle_pronator_quadratus_right",
+          "Muscle_pronator_teres_left",
+          "Muscle_pronator_teres_right",
+          "Muscle_psoas_major_left",
+          "Muscle_psoas_major_right",
+          "Muscle_pyramidalis_left",
+          "Muscle_pyramidalis_right",
+          "Muscle_quadratus_femoris_left",
+          "Muscle_quadratus_femoris_right",
+          "Muscle_quadratus_lumborum_left",
+          "Muscle_quadratus_lumborum_right",
+          "Muscle_quadratus_plantae_left",
+          "Muscle_quadratus_plantae_right",
+          "Muscle_rectus_abdominis_left",
+          "Muscle_rectus_abdominis_right",
+          "Muscle_rectus_capitis_lateralis_left",
+          "Muscle_rectus_capitis_lateralis_right",
+          "Muscle_rectus_femoris_left",
+          "Muscle_rectus_femoris_right",
+          "Muscle_rhomboid_major_left",
+          "Muscle_rhomboid_major_right",
+          "Muscle_rhomboid_minor_left",
+          "Muscle_rhomboid_minor_right",
+          "Muscle_sartorius_left",
+          "Muscle_sartorius_right",
+          "Muscle_semimembranosus_left",
+          "Muscle_semimembranosus_right",
+          "Muscle_semispinalis_capitis_left",
+          "Muscle_semispinalis_capitis_right",
+          "Muscle_semispinalis_cervicis_left",
+          "Muscle_semispinalis_cervicis_right",
+          "Muscle_semitendinosus_left",
+          "Muscle_semitendinosus_right",
+          "Muscle_soleus_left",
+          "Muscle_soleus_right",
+          "Muscle_splenius_capitis_left",
+          "Muscle_splenius_capitis_right",
+          "Muscle_sternocleidomastoid_left",
+          "Muscle_sternocleidomastoid_right",
+          "Muscle_sternohyoid_left",
+          "Muscle_sternohyoid_right",
+          "Muscle_sternothyroid_left",
+          "Muscle_sternothyroid_right",
+          "Muscle_styloglossus_left",
+          "Muscle_styloglossus_right",
+          "Muscle_stylohyoid_left",
+          "Muscle_stylohyoid_right",
+          "Muscle_stylopharyngeus_left",
+          "Muscle_stylopharyngeus_right",
+          "Muscle_subclavius_left",
+          "Muscle_subclavius_right",
+          "Muscle_subscapularis_left",
+          "Muscle_subscapularis_right",
+          "Muscle_superficial_transverse_perineal_left",
+          "Muscle_superficial_transverse_perineal_right",
+          "Muscle_superior_gemellus_left",
+          "Muscle_superior_gemellus_right",
+          "Muscle_superior_oblique_left",
+          "Muscle_superior_oblique_right",
+          "Muscle_superior_obliquus_capitis_left",
+          "Muscle_superior_obliquus_capitis_right",
+          "Muscle_superior_rectus_left",
+          "Muscle_superior_rectus_right",
+          "Muscle_supinator_left",
+          "Muscle_supinator_right",
+          "Muscle_supraspinatus_left",
+          "Muscle_supraspinatus_right",
+          "Muscle_temporal_left",
+          "Muscle_temporal_right",
+          "Muscle_tensor_fasciae_latae_left",
+          "Muscle_tensor_fasciae_latae_right",
+          "Muscle_tensor_veli_palatini",
+          "Muscle_teres_major_left",
+          "Muscle_teres_major_right",
+          "Muscle_teres_minor_left",
+          "Muscle_teres_minor_right",
+          "Muscle_thyrohyoid_left",
+          "Muscle_thyrohyoid_right",
+          "Muscle_transversospinales_left",
+          "Muscle_transversospinales_right",
+          "Muscle_transversus_abdominis_left",
+          "Muscle_transversus_abdominis_right",
+          "Muscle_trapezius_left",
+          "Muscle_trapezius_right",
+          "Muscle_triceps_brachii_left",
+          "Muscle_triceps_brachii_right",
+          "Muscle_vastus_intermedius_left",
+          "Muscle_vastus_intermedius_right",
+          "Muscle_vastus_lateralis_left",
+          "Muscle_vastus_lateralis_right",
+          "Muscle_vastus_medialis_left",
+          "Muscle_vastus_medialis_right",
+          "Muscle_zygomaticus_left",
+          "Muscle_zygomaticus_right"
+        ]
+      }
+    },
+    {
+      "material_id": "meniscus",
+      "display_name": "Meniscus",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Meniscus",
+      "source_cell_index": 138,
+      "properties": {
+        "mass_density_kg_per_m3": 1099.5,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 0.7392595578616339,
+          "relative_permittivity": 109650.9291883721
+        },
+        "value_origin": {
+          "mass_density": "fallback_in_notebook",
+          "conductivity": "fallback_in_notebook",
+          "relative_permittivity": "explicit_in_notebook"
+        }
+      },
+      "assignment": {
+        "entity_count": 2,
+        "entities": [
+          "Meniscus_left",
+          "Meniscus_right"
+        ]
+      }
+    },
+    {
+      "material_id": "midbrain",
+      "display_name": "Midbrain",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Midbrain",
+      "source_cell_index": 140,
+      "properties": {
+        "mass_density_kg_per_m3": 1045.5,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 0.35,
+          "relative_permittivity": 573471.1129522359
+        },
+        "value_origin": {
+          "mass_density": "fallback_in_notebook",
+          "conductivity": "fallback_in_notebook",
+          "relative_permittivity": "explicit_in_notebook"
+        }
+      },
+      "assignment": {
+        "entity_count": 1,
+        "entities": [
+          "Midbrain"
+        ]
+      }
+    },
+    {
+      "material_id": "bone_cancellous",
+      "display_name": "Bone (Cancellous)",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Bone (Cancellous)",
+      "source_cell_index": 142,
+      "properties": {
+        "mass_density_kg_per_m3": 1178.333333333333,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 0.08045952772338552,
+          "relative_permittivity": 36324.45747821044
+        },
+        "value_origin": {
+          "mass_density": "fallback_in_notebook",
+          "conductivity": "fallback_in_notebook",
+          "relative_permittivity": "explicit_in_notebook"
+        }
+      },
+      "assignment": {
+        "entity_count": 116,
+        "entities": [
+          "Carpalia_Metacarpalia_cancellous_left",
+          "Carpalia_Metacarpalia_cancellous_right",
+          "Femur_cancellous_left",
+          "Femur_cancellous_right",
+          "Fibula_cancellous_left",
+          "Fibula_cancellous_right",
+          "Foot_cancellous_left",
+          "Foot_cancellous_right",
+          "Humerus_cancellous_left",
+          "Humerus_cancellous_right",
+          "Hyoid_cancellous",
+          "Mandible_cancellous",
+          "Metacarpus_I_cancellous_left",
+          "Metacarpus_I_cancellous_right",
+          "Metatarsus_I_cancellous_left",
+          "Metatarsus_I_cancellous_right",
+          "Metatarsus_II_cancellous_left",
+          "Metatarsus_II_cancellous_right",
+          "Metatarsus_III_cancellous_left",
+          "Metatarsus_III_cancellous_right",
+          "Metatarsus_IV_cancellous_left",
+          "Metatarsus_IV_cancellous_right",
+          "Metatarsus_V_cancellous_left",
+          "Metatarsus_V_cancellous_right",
+          "Patella_cancellous_left",
+          "Patella_cancellous_right",
+          "Pelvis_cancellous",
+          "Phalanx_distalis_I_cancellous_foot_left",
+          "Phalanx_distalis_I_cancellous_foot_right",
+          "Phalanx_distalis_I_cancellous_left",
+          "Phalanx_distalis_I_cancellous_right",
+          "Phalanx_distalis_II_cancellous_foot_left",
+          "Phalanx_distalis_II_cancellous_foot_right",
+          "Phalanx_distalis_II_cancellous_left",
+          "Phalanx_distalis_II_cancellous_right",
+          "Phalanx_distalis_III_cancellous_foot_left",
+          "Phalanx_distalis_III_cancellous_foot_right",
+          "Phalanx_distalis_III_cancellous_left",
+          "Phalanx_distalis_III_cancellous_right",
+          "Phalanx_distalis_IV_cancellous_foot_left",
+          "Phalanx_distalis_IV_cancellous_foot_right",
+          "Phalanx_distalis_IV_cancellous_left",
+          "Phalanx_distalis_IV_cancellous_right",
+          "Phalanx_distalis_V_cancellous_foot_left",
+          "Phalanx_distalis_V_cancellous_foot_right",
+          "Phalanx_distalis_V_cancellous_left",
+          "Phalanx_distalis_V_cancellous_right",
+          "Phalanx_media_II_cancellous_foot_left",
+          "Phalanx_media_II_cancellous_foot_right",
+          "Phalanx_media_II_cancellous_left",
+          "Phalanx_media_II_cancellous_right",
+          "Phalanx_media_III_cancellous_foot_left",
+          "Phalanx_media_III_cancellous_foot_right",
+          "Phalanx_media_III_cancellous_left",
+          "Phalanx_media_III_cancellous_right",
+          "Phalanx_media_IV_cancellous_foot_left",
+          "Phalanx_media_IV_cancellous_foot_right",
+          "Phalanx_media_IV_cancellous_left",
+          "Phalanx_media_IV_cancellous_right",
+          "Phalanx_media_V_cancellous_foot_left",
+          "Phalanx_media_V_cancellous_foot_right",
+          "Phalanx_media_V_cancellous_left",
+          "Phalanx_media_V_cancellous_right",
+          "Phalanx_proximalis_I_cancellous_foot_left",
+          "Phalanx_proximalis_I_cancellous_foot_right",
+          "Phalanx_proximalis_I_cancellous_left",
+          "Phalanx_proximalis_I_cancellous_right",
+          "Phalanx_proximalis_II_cancellous_foot_left",
+          "Phalanx_proximalis_II_cancellous_foot_right",
+          "Phalanx_proximalis_II_cancellous_left",
+          "Phalanx_proximalis_II_cancellous_right",
+          "Phalanx_proximalis_III_cancellous_foot_left",
+          "Phalanx_proximalis_III_cancellous_foot_right",
+          "Phalanx_proximalis_III_cancellous_left",
+          "Phalanx_proximalis_III_cancellous_right",
+          "Phalanx_proximalis_IV_cancellous_foot_left",
+          "Phalanx_proximalis_IV_cancellous_foot_right",
+          "Phalanx_proximalis_IV_cancellous_left",
+          "Phalanx_proximalis_IV_cancellous_right",
+          "Phalanx_proximalis_V_cancellous_foot_left",
+          "Phalanx_proximalis_V_cancellous_foot_right",
+          "Phalanx_proximalis_V_cancellous_left",
+          "Phalanx_proximalis_V_cancellous_right",
+          "Radius_cancellous_left",
+          "Radius_cancellous_right",
+          "Skull_cancellous",
+          "Thorax_cancellous",
+          "Tibia_cancellous_left",
+          "Tibia_cancellous_right",
+          "Ulna_cancellous_left",
+          "Ulna_cancellous_right",
+          "Vertebra_cancellous_C1",
+          "Vertebra_cancellous_C2",
+          "Vertebra_cancellous_C3",
+          "Vertebra_cancellous_C4",
+          "Vertebra_cancellous_C5",
+          "Vertebra_cancellous_C6",
+          "Vertebra_cancellous_C7",
+          "Vertebra_cancellous_L1",
+          "Vertebra_cancellous_L2",
+          "Vertebra_cancellous_L3",
+          "Vertebra_cancellous_L4",
+          "Vertebra_cancellous_L5",
+          "Vertebra_cancellous_os_sacrum_coccyx",
+          "Vertebra_cancellous_T1",
+          "Vertebra_cancellous_T10",
+          "Vertebra_cancellous_T11",
+          "Vertebra_cancellous_T12",
+          "Vertebra_cancellous_T2",
+          "Vertebra_cancellous_T3",
+          "Vertebra_cancellous_T4",
+          "Vertebra_cancellous_T5",
+          "Vertebra_cancellous_T6",
+          "Vertebra_cancellous_T7",
+          "Vertebra_cancellous_T8",
+          "Vertebra_cancellous_T9"
+        ]
+      }
+    },
+    {
+      "material_id": "bone_marrow_yellow",
+      "display_name": "Bone Marrow (Yellow)",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Bone Marrow (Yellow)",
+      "source_cell_index": 144,
+      "properties": {
+        "mass_density_kg_per_m3": 980.0,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 0.1797899207920792,
+          "relative_permittivity": 18462.303949127978
+        },
+        "value_origin": {
+          "mass_density": "fallback_in_notebook",
+          "conductivity": "fallback_in_notebook",
+          "relative_permittivity": "explicit_in_notebook"
+        }
+      },
+      "assignment": {
+        "entity_count": 12,
+        "entities": [
+          "Femur_yellow_marrow_left",
+          "Femur_yellow_marrow_right",
+          "Fibula_yellow_marrow_left",
+          "Fibula_yellow_marrow_right",
+          "Humerus_yellow_marrow_left",
+          "Humerus_yellow_marrow_right",
+          "Radius_yellow_marrow_left",
+          "Radius_yellow_marrow_right",
+          "Tibia_yellow_marrow_left",
+          "Tibia_yellow_marrow_right",
+          "Ulna_yellow_marrow_left",
+          "Ulna_yellow_marrow_right"
+        ]
+      }
+    },
+    {
+      "material_id": "bone_cortical",
+      "display_name": "Bone (Cortical)",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Bone (Cortical)",
+      "source_cell_index": 146,
+      "properties": {
+        "mass_density_kg_per_m3": 1908.0,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 0.00630199709513435,
+          "relative_permittivity": 4291.018033214009
+        },
+        "value_origin": {
+          "mass_density": "fallback_in_notebook",
+          "conductivity": "fallback_in_notebook",
+          "relative_permittivity": "explicit_in_notebook"
+        }
+      },
+      "assignment": {
+        "entity_count": 116,
+        "entities": [
+          "Carpalia_Metacarpalia_cortical_left",
+          "Carpalia_Metacarpalia_cortical_right",
+          "Femur_cortical_left",
+          "Femur_cortical_right",
+          "Fibula_cortical_left",
+          "Fibula_cortical_right",
+          "Foot_cortical_left",
+          "Foot_cortical_right",
+          "Humerus_cortical_left",
+          "Humerus_cortical_right",
+          "Hyoid_cortical",
+          "Mandible_cortical",
+          "Metacarpus_I_cortical_left",
+          "Metacarpus_I_cortical_right",
+          "Metatarsus_I_cortical_left",
+          "Metatarsus_I_cortical_right",
+          "Metatarsus_II_cortical_left",
+          "Metatarsus_II_cortical_right",
+          "Metatarsus_III_cortical_left",
+          "Metatarsus_III_cortical_right",
+          "Metatarsus_IV_cortical_left",
+          "Metatarsus_IV_cortical_right",
+          "Metatarsus_V_cortical_left",
+          "Metatarsus_V_cortical_right",
+          "Patella_cortical_left",
+          "Patella_cortical_right",
+          "Pelvis_cortical",
+          "Phalanx_distalis_I_cortical_foot_left",
+          "Phalanx_distalis_I_cortical_foot_right",
+          "Phalanx_distalis_I_cortical_left",
+          "Phalanx_distalis_I_cortical_right",
+          "Phalanx_distalis_II_cortical_foot_left",
+          "Phalanx_distalis_II_cortical_foot_right",
+          "Phalanx_distalis_II_cortical_left",
+          "Phalanx_distalis_II_cortical_right",
+          "Phalanx_distalis_III_cortical_foot_left",
+          "Phalanx_distalis_III_cortical_foot_right",
+          "Phalanx_distalis_III_cortical_left",
+          "Phalanx_distalis_III_cortical_right",
+          "Phalanx_distalis_IV_cortical_foot_left",
+          "Phalanx_distalis_IV_cortical_foot_right",
+          "Phalanx_distalis_IV_cortical_left",
+          "Phalanx_distalis_IV_cortical_right",
+          "Phalanx_distalis_V_cortical_foot_left",
+          "Phalanx_distalis_V_cortical_foot_right",
+          "Phalanx_distalis_V_cortical_left",
+          "Phalanx_distalis_V_cortical_right",
+          "Phalanx_media_II_cortical_foot_left",
+          "Phalanx_media_II_cortical_foot_right",
+          "Phalanx_media_II_cortical_left",
+          "Phalanx_media_II_cortical_right",
+          "Phalanx_media_III_cortical_foot_left",
+          "Phalanx_media_III_cortical_foot_right",
+          "Phalanx_media_III_cortical_left",
+          "Phalanx_media_III_cortical_right",
+          "Phalanx_media_IV_cortical_foot_left",
+          "Phalanx_media_IV_cortical_foot_right",
+          "Phalanx_media_IV_cortical_left",
+          "Phalanx_media_IV_cortical_right",
+          "Phalanx_media_V_cortical_foot_left",
+          "Phalanx_media_V_cortical_foot_right",
+          "Phalanx_media_V_cortical_left",
+          "Phalanx_media_V_cortical_right",
+          "Phalanx_proximalis_I_cortical_foot_left",
+          "Phalanx_proximalis_I_cortical_foot_right",
+          "Phalanx_proximalis_I_cortical_left",
+          "Phalanx_proximalis_I_cortical_right",
+          "Phalanx_proximalis_II_cortical_foot_left",
+          "Phalanx_proximalis_II_cortical_foot_right",
+          "Phalanx_proximalis_II_cortical_left",
+          "Phalanx_proximalis_II_cortical_right",
+          "Phalanx_proximalis_III_cortical_foot_left",
+          "Phalanx_proximalis_III_cortical_foot_right",
+          "Phalanx_proximalis_III_cortical_left",
+          "Phalanx_proximalis_III_cortical_right",
+          "Phalanx_proximalis_IV_cortical_foot_left",
+          "Phalanx_proximalis_IV_cortical_foot_right",
+          "Phalanx_proximalis_IV_cortical_left",
+          "Phalanx_proximalis_IV_cortical_right",
+          "Phalanx_proximalis_V_cortical_foot_left",
+          "Phalanx_proximalis_V_cortical_foot_right",
+          "Phalanx_proximalis_V_cortical_left",
+          "Phalanx_proximalis_V_cortical_right",
+          "Radius_cortical_left",
+          "Radius_cortical_right",
+          "Skull_cortical",
+          "Thorax_cortical",
+          "Tibia_cortical_left",
+          "Tibia_cortical_right",
+          "Ulna_cortical_left",
+          "Ulna_cortical_right",
+          "Vertebra_cortical_C1",
+          "Vertebra_cortical_C2",
+          "Vertebra_cortical_C3",
+          "Vertebra_cortical_C4",
+          "Vertebra_cortical_C5",
+          "Vertebra_cortical_C6",
+          "Vertebra_cortical_C7",
+          "Vertebra_cortical_L1",
+          "Vertebra_cortical_L2",
+          "Vertebra_cortical_L3",
+          "Vertebra_cortical_L4",
+          "Vertebra_cortical_L5",
+          "Vertebra_cortical_os_sacrum_coccyx",
+          "Vertebra_cortical_T1",
+          "Vertebra_cortical_T10",
+          "Vertebra_cortical_T11",
+          "Vertebra_cortical_T12",
+          "Vertebra_cortical_T2",
+          "Vertebra_cortical_T3",
+          "Vertebra_cortical_T4",
+          "Vertebra_cortical_T5",
+          "Vertebra_cortical_T6",
+          "Vertebra_cortical_T7",
+          "Vertebra_cortical_T8",
+          "Vertebra_cortical_T9"
+        ]
+      }
+    },
+    {
+      "material_id": "pons",
+      "display_name": "Pons",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Pons",
+      "source_cell_index": 148,
+      "properties": {
+        "mass_density_kg_per_m3": 1045.5,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 0.558392,
+          "relative_permittivity": 573471.1129522359
+        },
+        "value_origin": {
+          "mass_density": "fallback_in_notebook",
+          "conductivity": "fallback_in_notebook",
+          "relative_permittivity": "explicit_in_notebook"
+        }
+      },
+      "assignment": {
+        "entity_count": 1,
+        "entities": [
+          "Pons"
+        ]
+      }
+    },
+    {
+      "material_id": "pineal_body",
+      "display_name": "Pineal Body",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Pineal Body",
+      "source_cell_index": 150,
+      "properties": {
+        "mass_density_kg_per_m3": 1053.0,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 0.4811,
+          "relative_permittivity": 122549.18389408203
+        },
+        "value_origin": {
+          "mass_density": "fallback_in_notebook",
+          "conductivity": "fallback_in_notebook",
+          "relative_permittivity": "explicit_in_notebook"
+        }
+      },
+      "assignment": {
+        "entity_count": 1,
+        "entities": [
+          "Pineal_body"
+        ]
+      }
+    },
+    {
+      "material_id": "thalamus",
+      "display_name": "Thalamus",
+      "database_catalog": "IT'IS LF 4.2",
+      "database_name": "Thalamus",
+      "source_cell_index": 152,
+      "properties": {
+        "mass_density_kg_per_m3": 1044.5,
+        "electric": {
+          "frequency_hz": 316.0,
+          "conductivity_s_per_m": 0.475,
+          "relative_permittivity": 573176.1234301236
+        },
+        "value_origin": {
+          "mass_density": "fallback_in_notebook",
+          "conductivity": "fallback_in_notebook",
+          "relative_permittivity": "explicit_in_notebook"
+        }
+      },
+      "assignment": {
+        "entity_count": 2,
+        "entities": [
+          "Thalamus_left",
+          "Thalamus_right"
+        ]
+      }
+    }
+  ],
+  "entity_material_index": {
+    "Ear_skin_left": "skin",
+    "Ear_skin_right": "skin",
+    "Skin": "skin",
+    "Fat": "fat",
+    "SAT": "sat_subcutaneous_fat",
+    "Gallbladder_bile": "bile",
+    "Ductus_deferens_left": "ductus_deferens",
+    "Ductus_deferens_right": "ductus_deferens",
+    "Epididymis_left": "epididymis",
+    "Epididymis_right": "epididymis",
+    "Esophagus_wall": "esophagus",
+    "Cerebrospinal_fluid": "cerebrospinal_fluid",
+    "Dura_mater": "dura",
+    "Gallbladder_wall": "gallbladder",
+    "Esophagus_lumen": "esophagus_lumen",
+    "Diaphragm": "diaphragm",
+    "Bladder_wall": "urinary_bladder_wall",
+    "Bronchus_lumen": "bronchi_lumen",
+    "Bronchus_wall": "bronchi",
+    "Kidney_cortex_left": "kidney_cortex",
+    "Kidney_cortex_right": "kidney_cortex",
+    "Lymph_node": "lymphnode",
+    "Liver": "liver",
+    "Mucosa": "mucous_membrane",
+    "Lung_left": "lung",
+    "Lung_right": "lung",
+    "Larynx": "larynx",
+    "Large_intestine_wall": "large_intestine",
+    "Kidney_medulla_left": "kidney_medulla",
+    "Kidney_medulla_right": "kidney_medulla",
+    "Large_intestine_lumen": "large_intestine_lumen",
+    "Seminal_vesicle_left": "seminal_vesicle",
+    "Seminal_vesicle_right": "seminal_vesicle",
+    "Small_intestine_wall": "small_intestine",
+    "Small_intestine_lumen": "small_intestine_lumen",
+    "Stomach_lumen": "stomach_lumen",
+    "Penis": "penis",
+    "Salivary_gland_left": "salivary_gland",
+    "Salivary_gland_right": "salivary_gland",
+    "Prostate": "prostate",
+    "Pancreas": "pancreas",
+    "Stomach_wall": "stomach",
+    "Spleen": "spleen",
+    "Tongue": "tongue",
+    "Ureter_left": "ureter_urethra",
+    "Ureter_right": "ureter_urethra",
+    "Urethra": "ureter_urethra",
+    "Testis_left": "testis",
+    "Testis_right": "testis",
+    "Urine": "urine",
+    "Trachea_wall": "trachea",
+    "Tendon_ligament": "tendon_ligament",
+    "Trachea_lumen": "trachea_lumen",
+    "Thyroid_gland": "thyroid_gland",
+    "Adrenal_gland_left": "adrenal_gland",
+    "Adrenal_gland_right": "adrenal_gland",
+    "Air_internal": "air",
+    "Tooth": "tooth",
+    "Cartilage": "cartilage",
+    "Ear_cartilage_left": "cartilage",
+    "Ear_cartilage_right": "cartilage",
+    "Eye_lens_left": "eye_lens",
+    "Eye_lens_right": "eye_lens",
+    "Commissura_anterior": "commissura_anterior",
+    "Eye_sclera_left": "eye_sclera",
+    "Eye_sclera_right": "eye_sclera",
+    "Heart_atrium_left": "heart_lumen",
+    "Heart_atrium_right": "heart_lumen",
+    "Heart_ventricle_left": "heart_lumen",
+    "Heart_ventricle_right": "heart_lumen",
+    "Hypophysis": "hypophysis",
+    "Caudate_nucleus_left": "brain_grey_matter",
+    "Caudate_nucleus_right": "brain_grey_matter",
+    "Cerebrum_grey_matter": "brain_grey_matter",
+    "Globus_pallidus_left": "brain_grey_matter",
+    "Globus_pallidus_right": "brain_grey_matter",
+    "Insula_left": "brain_grey_matter",
+    "Insula_right": "brain_grey_matter",
+    "Putamen_left": "brain_grey_matter",
+    "Putamen_right": "brain_grey_matter",
+    "Spinal_cord_grey_matter": "brain_grey_matter",
+    "Sympathetic_ganglion_eighth_thoracic_left": "brain_grey_matter",
+    "Sympathetic_ganglion_eighth_thoracic_right": "brain_grey_matter",
+    "Sympathetic_ganglion_eleventh_thoracic_left": "brain_grey_matter",
+    "Sympathetic_ganglion_eleventh_thoracic_right": "brain_grey_matter",
+    "Sympathetic_ganglion_fifth_sacral_left": "brain_grey_matter",
+    "Sympathetic_ganglion_fifth_thoracic_left": "brain_grey_matter",
+    "Sympathetic_ganglion_fifth_thoracic_right": "brain_grey_matter",
+    "Sympathetic_ganglion_first_lumbar_left": "brain_grey_matter",
+    "Sympathetic_ganglion_first_lumbar_right": "brain_grey_matter",
+    "Sympathetic_ganglion_first_sacral_left": "brain_grey_matter",
+    "Sympathetic_ganglion_first_sacral_right": "brain_grey_matter",
+    "Sympathetic_ganglion_fourth_lumbar_left": "brain_grey_matter",
+    "Sympathetic_ganglion_fourth_lumbar_right": "brain_grey_matter",
+    "Sympathetic_ganglion_fourth_sacral_left": "brain_grey_matter",
+    "Sympathetic_ganglion_fourth_sacral_right": "brain_grey_matter",
+    "Sympathetic_ganglion_fourth_thoracic_left": "brain_grey_matter",
+    "Sympathetic_ganglion_fourth_thoracic_right": "brain_grey_matter",
+    "Sympathetic_ganglion_impar": "brain_grey_matter",
+    "Sympathetic_ganglion_middle_cervical_left": "brain_grey_matter",
+    "Sympathetic_ganglion_middle_cervical_right": "brain_grey_matter",
+    "Sympathetic_ganglion_ninth_thoracic_left": "brain_grey_matter",
+    "Sympathetic_ganglion_ninth_thoracic_right": "brain_grey_matter",
+    "Sympathetic_ganglion_second_lumbar_left": "brain_grey_matter",
+    "Sympathetic_ganglion_second_lumbar_right": "brain_grey_matter",
+    "Sympathetic_ganglion_second_sacral_left": "brain_grey_matter",
+    "Sympathetic_ganglion_second_sacral_right": "brain_grey_matter",
+    "Sympathetic_ganglion_second_thoracic_left": "brain_grey_matter",
+    "Sympathetic_ganglion_second_thoracic_right": "brain_grey_matter",
+    "Sympathetic_ganglion_seventh_thoracic_left": "brain_grey_matter",
+    "Sympathetic_ganglion_seventh_thoracic_right": "brain_grey_matter",
+    "Sympathetic_ganglion_sixth_thoracic_left": "brain_grey_matter",
+    "Sympathetic_ganglion_sixth_thoracic_right": "brain_grey_matter",
+    "Sympathetic_ganglion_stellate_left": "brain_grey_matter",
+    "Sympathetic_ganglion_stellate_right": "brain_grey_matter",
+    "Sympathetic_ganglion_superior_cervical_left": "brain_grey_matter",
+    "Sympathetic_ganglion_superior_cervical_right": "brain_grey_matter",
+    "Sympathetic_ganglion_tenth_thoracic_left": "brain_grey_matter",
+    "Sympathetic_ganglion_tenth_thoracic_right": "brain_grey_matter",
+    "Sympathetic_ganglion_third_lumbar_left": "brain_grey_matter",
+    "Sympathetic_ganglion_third_lumbar_right": "brain_grey_matter",
+    "Sympathetic_ganglion_third_sacral_left": "brain_grey_matter",
+    "Sympathetic_ganglion_third_sacral_right": "brain_grey_matter",
+    "Sympathetic_ganglion_third_thoracic_left": "brain_grey_matter",
+    "Sympathetic_ganglion_third_thoracic_right": "brain_grey_matter",
+    "Sympathetic_ganglion_twelfth_thoracic_left": "brain_grey_matter",
+    "Sympathetic_ganglion_twelfth_thoracic_right": "brain_grey_matter",
+    "Intervertebral_disc_C2_C3": "intervertebral_disc",
+    "Intervertebral_disc_C3_C4": "intervertebral_disc",
+    "Intervertebral_disc_C4_C5": "intervertebral_disc",
+    "Intervertebral_disc_C5_C6": "intervertebral_disc",
+    "Intervertebral_disc_C6_C7": "intervertebral_disc",
+    "Intervertebral_disc_C7_T1": "intervertebral_disc",
+    "Intervertebral_disc_L1_L2": "intervertebral_disc",
+    "Intervertebral_disc_L2_L3": "intervertebral_disc",
+    "Intervertebral_disc_L3_L4": "intervertebral_disc",
+    "Intervertebral_disc_L4_L5": "intervertebral_disc",
+    "Intervertebral_disc_L5_sacrum": "intervertebral_disc",
+    "Intervertebral_disc_T10_T11": "intervertebral_disc",
+    "Intervertebral_disc_T11_T12": "intervertebral_disc",
+    "Intervertebral_disc_T12_L1": "intervertebral_disc",
+    "Intervertebral_disc_T1_T2": "intervertebral_disc",
+    "Intervertebral_disc_T2_T3": "intervertebral_disc",
+    "Intervertebral_disc_T3_T4": "intervertebral_disc",
+    "Intervertebral_disc_T4_T5": "intervertebral_disc",
+    "Intervertebral_disc_T5_T6": "intervertebral_disc",
+    "Intervertebral_disc_T6_T7": "intervertebral_disc",
+    "Intervertebral_disc_T7_T8": "intervertebral_disc",
+    "Intervertebral_disc_T8_T9": "intervertebral_disc",
+    "Intervertebral_disc_T9_T10": "intervertebral_disc",
+    "Cerebrum_white_matter": "brain_white_matter",
+    "Corpus_callosum": "brain_white_matter",
+    "Spinal_cord_white_matter": "brain_white_matter",
+    "Heart_muscle": "heart_muscle",
+    "Hypothalamus": "hypothalamus",
+    "Cerebellum": "cerebellum",
+    "Eye_cornea_left": "eye_cornea",
+    "Eye_cornea_right": "eye_cornea",
+    "Hippocampus_left": "hippocampus",
+    "Hippocampus_right": "hippocampus",
+    "Eye_vitreous_humor_left": "eye_vitreous_humor",
+    "Eye_vitreous_humor_right": "eye_vitreous_humor",
+    "Commissura_posterior": "commissura_posterior",
+    "Aorta_arch": "blood",
+    "Aorta_ascending": "blood",
+    "Aorta_descending": "blood",
+    "Artery_anterior_cerebral_left": "blood",
+    "Artery_anterior_cerebral_right": "blood",
+    "Artery_anterior_interventricular": "blood",
+    "Artery_anterior_tibial_left": "blood",
+    "Artery_anterior_tibial_right": "blood",
+    "Artery_atrioventricular_nodal": "blood",
+    "Artery_axillary_left": "blood",
+    "Artery_axillary_right": "blood",
+    "Artery_basilar": "blood",
+    "Artery_brachial_left": "blood",
+    "Artery_brachial_right": "blood",
+    "Artery_brachiocephalic": "blood",
+    "Artery_celiac": "blood",
+    "Artery_circumflex": "blood",
+    "Artery_common_carotid_left": "blood",
+    "Artery_common_carotid_right": "blood",
+    "Artery_common_hepatic": "blood",
+    "Artery_common_iliac_left": "blood",
+    "Artery_common_iliac_right": "blood",
+    "Artery_coronary_left": "blood",
+    "Artery_coronary_right": "blood",
+    "Artery_deep_brachial_left": "blood",
+    "Artery_deep_brachial_right": "blood",
+    "Artery_deep_femoral_left": "blood",
+    "Artery_deep_femoral_right": "blood",
+    "Artery_external_carotid_left": "blood",
+    "Artery_external_carotid_right": "blood",
+    "Artery_external_iliac_left": "blood",
+    "Artery_external_iliac_right": "blood",
+    "Artery_facial_left": "blood",
+    "Artery_facial_right": "blood",
+    "Artery_femoral_left": "blood",
+    "Artery_femoral_right": "blood",
+    "Artery_gastric_left": "blood",
+    "Artery_gastroduodenal": "blood",
+    "Artery_inferior_gluteal_left": "blood",
+    "Artery_inferior_gluteal_right": "blood",
+    "Artery_inferior_mesenteric": "blood",
+    "Artery_inferior_vesical_left": "blood",
+    "Artery_inferior_vesical_right": "blood",
+    "Artery_internal_carotid_left": "blood",
+    "Artery_internal_carotid_right": "blood",
+    "Artery_internal_iliac_left": "blood",
+    "Artery_internal_iliac_right": "blood",
+    "Artery_internal_pudendal_left": "blood",
+    "Artery_internal_pudendal_right": "blood",
+    "Artery_internal_thoracic_left": "blood",
+    "Artery_internal_thoracic_right": "blood",
+    "Artery_lingual_left": "blood",
+    "Artery_lingual_right": "blood",
+    "Artery_main_pulmonary": "blood",
+    "Artery_marginal_left": "blood",
+    "Artery_maxillary_left": "blood",
+    "Artery_maxillary_right": "blood",
+    "Artery_obturator_left": "blood",
+    "Artery_obturator_right": "blood",
+    "Artery_peroneal_left": "blood",
+    "Artery_peroneal_right": "blood",
+    "Artery_popliteal_left": "blood",
+    "Artery_popliteal_right": "blood",
+    "Artery_posterior_cerebral_left": "blood",
+    "Artery_posterior_cerebral_right": "blood",
+    "Artery_posterior_interventricular": "blood",
+    "Artery_posterior_tibial_left": "blood",
+    "Artery_posterior_tibial_right": "blood",
+    "Artery_proper_hepatic": "blood",
+    "Artery_pulmonary_left": "blood",
+    "Artery_pulmonary_right": "blood",
+    "Artery_radial_left": "blood",
+    "Artery_radial_right": "blood",
+    "Artery_renal_left": "blood",
+    "Artery_renal_right": "blood",
+    "Artery_splenic": "blood",
+    "Artery_subclavian_left": "blood",
+    "Artery_subclavian_right": "blood",
+    "Artery_superficial_temporal_left": "blood",
+    "Artery_superficial_temporal_right": "blood",
+    "Artery_superior_gluteal_left": "blood",
+    "Artery_superior_gluteal_right": "blood",
+    "Artery_superior_mesenteric": "blood",
+    "Artery_superior_thyroid_left": "blood",
+    "Artery_superior_thyroid_right": "blood",
+    "Artery_ulnar_left": "blood",
+    "Artery_ulnar_right": "blood",
+    "Artery_vertebral_left": "blood",
+    "Artery_vertebral_right": "blood",
+    "Vein_accessory_hemi_azygos": "blood",
+    "Vein_anterior_tibial_left": "blood",
+    "Vein_anterior_tibial_right": "blood",
+    "Vein_ascending_lumbar_left": "blood",
+    "Vein_ascending_lumbar_right": "blood",
+    "Vein_axillary_left": "blood",
+    "Vein_axillary_right": "blood",
+    "Vein_azygos": "blood",
+    "Vein_basilic_left": "blood",
+    "Vein_basilic_right": "blood",
+    "Vein_brachial_left": "blood",
+    "Vein_brachial_right": "blood",
+    "Vein_brachiocephalic": "blood",
+    "Vein_cephalic_left": "blood",
+    "Vein_cephalic_right": "blood",
+    "Vein_common_iliac": "blood",
+    "Vein_confluence_of_sinuses": "blood",
+    "Vein_coronary_sinus": "blood",
+    "Vein_deep_cervical_left": "blood",
+    "Vein_deep_cervical_right": "blood",
+    "Vein_deep_femoral_left": "blood",
+    "Vein_deep_femoral_right": "blood",
+    "Vein_external_iliac_left": "blood",
+    "Vein_external_iliac_right": "blood",
+    "Vein_external_jugular_left": "blood",
+    "Vein_external_jugular_right": "blood",
+    "Vein_femoral_left": "blood",
+    "Vein_femoral_right": "blood",
+    "Vein_gastrocnemius_left": "blood",
+    "Vein_gastrocnemius_right": "blood",
+    "Vein_genicular_left": "blood",
+    "Vein_genicular_right": "blood",
+    "Vein_gonadal_left": "blood",
+    "Vein_gonadal_right": "blood",
+    "Vein_great_cardiac": "blood",
+    "Vein_great_saphenous_left": "blood",
+    "Vein_great_saphenous_right": "blood",
+    "Vein_hemi_azygos": "blood",
+    "Vein_hepatic_left": "blood",
+    "Vein_hepatic_right": "blood",
+    "Vein_inferior_mesenteric": "blood",
+    "Vein_inferior_pulmonary_left": "blood",
+    "Vein_inferior_pulmonary_right": "blood",
+    "Vein_inferior_sagittal": "blood",
+    "Vein_inferior_thyroid": "blood",
+    "Vein_internal_iliac_left": "blood",
+    "Vein_internal_iliac_right": "blood",
+    "Vein_internal_jugular_left": "blood",
+    "Vein_internal_jugular_right": "blood",
+    "Vein_long_thoracic_left": "blood",
+    "Vein_long_thoracic_right": "blood",
+    "Vein_median_cubital_left": "blood",
+    "Vein_median_cubital_right": "blood",
+    "Vein_middle_cardiac": "blood",
+    "Vein_middle_hepatic": "blood",
+    "Vein_pericardiacophrenic_left": "blood",
+    "Vein_pericardiacophrenic_right": "blood",
+    "Vein_peroneal_left": "blood",
+    "Vein_peroneal_right": "blood",
+    "Vein_plexus_uro-genital": "blood",
+    "Vein_popliteal_left": "blood",
+    "Vein_popliteal_right": "blood",
+    "Vein_portal": "blood",
+    "Vein_posterior_external_jugular_left": "blood",
+    "Vein_posterior_external_jugular_right": "blood",
+    "Vein_posterior_tibial_left": "blood",
+    "Vein_posterior_tibial_right": "blood",
+    "Vein_radial_left": "blood",
+    "Vein_radial_right": "blood",
+    "Vein_renal_left": "blood",
+    "Vein_renal_right": "blood",
+    "Vein_sigmoid_sinus_left": "blood",
+    "Vein_sigmoid_sinus_right": "blood",
+    "Vein_small_cardiac": "blood",
+    "Vein_small_saphenous_left": "blood",
+    "Vein_small_saphenous_right": "blood",
+    "Vein_soleal_left": "blood",
+    "Vein_soleal_right": "blood",
+    "Vein_splenic": "blood",
+    "Vein_straight_sinus": "blood",
+    "Vein_subclavian_left": "blood",
+    "Vein_subclavian_right": "blood",
+    "Vein_superficial_arm_hand_left": "blood",
+    "Vein_superficial_arm_hand_right": "blood",
+    "Vein_superficial_epigastric_left": "blood",
+    "Vein_superficial_epigastric_right": "blood",
+    "Vein_superficial_head_neck": "blood",
+    "Vein_superficial_leg_foot_left": "blood",
+    "Vein_superficial_leg_foot_right": "blood",
+    "Vein_superficial_torso_abdomen": "blood",
+    "Vein_superior_mesenteric": "blood",
+    "Vein_superior_pulmonary_left": "blood",
+    "Vein_superior_pulmonary_right": "blood",
+    "Vein_superior_sagittal": "blood",
+    "Vein_suprascapular_left": "blood",
+    "Vein_suprascapular_right": "blood",
+    "Vein_thoracoepigastric_left": "blood",
+    "Vein_thoracoepigastric_right": "blood",
+    "Vein_transverse_cervical_left": "blood",
+    "Vein_transverse_cervical_right": "blood",
+    "Vein_transverse_sinus_left": "blood",
+    "Vein_transverse_sinus_right": "blood",
+    "Vein_ulnar_left": "blood",
+    "Vein_ulnar_right": "blood",
+    "Vein_vertebral_left": "blood",
+    "Vein_vertebral_right": "blood",
+    "Vena_cava_inferior": "blood",
+    "Vena_cava_superior": "blood",
+    "Brachial_plexus_left": "nerve",
+    "Brachial_plexus_right": "nerve",
+    "Nerve_axillary_left": "nerve",
+    "Nerve_axillary_right": "nerve",
+    "Nerve_common_fibular_left": "nerve",
+    "Nerve_common_fibular_right": "nerve",
+    "Nerve_cranial_I_olfactory": "nerve",
+    "Nerve_cranial_II_optic": "nerve",
+    "Nerve_cranial_III_oculomotor_left": "nerve",
+    "Nerve_cranial_III_oculomotor_right": "nerve",
+    "Nerve_cranial_IV_trochlear_left": "nerve",
+    "Nerve_cranial_IV_trochlear_right": "nerve",
+    "Nerve_cranial_IX_glossopharyngeal_left": "nerve",
+    "Nerve_cranial_IX_glossopharyngeal_right": "nerve",
+    "Nerve_cranial_V_trigeminal_left": "nerve",
+    "Nerve_cranial_V_trigeminal_right": "nerve",
+    "Nerve_cranial_VI_abducent_left": "nerve",
+    "Nerve_cranial_VI_abducent_right": "nerve",
+    "Nerve_cranial_VII_facial_left": "nerve",
+    "Nerve_cranial_VII_facial_right": "nerve",
+    "Nerve_cranial_VIII_vestibulocochlear_left": "nerve",
+    "Nerve_cranial_VIII_vestibulocochlear_right": "nerve",
+    "Nerve_cranial_X_vagus_left": "nerve",
+    "Nerve_cranial_X_vagus_right": "nerve",
+    "Nerve_cranial_XI_accessory_left": "nerve",
+    "Nerve_cranial_XI_accessory_right": "nerve",
+    "Nerve_cranial_XII_hypoglossal_left": "nerve",
+    "Nerve_cranial_XII_hypoglossal_right": "nerve",
+    "Nerve_deep_fibular_left": "nerve",
+    "Nerve_deep_fibular_right": "nerve",
+    "Nerve_dorsal_root_C1_left": "nerve",
+    "Nerve_dorsal_root_C1_right": "nerve",
+    "Nerve_dorsal_root_C2_left": "nerve",
+    "Nerve_dorsal_root_C2_right": "nerve",
+    "Nerve_dorsal_root_C3_left": "nerve",
+    "Nerve_dorsal_root_C3_right": "nerve",
+    "Nerve_dorsal_root_C4_left": "nerve",
+    "Nerve_dorsal_root_C4_right": "nerve",
+    "Nerve_dorsal_root_C5_left": "nerve",
+    "Nerve_dorsal_root_C5_right": "nerve",
+    "Nerve_dorsal_root_C6_left": "nerve",
+    "Nerve_dorsal_root_C6_right": "nerve",
+    "Nerve_dorsal_root_C7_left": "nerve",
+    "Nerve_dorsal_root_C7_right": "nerve",
+    "Nerve_dorsal_root_C8_left": "nerve",
+    "Nerve_dorsal_root_C8_right": "nerve",
+    "Nerve_dorsal_root_L1_left": "nerve",
+    "Nerve_dorsal_root_L1_right": "nerve",
+    "Nerve_dorsal_root_L2_left": "nerve",
+    "Nerve_dorsal_root_L2_right": "nerve",
+    "Nerve_dorsal_root_T10_left": "nerve",
+    "Nerve_dorsal_root_T10_right": "nerve",
+    "Nerve_dorsal_root_T11_left": "nerve",
+    "Nerve_dorsal_root_T11_right": "nerve",
+    "Nerve_dorsal_root_T12_left": "nerve",
+    "Nerve_dorsal_root_T12_right": "nerve",
+    "Nerve_dorsal_root_T1_left": "nerve",
+    "Nerve_dorsal_root_T1_right": "nerve",
+    "Nerve_dorsal_root_T2_left": "nerve",
+    "Nerve_dorsal_root_T2_right": "nerve",
+    "Nerve_dorsal_root_T3_left": "nerve",
+    "Nerve_dorsal_root_T3_right": "nerve",
+    "Nerve_dorsal_root_T4_left": "nerve",
+    "Nerve_dorsal_root_T4_right": "nerve",
+    "Nerve_dorsal_root_T5_left": "nerve",
+    "Nerve_dorsal_root_T5_right": "nerve",
+    "Nerve_dorsal_root_T6_left": "nerve",
+    "Nerve_dorsal_root_T6_right": "nerve",
+    "Nerve_dorsal_root_T7_left": "nerve",
+    "Nerve_dorsal_root_T7_right": "nerve",
+    "Nerve_dorsal_root_T8_left": "nerve",
+    "Nerve_dorsal_root_T8_right": "nerve",
+    "Nerve_dorsal_root_T9_left": "nerve",
+    "Nerve_dorsal_root_T9_right": "nerve",
+    "Nerve_femoral_left": "nerve",
+    "Nerve_femoral_right": "nerve",
+    "Nerve_inferior_gluteal_left": "nerve",
+    "Nerve_inferior_gluteal_right": "nerve",
+    "Nerve_inferior_rectal_left": "nerve",
+    "Nerve_inferior_rectal_right": "nerve",
+    "Nerve_intermediate_femoral_cutaneous_left": "nerve",
+    "Nerve_intermediate_femoral_cutaneous_right": "nerve",
+    "Nerve_lateral_femoral_cutaneous_left": "nerve",
+    "Nerve_lateral_femoral_cutaneous_right": "nerve",
+    "Nerve_medial_arm_cutaneous_left": "nerve",
+    "Nerve_medial_arm_cutaneous_right": "nerve",
+    "Nerve_medial_femoral_cutaneous_left": "nerve",
+    "Nerve_medial_femoral_cutaneous_right": "nerve",
+    "Nerve_median_left": "nerve",
+    "Nerve_median_right": "nerve",
+    "Nerve_muscolocutaneous_left": "nerve",
+    "Nerve_muscolocutaneous_right": "nerve",
+    "Nerve_obturator_left": "nerve",
+    "Nerve_obturator_right": "nerve",
+    "Nerve_perineal_left": "nerve",
+    "Nerve_perineal_right": "nerve",
+    "Nerve_phrenic_left": "nerve",
+    "Nerve_phrenic_right": "nerve",
+    "Nerve_posterior_femoral_cutaneous_left": "nerve",
+    "Nerve_posterior_femoral_cutaneous_right": "nerve",
+    "Nerve_pudendal_left": "nerve",
+    "Nerve_pudendal_right": "nerve",
+    "Nerve_radial_left": "nerve",
+    "Nerve_radial_right": "nerve",
+    "Nerve_root_L3_left": "nerve",
+    "Nerve_root_L3_right": "nerve",
+    "Nerve_root_L4_left": "nerve",
+    "Nerve_root_L4_right": "nerve",
+    "Nerve_root_L5_left": "nerve",
+    "Nerve_root_L5_right": "nerve",
+    "Nerve_root_S1_left": "nerve",
+    "Nerve_root_S1_right": "nerve",
+    "Nerve_root_S2_left": "nerve",
+    "Nerve_root_S2_right": "nerve",
+    "Nerve_root_S3_left": "nerve",
+    "Nerve_root_S3_right": "nerve",
+    "Nerve_root_S4_left": "nerve",
+    "Nerve_root_S4_right": "nerve",
+    "Nerve_saphenous_left": "nerve",
+    "Nerve_saphenous_right": "nerve",
+    "Nerve_sciatic_left": "nerve",
+    "Nerve_sciatic_right": "nerve",
+    "Nerve_spinal_C1_left": "nerve",
+    "Nerve_spinal_C1_right": "nerve",
+    "Nerve_spinal_C2_left": "nerve",
+    "Nerve_spinal_C2_right": "nerve",
+    "Nerve_spinal_C3_left": "nerve",
+    "Nerve_spinal_C3_right": "nerve",
+    "Nerve_spinal_C4_left": "nerve",
+    "Nerve_spinal_C4_right": "nerve",
+    "Nerve_spinal_C5_left": "nerve",
+    "Nerve_spinal_C5_right": "nerve",
+    "Nerve_spinal_C6_left": "nerve",
+    "Nerve_spinal_C6_right": "nerve",
+    "Nerve_spinal_C7_left": "nerve",
+    "Nerve_spinal_C7_right": "nerve",
+    "Nerve_spinal_C8_left": "nerve",
+    "Nerve_spinal_C8_right": "nerve",
+    "Nerve_spinal_L1_left": "nerve",
+    "Nerve_spinal_L1_right": "nerve",
+    "Nerve_spinal_L2_left": "nerve",
+    "Nerve_spinal_L2_right": "nerve",
+    "Nerve_spinal_L3_left": "nerve",
+    "Nerve_spinal_L3_right": "nerve",
+    "Nerve_spinal_L4_left": "nerve",
+    "Nerve_spinal_L4_right": "nerve",
+    "Nerve_spinal_L5_left": "nerve",
+    "Nerve_spinal_L5_right": "nerve",
+    "Nerve_spinal_S1_left": "nerve",
+    "Nerve_spinal_S1_right": "nerve",
+    "Nerve_spinal_S2_left": "nerve",
+    "Nerve_spinal_S2_right": "nerve",
+    "Nerve_spinal_S3_left": "nerve",
+    "Nerve_spinal_S3_right": "nerve",
+    "Nerve_spinal_S4_left": "nerve",
+    "Nerve_spinal_S4_right": "nerve",
+    "Nerve_spinal_T10_left": "nerve",
+    "Nerve_spinal_T10_right": "nerve",
+    "Nerve_spinal_T11_left": "nerve",
+    "Nerve_spinal_T11_right": "nerve",
+    "Nerve_spinal_T12_left": "nerve",
+    "Nerve_spinal_T12_right": "nerve",
+    "Nerve_spinal_T1_left": "nerve",
+    "Nerve_spinal_T1_right": "nerve",
+    "Nerve_spinal_T2_left": "nerve",
+    "Nerve_spinal_T2_right": "nerve",
+    "Nerve_spinal_T3_left": "nerve",
+    "Nerve_spinal_T3_right": "nerve",
+    "Nerve_spinal_T4_left": "nerve",
+    "Nerve_spinal_T4_right": "nerve",
+    "Nerve_spinal_T5_left": "nerve",
+    "Nerve_spinal_T5_right": "nerve",
+    "Nerve_spinal_T6_left": "nerve",
+    "Nerve_spinal_T6_right": "nerve",
+    "Nerve_spinal_T7_left": "nerve",
+    "Nerve_spinal_T7_right": "nerve",
+    "Nerve_spinal_T8_left": "nerve",
+    "Nerve_spinal_T8_right": "nerve",
+    "Nerve_spinal_T9_left": "nerve",
+    "Nerve_spinal_T9_right": "nerve",
+    "Nerve_superficial_fibular_left": "nerve",
+    "Nerve_superficial_fibular_right": "nerve",
+    "Nerve_superior_gluteal_left": "nerve",
+    "Nerve_superior_gluteal_right": "nerve",
+    "Nerve_suprascapular_left": "nerve",
+    "Nerve_suprascapular_right": "nerve",
+    "Nerve_thoracodorsal_left": "nerve",
+    "Nerve_thoracodorsal_right": "nerve",
+    "Nerve_tibial_left": "nerve",
+    "Nerve_tibial_right": "nerve",
+    "Nerve_ulnar_left": "nerve",
+    "Nerve_ulnar_right": "nerve",
+    "Nerve_ventral_root_C1_left": "nerve",
+    "Nerve_ventral_root_C1_right": "nerve",
+    "Nerve_ventral_root_C2_left": "nerve",
+    "Nerve_ventral_root_C2_right": "nerve",
+    "Nerve_ventral_root_C3_left": "nerve",
+    "Nerve_ventral_root_C3_right": "nerve",
+    "Nerve_ventral_root_C4_left": "nerve",
+    "Nerve_ventral_root_C4_right": "nerve",
+    "Nerve_ventral_root_C5_left": "nerve",
+    "Nerve_ventral_root_C5_right": "nerve",
+    "Nerve_ventral_root_C6_left": "nerve",
+    "Nerve_ventral_root_C6_right": "nerve",
+    "Nerve_ventral_root_C7_left": "nerve",
+    "Nerve_ventral_root_C7_right": "nerve",
+    "Nerve_ventral_root_C8_left": "nerve",
+    "Nerve_ventral_root_C8_right": "nerve",
+    "Nerve_ventral_root_L1_left": "nerve",
+    "Nerve_ventral_root_L1_right": "nerve",
+    "Nerve_ventral_root_L2_left": "nerve",
+    "Nerve_ventral_root_L2_right": "nerve",
+    "Nerve_ventral_root_T10_left": "nerve",
+    "Nerve_ventral_root_T10_right": "nerve",
+    "Nerve_ventral_root_T11_left": "nerve",
+    "Nerve_ventral_root_T11_right": "nerve",
+    "Nerve_ventral_root_T12_left": "nerve",
+    "Nerve_ventral_root_T12_right": "nerve",
+    "Nerve_ventral_root_T1_left": "nerve",
+    "Nerve_ventral_root_T1_right": "nerve",
+    "Nerve_ventral_root_T2_left": "nerve",
+    "Nerve_ventral_root_T2_right": "nerve",
+    "Nerve_ventral_root_T3_left": "nerve",
+    "Nerve_ventral_root_T3_right": "nerve",
+    "Nerve_ventral_root_T4_left": "nerve",
+    "Nerve_ventral_root_T4_right": "nerve",
+    "Nerve_ventral_root_T5_left": "nerve",
+    "Nerve_ventral_root_T5_right": "nerve",
+    "Nerve_ventral_root_T6_left": "nerve",
+    "Nerve_ventral_root_T6_right": "nerve",
+    "Nerve_ventral_root_T7_left": "nerve",
+    "Nerve_ventral_root_T7_right": "nerve",
+    "Nerve_ventral_root_T8_left": "nerve",
+    "Nerve_ventral_root_T8_right": "nerve",
+    "Nerve_ventral_root_T9_left": "nerve",
+    "Nerve_ventral_root_T9_right": "nerve",
+    "Ramus_communicans_left": "nerve",
+    "Ramus_communicans_right": "nerve",
+    "Sympathetic_trunk_left": "nerve",
+    "Sympathetic_trunk_right": "nerve",
+    "Medulla_oblongata": "medulla_oblongata",
+    "Muscle_abductor_digiti_minimi_foot_left": "muscle",
+    "Muscle_abductor_digiti_minimi_foot_right": "muscle",
+    "Muscle_abductor_digiti_minimi_left": "muscle",
+    "Muscle_abductor_digiti_minimi_right": "muscle",
+    "Muscle_abductor_hallucis_left": "muscle",
+    "Muscle_abductor_hallucis_right": "muscle",
+    "Muscle_abductor_pollicis_brevis_left": "muscle",
+    "Muscle_abductor_pollicis_brevis_right": "muscle",
+    "Muscle_abductor_pollicis_longus_left": "muscle",
+    "Muscle_abductor_pollicis_longus_right": "muscle",
+    "Muscle_adductor_brevis_left": "muscle",
+    "Muscle_adductor_brevis_right": "muscle",
+    "Muscle_adductor_hallucis_oblique_head_left": "muscle",
+    "Muscle_adductor_hallucis_oblique_head_right": "muscle",
+    "Muscle_adductor_hallucis_transverse_head_left": "muscle",
+    "Muscle_adductor_hallucis_transverse_head_right": "muscle",
+    "Muscle_adductor_longus_left": "muscle",
+    "Muscle_adductor_longus_right": "muscle",
+    "Muscle_adductor_magnus_left": "muscle",
+    "Muscle_adductor_magnus_right": "muscle",
+    "Muscle_adductor_pollicis_left": "muscle",
+    "Muscle_adductor_pollicis_right": "muscle",
+    "Muscle_anconeus_left": "muscle",
+    "Muscle_anconeus_right": "muscle",
+    "Muscle_anterior_rectus_capitis_left": "muscle",
+    "Muscle_anterior_rectus_capitis_right": "muscle",
+    "Muscle_anterior_scalenus_left": "muscle",
+    "Muscle_anterior_scalenus_right": "muscle",
+    "Muscle_anterior_serratus_left": "muscle",
+    "Muscle_anterior_serratus_right": "muscle",
+    "Muscle_anterior_tibialis_left": "muscle",
+    "Muscle_anterior_tibialis_right": "muscle",
+    "Muscle_biceps_brachii_left": "muscle",
+    "Muscle_biceps_brachii_right": "muscle",
+    "Muscle_biceps_femoris_left": "muscle",
+    "Muscle_biceps_femoris_right": "muscle",
+    "Muscle_brachialis_left": "muscle",
+    "Muscle_brachialis_right": "muscle",
+    "Muscle_brachioradialis_left": "muscle",
+    "Muscle_brachioradialis_right": "muscle",
+    "Muscle_buccinator_left": "muscle",
+    "Muscle_buccinator_right": "muscle",
+    "Muscle_bulbospongiosus": "muscle",
+    "Muscle_coccygeus_left": "muscle",
+    "Muscle_coccygeus_right": "muscle",
+    "Muscle_constrictor": "muscle",
+    "Muscle_coracobrachialis_left": "muscle",
+    "Muscle_coracobrachialis_right": "muscle",
+    "Muscle_cricothyroid_left": "muscle",
+    "Muscle_cricothyroid_right": "muscle",
+    "Muscle_deep_transverse_perineal": "muscle",
+    "Muscle_deltoid_left": "muscle",
+    "Muscle_deltoid_right": "muscle",
+    "Muscle_depressor_anguli_oris_left": "muscle",
+    "Muscle_depressor_anguli_oris_right": "muscle",
+    "Muscle_digastric_left": "muscle",
+    "Muscle_digastric_right": "muscle",
+    "Muscle_dorsal_interosseous_left": "muscle",
+    "Muscle_dorsal_interosseous_right": "muscle",
+    "Muscle_erector_spinae_left": "muscle",
+    "Muscle_erector_spinae_right": "muscle",
+    "Muscle_extensor_carpi_radialis_brevis_left": "muscle",
+    "Muscle_extensor_carpi_radialis_brevis_right": "muscle",
+    "Muscle_extensor_carpi_radialis_longus_left": "muscle",
+    "Muscle_extensor_carpi_radialis_longus_right": "muscle",
+    "Muscle_extensor_carpi_ulnaris_left": "muscle",
+    "Muscle_extensor_carpi_ulnaris_right": "muscle",
+    "Muscle_extensor_digiti_minimi_left": "muscle",
+    "Muscle_extensor_digiti_minimi_right": "muscle",
+    "Muscle_extensor_digitorum_brevis_left": "muscle",
+    "Muscle_extensor_digitorum_brevis_right": "muscle",
+    "Muscle_extensor_digitorum_left": "muscle",
+    "Muscle_extensor_digitorum_longus_left": "muscle",
+    "Muscle_extensor_digitorum_longus_right": "muscle",
+    "Muscle_extensor_digitorum_right": "muscle",
+    "Muscle_extensor_hallucis_longus_left": "muscle",
+    "Muscle_extensor_hallucis_longus_right": "muscle",
+    "Muscle_extensor_indicis_left": "muscle",
+    "Muscle_extensor_indicis_right": "muscle",
+    "Muscle_extensor_pollicis_brevis_left": "muscle",
+    "Muscle_extensor_pollicis_brevis_right": "muscle",
+    "Muscle_extensor_pollicis_longus_left": "muscle",
+    "Muscle_extensor_pollicis_longus_right": "muscle",
+    "Muscle_external_anal_sphincter": "muscle",
+    "Muscle_external_oblique_abdominal_left": "muscle",
+    "Muscle_external_oblique_abdominal_right": "muscle",
+    "Muscle_external_urethral_sphincter": "muscle",
+    "Muscle_fibularis_brevis_left": "muscle",
+    "Muscle_fibularis_brevis_right": "muscle",
+    "Muscle_fibularis_longus_left": "muscle",
+    "Muscle_fibularis_longus_right": "muscle",
+    "Muscle_flexor_carpi_radialis_left": "muscle",
+    "Muscle_flexor_carpi_radialis_right": "muscle",
+    "Muscle_flexor_carpi_ulnaris_left": "muscle",
+    "Muscle_flexor_carpi_ulnaris_right": "muscle",
+    "Muscle_flexor_digiti_minimi_brevis_foot_left": "muscle",
+    "Muscle_flexor_digiti_minimi_brevis_foot_right": "muscle",
+    "Muscle_flexor_digiti_minimi_left": "muscle",
+    "Muscle_flexor_digiti_minimi_right": "muscle",
+    "Muscle_flexor_digitorum_brevi_left": "muscle",
+    "Muscle_flexor_digitorum_brevi_right": "muscle",
+    "Muscle_flexor_digitorum_longus_left": "muscle",
+    "Muscle_flexor_digitorum_longus_right": "muscle",
+    "Muscle_flexor_digitorum_profundus_left": "muscle",
+    "Muscle_flexor_digitorum_profundus_right": "muscle",
+    "Muscle_flexor_digitorum_superficialis_left": "muscle",
+    "Muscle_flexor_digitorum_superficialis_right": "muscle",
+    "Muscle_flexor_hallucis_brevis_left": "muscle",
+    "Muscle_flexor_hallucis_brevis_right": "muscle",
+    "Muscle_flexor_hallucis_longus_left": "muscle",
+    "Muscle_flexor_hallucis_longus_right": "muscle",
+    "Muscle_flexor_pollicis_brevis_left": "muscle",
+    "Muscle_flexor_pollicis_brevis_right": "muscle",
+    "Muscle_flexor_pollicis_longus_left": "muscle",
+    "Muscle_flexor_pollicis_longus_right": "muscle",
+    "Muscle_gastrocnemius_left": "muscle",
+    "Muscle_gastrocnemius_right": "muscle",
+    "Muscle_genioglossus_left": "muscle",
+    "Muscle_genioglossus_right": "muscle",
+    "Muscle_geniohyoid_left": "muscle",
+    "Muscle_geniohyoid_right": "muscle",
+    "Muscle_gluteus_maximus_left": "muscle",
+    "Muscle_gluteus_maximus_right": "muscle",
+    "Muscle_gluteus_medius_left": "muscle",
+    "Muscle_gluteus_medius_right": "muscle",
+    "Muscle_gluteus_minimus_left": "muscle",
+    "Muscle_gluteus_minimus_right": "muscle",
+    "Muscle_gracilis_left": "muscle",
+    "Muscle_gracilis_right": "muscle",
+    "Muscle_hyoglossus_left": "muscle",
+    "Muscle_hyoglossus_right": "muscle",
+    "Muscle_iliacus_left": "muscle",
+    "Muscle_iliacus_right": "muscle",
+    "Muscle_iliocostalis_left": "muscle",
+    "Muscle_iliocostalis_lumborum_left": "muscle",
+    "Muscle_iliocostalis_lumborum_right": "muscle",
+    "Muscle_iliocostalis_right": "muscle",
+    "Muscle_iliopsoas_left": "muscle",
+    "Muscle_iliopsoas_right": "muscle",
+    "Muscle_inferior_gemellus_left": "muscle",
+    "Muscle_inferior_gemellus_right": "muscle",
+    "Muscle_inferior_oblique_left": "muscle",
+    "Muscle_inferior_oblique_right": "muscle",
+    "Muscle_inferior_obliquus_capitis_left": "muscle",
+    "Muscle_inferior_obliquus_capitis_right": "muscle",
+    "Muscle_inferior_rectus_left": "muscle",
+    "Muscle_inferior_rectus_right": "muscle",
+    "Muscle_infraspinatus_left": "muscle",
+    "Muscle_infraspinatus_right": "muscle",
+    "Muscle_intercostal_left": "muscle",
+    "Muscle_intercostal_right": "muscle",
+    "Muscle_internal_oblique_abdominal_left": "muscle",
+    "Muscle_internal_oblique_abdominal_right": "muscle",
+    "Muscle_ischiocavernosus_left": "muscle",
+    "Muscle_ischiocavernosus_right": "muscle",
+    "Muscle_lateral_crico_arytenoid_left": "muscle",
+    "Muscle_lateral_crico_arytenoid_right": "muscle",
+    "Muscle_lateral_pterygoid_left": "muscle",
+    "Muscle_lateral_pterygoid_right": "muscle",
+    "Muscle_lateral_rectus_left": "muscle",
+    "Muscle_lateral_rectus_right": "muscle",
+    "Muscle_latissimus_dorsi_left": "muscle",
+    "Muscle_latissimus_dorsi_right": "muscle",
+    "Muscle_levator_ani": "muscle",
+    "Muscle_levator_palpebrae_superioris_left": "muscle",
+    "Muscle_levator_palpebrae_superioris_right": "muscle",
+    "Muscle_levator_scapulae_left": "muscle",
+    "Muscle_levator_scapulae_right": "muscle",
+    "Muscle_levator_veli_palatini": "muscle",
+    "Muscle_longissimus_capitis_left": "muscle",
+    "Muscle_longissimus_capitis_right": "muscle",
+    "Muscle_longissimus_cervicis_left": "muscle",
+    "Muscle_longissimus_cervicis_right": "muscle",
+    "Muscle_longissimus_left": "muscle",
+    "Muscle_longissimus_right": "muscle",
+    "Muscle_longissimus_thoracis_left": "muscle",
+    "Muscle_longissimus_thoracis_right": "muscle",
+    "Muscle_longus_capitis_left": "muscle",
+    "Muscle_longus_capitis_right": "muscle",
+    "Muscle_longus_colli_left": "muscle",
+    "Muscle_longus_colli_right": "muscle",
+    "Muscle_lumbrical_left": "muscle",
+    "Muscle_lumbrical_right": "muscle",
+    "Muscle_masseter_left": "muscle",
+    "Muscle_masseter_right": "muscle",
+    "Muscle_medial_pterygoid_left": "muscle",
+    "Muscle_medial_pterygoid_right": "muscle",
+    "Muscle_medial_rectus_left": "muscle",
+    "Muscle_medial_rectus_right": "muscle",
+    "Muscle_middle_scalenus_left": "muscle",
+    "Muscle_middle_scalenus_right": "muscle",
+    "Muscle_mylohyoid_left": "muscle",
+    "Muscle_mylohyoid_right": "muscle",
+    "Muscle_obturator_externus_left": "muscle",
+    "Muscle_obturator_externus_right": "muscle",
+    "Muscle_obturator_internus_left": "muscle",
+    "Muscle_obturator_internus_right": "muscle",
+    "Muscle_occipitofrontalis_left": "muscle",
+    "Muscle_occipitofrontalis_right": "muscle",
+    "Muscle_omohyoid_left": "muscle",
+    "Muscle_omohyoid_right": "muscle",
+    "Muscle_opponens_digiti_minimi_left": "muscle",
+    "Muscle_opponens_digiti_minimi_right": "muscle",
+    "Muscle_opponens_pollicis_left": "muscle",
+    "Muscle_opponens_pollicis_right": "muscle",
+    "Muscle_palatoglossus_left": "muscle",
+    "Muscle_palatoglossus_right": "muscle",
+    "Muscle_palmar_interosseous_left": "muscle",
+    "Muscle_palmar_interosseous_right": "muscle",
+    "Muscle_palmaris_brevis_left": "muscle",
+    "Muscle_palmaris_brevis_right": "muscle",
+    "Muscle_palmaris_longus_left": "muscle",
+    "Muscle_palmaris_longus_right": "muscle",
+    "Muscle_pectineus_left": "muscle",
+    "Muscle_pectineus_right": "muscle",
+    "Muscle_pectoralis_major_left": "muscle",
+    "Muscle_pectoralis_major_right": "muscle",
+    "Muscle_pectoralis_minor_left": "muscle",
+    "Muscle_pectoralis_minor_right": "muscle",
+    "Muscle_piriformis_left": "muscle",
+    "Muscle_piriformis_right": "muscle",
+    "Muscle_plantar_interosseous_left": "muscle",
+    "Muscle_plantar_interosseous_right": "muscle",
+    "Muscle_plantaris_left": "muscle",
+    "Muscle_plantaris_right": "muscle",
+    "Muscle_popliteus_left": "muscle",
+    "Muscle_popliteus_right": "muscle",
+    "Muscle_posterior_crico_arytenoid_left": "muscle",
+    "Muscle_posterior_crico_arytenoid_right": "muscle",
+    "Muscle_posterior_rectus_capitis_major_left": "muscle",
+    "Muscle_posterior_rectus_capitis_major_right": "muscle",
+    "Muscle_posterior_rectus_capitis_minor_left": "muscle",
+    "Muscle_posterior_rectus_capitis_minor_right": "muscle",
+    "Muscle_posterior_scalenus_left": "muscle",
+    "Muscle_posterior_scalenus_right": "muscle",
+    "Muscle_posterior_superior_serratus_left": "muscle",
+    "Muscle_posterior_superior_serratus_right": "muscle",
+    "Muscle_posterior_tibialis_left": "muscle",
+    "Muscle_posterior_tibialis_right": "muscle",
+    "Muscle_pronator_quadratus_left": "muscle",
+    "Muscle_pronator_quadratus_right": "muscle",
+    "Muscle_pronator_teres_left": "muscle",
+    "Muscle_pronator_teres_right": "muscle",
+    "Muscle_psoas_major_left": "muscle",
+    "Muscle_psoas_major_right": "muscle",
+    "Muscle_pyramidalis_left": "muscle",
+    "Muscle_pyramidalis_right": "muscle",
+    "Muscle_quadratus_femoris_left": "muscle",
+    "Muscle_quadratus_femoris_right": "muscle",
+    "Muscle_quadratus_lumborum_left": "muscle",
+    "Muscle_quadratus_lumborum_right": "muscle",
+    "Muscle_quadratus_plantae_left": "muscle",
+    "Muscle_quadratus_plantae_right": "muscle",
+    "Muscle_rectus_abdominis_left": "muscle",
+    "Muscle_rectus_abdominis_right": "muscle",
+    "Muscle_rectus_capitis_lateralis_left": "muscle",
+    "Muscle_rectus_capitis_lateralis_right": "muscle",
+    "Muscle_rectus_femoris_left": "muscle",
+    "Muscle_rectus_femoris_right": "muscle",
+    "Muscle_rhomboid_major_left": "muscle",
+    "Muscle_rhomboid_major_right": "muscle",
+    "Muscle_rhomboid_minor_left": "muscle",
+    "Muscle_rhomboid_minor_right": "muscle",
+    "Muscle_sartorius_left": "muscle",
+    "Muscle_sartorius_right": "muscle",
+    "Muscle_semimembranosus_left": "muscle",
+    "Muscle_semimembranosus_right": "muscle",
+    "Muscle_semispinalis_capitis_left": "muscle",
+    "Muscle_semispinalis_capitis_right": "muscle",
+    "Muscle_semispinalis_cervicis_left": "muscle",
+    "Muscle_semispinalis_cervicis_right": "muscle",
+    "Muscle_semitendinosus_left": "muscle",
+    "Muscle_semitendinosus_right": "muscle",
+    "Muscle_soleus_left": "muscle",
+    "Muscle_soleus_right": "muscle",
+    "Muscle_splenius_capitis_left": "muscle",
+    "Muscle_splenius_capitis_right": "muscle",
+    "Muscle_sternocleidomastoid_left": "muscle",
+    "Muscle_sternocleidomastoid_right": "muscle",
+    "Muscle_sternohyoid_left": "muscle",
+    "Muscle_sternohyoid_right": "muscle",
+    "Muscle_sternothyroid_left": "muscle",
+    "Muscle_sternothyroid_right": "muscle",
+    "Muscle_styloglossus_left": "muscle",
+    "Muscle_styloglossus_right": "muscle",
+    "Muscle_stylohyoid_left": "muscle",
+    "Muscle_stylohyoid_right": "muscle",
+    "Muscle_stylopharyngeus_left": "muscle",
+    "Muscle_stylopharyngeus_right": "muscle",
+    "Muscle_subclavius_left": "muscle",
+    "Muscle_subclavius_right": "muscle",
+    "Muscle_subscapularis_left": "muscle",
+    "Muscle_subscapularis_right": "muscle",
+    "Muscle_superficial_transverse_perineal_left": "muscle",
+    "Muscle_superficial_transverse_perineal_right": "muscle",
+    "Muscle_superior_gemellus_left": "muscle",
+    "Muscle_superior_gemellus_right": "muscle",
+    "Muscle_superior_oblique_left": "muscle",
+    "Muscle_superior_oblique_right": "muscle",
+    "Muscle_superior_obliquus_capitis_left": "muscle",
+    "Muscle_superior_obliquus_capitis_right": "muscle",
+    "Muscle_superior_rectus_left": "muscle",
+    "Muscle_superior_rectus_right": "muscle",
+    "Muscle_supinator_left": "muscle",
+    "Muscle_supinator_right": "muscle",
+    "Muscle_supraspinatus_left": "muscle",
+    "Muscle_supraspinatus_right": "muscle",
+    "Muscle_temporal_left": "muscle",
+    "Muscle_temporal_right": "muscle",
+    "Muscle_tensor_fasciae_latae_left": "muscle",
+    "Muscle_tensor_fasciae_latae_right": "muscle",
+    "Muscle_tensor_veli_palatini": "muscle",
+    "Muscle_teres_major_left": "muscle",
+    "Muscle_teres_major_right": "muscle",
+    "Muscle_teres_minor_left": "muscle",
+    "Muscle_teres_minor_right": "muscle",
+    "Muscle_thyrohyoid_left": "muscle",
+    "Muscle_thyrohyoid_right": "muscle",
+    "Muscle_transversospinales_left": "muscle",
+    "Muscle_transversospinales_right": "muscle",
+    "Muscle_transversus_abdominis_left": "muscle",
+    "Muscle_transversus_abdominis_right": "muscle",
+    "Muscle_trapezius_left": "muscle",
+    "Muscle_trapezius_right": "muscle",
+    "Muscle_triceps_brachii_left": "muscle",
+    "Muscle_triceps_brachii_right": "muscle",
+    "Muscle_vastus_intermedius_left": "muscle",
+    "Muscle_vastus_intermedius_right": "muscle",
+    "Muscle_vastus_lateralis_left": "muscle",
+    "Muscle_vastus_lateralis_right": "muscle",
+    "Muscle_vastus_medialis_left": "muscle",
+    "Muscle_vastus_medialis_right": "muscle",
+    "Muscle_zygomaticus_left": "muscle",
+    "Muscle_zygomaticus_right": "muscle",
+    "Meniscus_left": "meniscus",
+    "Meniscus_right": "meniscus",
+    "Midbrain": "midbrain",
+    "Carpalia_Metacarpalia_cancellous_left": "bone_cancellous",
+    "Carpalia_Metacarpalia_cancellous_right": "bone_cancellous",
+    "Femur_cancellous_left": "bone_cancellous",
+    "Femur_cancellous_right": "bone_cancellous",
+    "Fibula_cancellous_left": "bone_cancellous",
+    "Fibula_cancellous_right": "bone_cancellous",
+    "Foot_cancellous_left": "bone_cancellous",
+    "Foot_cancellous_right": "bone_cancellous",
+    "Humerus_cancellous_left": "bone_cancellous",
+    "Humerus_cancellous_right": "bone_cancellous",
+    "Hyoid_cancellous": "bone_cancellous",
+    "Mandible_cancellous": "bone_cancellous",
+    "Metacarpus_I_cancellous_left": "bone_cancellous",
+    "Metacarpus_I_cancellous_right": "bone_cancellous",
+    "Metatarsus_I_cancellous_left": "bone_cancellous",
+    "Metatarsus_I_cancellous_right": "bone_cancellous",
+    "Metatarsus_II_cancellous_left": "bone_cancellous",
+    "Metatarsus_II_cancellous_right": "bone_cancellous",
+    "Metatarsus_III_cancellous_left": "bone_cancellous",
+    "Metatarsus_III_cancellous_right": "bone_cancellous",
+    "Metatarsus_IV_cancellous_left": "bone_cancellous",
+    "Metatarsus_IV_cancellous_right": "bone_cancellous",
+    "Metatarsus_V_cancellous_left": "bone_cancellous",
+    "Metatarsus_V_cancellous_right": "bone_cancellous",
+    "Patella_cancellous_left": "bone_cancellous",
+    "Patella_cancellous_right": "bone_cancellous",
+    "Pelvis_cancellous": "bone_cancellous",
+    "Phalanx_distalis_I_cancellous_foot_left": "bone_cancellous",
+    "Phalanx_distalis_I_cancellous_foot_right": "bone_cancellous",
+    "Phalanx_distalis_I_cancellous_left": "bone_cancellous",
+    "Phalanx_distalis_I_cancellous_right": "bone_cancellous",
+    "Phalanx_distalis_II_cancellous_foot_left": "bone_cancellous",
+    "Phalanx_distalis_II_cancellous_foot_right": "bone_cancellous",
+    "Phalanx_distalis_II_cancellous_left": "bone_cancellous",
+    "Phalanx_distalis_II_cancellous_right": "bone_cancellous",
+    "Phalanx_distalis_III_cancellous_foot_left": "bone_cancellous",
+    "Phalanx_distalis_III_cancellous_foot_right": "bone_cancellous",
+    "Phalanx_distalis_III_cancellous_left": "bone_cancellous",
+    "Phalanx_distalis_III_cancellous_right": "bone_cancellous",
+    "Phalanx_distalis_IV_cancellous_foot_left": "bone_cancellous",
+    "Phalanx_distalis_IV_cancellous_foot_right": "bone_cancellous",
+    "Phalanx_distalis_IV_cancellous_left": "bone_cancellous",
+    "Phalanx_distalis_IV_cancellous_right": "bone_cancellous",
+    "Phalanx_distalis_V_cancellous_foot_left": "bone_cancellous",
+    "Phalanx_distalis_V_cancellous_foot_right": "bone_cancellous",
+    "Phalanx_distalis_V_cancellous_left": "bone_cancellous",
+    "Phalanx_distalis_V_cancellous_right": "bone_cancellous",
+    "Phalanx_media_II_cancellous_foot_left": "bone_cancellous",
+    "Phalanx_media_II_cancellous_foot_right": "bone_cancellous",
+    "Phalanx_media_II_cancellous_left": "bone_cancellous",
+    "Phalanx_media_II_cancellous_right": "bone_cancellous",
+    "Phalanx_media_III_cancellous_foot_left": "bone_cancellous",
+    "Phalanx_media_III_cancellous_foot_right": "bone_cancellous",
+    "Phalanx_media_III_cancellous_left": "bone_cancellous",
+    "Phalanx_media_III_cancellous_right": "bone_cancellous",
+    "Phalanx_media_IV_cancellous_foot_left": "bone_cancellous",
+    "Phalanx_media_IV_cancellous_foot_right": "bone_cancellous",
+    "Phalanx_media_IV_cancellous_left": "bone_cancellous",
+    "Phalanx_media_IV_cancellous_right": "bone_cancellous",
+    "Phalanx_media_V_cancellous_foot_left": "bone_cancellous",
+    "Phalanx_media_V_cancellous_foot_right": "bone_cancellous",
+    "Phalanx_media_V_cancellous_left": "bone_cancellous",
+    "Phalanx_media_V_cancellous_right": "bone_cancellous",
+    "Phalanx_proximalis_I_cancellous_foot_left": "bone_cancellous",
+    "Phalanx_proximalis_I_cancellous_foot_right": "bone_cancellous",
+    "Phalanx_proximalis_I_cancellous_left": "bone_cancellous",
+    "Phalanx_proximalis_I_cancellous_right": "bone_cancellous",
+    "Phalanx_proximalis_II_cancellous_foot_left": "bone_cancellous",
+    "Phalanx_proximalis_II_cancellous_foot_right": "bone_cancellous",
+    "Phalanx_proximalis_II_cancellous_left": "bone_cancellous",
+    "Phalanx_proximalis_II_cancellous_right": "bone_cancellous",
+    "Phalanx_proximalis_III_cancellous_foot_left": "bone_cancellous",
+    "Phalanx_proximalis_III_cancellous_foot_right": "bone_cancellous",
+    "Phalanx_proximalis_III_cancellous_left": "bone_cancellous",
+    "Phalanx_proximalis_III_cancellous_right": "bone_cancellous",
+    "Phalanx_proximalis_IV_cancellous_foot_left": "bone_cancellous",
+    "Phalanx_proximalis_IV_cancellous_foot_right": "bone_cancellous",
+    "Phalanx_proximalis_IV_cancellous_left": "bone_cancellous",
+    "Phalanx_proximalis_IV_cancellous_right": "bone_cancellous",
+    "Phalanx_proximalis_V_cancellous_foot_left": "bone_cancellous",
+    "Phalanx_proximalis_V_cancellous_foot_right": "bone_cancellous",
+    "Phalanx_proximalis_V_cancellous_left": "bone_cancellous",
+    "Phalanx_proximalis_V_cancellous_right": "bone_cancellous",
+    "Radius_cancellous_left": "bone_cancellous",
+    "Radius_cancellous_right": "bone_cancellous",
+    "Skull_cancellous": "bone_cancellous",
+    "Thorax_cancellous": "bone_cancellous",
+    "Tibia_cancellous_left": "bone_cancellous",
+    "Tibia_cancellous_right": "bone_cancellous",
+    "Ulna_cancellous_left": "bone_cancellous",
+    "Ulna_cancellous_right": "bone_cancellous",
+    "Vertebra_cancellous_C1": "bone_cancellous",
+    "Vertebra_cancellous_C2": "bone_cancellous",
+    "Vertebra_cancellous_C3": "bone_cancellous",
+    "Vertebra_cancellous_C4": "bone_cancellous",
+    "Vertebra_cancellous_C5": "bone_cancellous",
+    "Vertebra_cancellous_C6": "bone_cancellous",
+    "Vertebra_cancellous_C7": "bone_cancellous",
+    "Vertebra_cancellous_L1": "bone_cancellous",
+    "Vertebra_cancellous_L2": "bone_cancellous",
+    "Vertebra_cancellous_L3": "bone_cancellous",
+    "Vertebra_cancellous_L4": "bone_cancellous",
+    "Vertebra_cancellous_L5": "bone_cancellous",
+    "Vertebra_cancellous_os_sacrum_coccyx": "bone_cancellous",
+    "Vertebra_cancellous_T1": "bone_cancellous",
+    "Vertebra_cancellous_T10": "bone_cancellous",
+    "Vertebra_cancellous_T11": "bone_cancellous",
+    "Vertebra_cancellous_T12": "bone_cancellous",
+    "Vertebra_cancellous_T2": "bone_cancellous",
+    "Vertebra_cancellous_T3": "bone_cancellous",
+    "Vertebra_cancellous_T4": "bone_cancellous",
+    "Vertebra_cancellous_T5": "bone_cancellous",
+    "Vertebra_cancellous_T6": "bone_cancellous",
+    "Vertebra_cancellous_T7": "bone_cancellous",
+    "Vertebra_cancellous_T8": "bone_cancellous",
+    "Vertebra_cancellous_T9": "bone_cancellous",
+    "Femur_yellow_marrow_left": "bone_marrow_yellow",
+    "Femur_yellow_marrow_right": "bone_marrow_yellow",
+    "Fibula_yellow_marrow_left": "bone_marrow_yellow",
+    "Fibula_yellow_marrow_right": "bone_marrow_yellow",
+    "Humerus_yellow_marrow_left": "bone_marrow_yellow",
+    "Humerus_yellow_marrow_right": "bone_marrow_yellow",
+    "Radius_yellow_marrow_left": "bone_marrow_yellow",
+    "Radius_yellow_marrow_right": "bone_marrow_yellow",
+    "Tibia_yellow_marrow_left": "bone_marrow_yellow",
+    "Tibia_yellow_marrow_right": "bone_marrow_yellow",
+    "Ulna_yellow_marrow_left": "bone_marrow_yellow",
+    "Ulna_yellow_marrow_right": "bone_marrow_yellow",
+    "Carpalia_Metacarpalia_cortical_left": "bone_cortical",
+    "Carpalia_Metacarpalia_cortical_right": "bone_cortical",
+    "Femur_cortical_left": "bone_cortical",
+    "Femur_cortical_right": "bone_cortical",
+    "Fibula_cortical_left": "bone_cortical",
+    "Fibula_cortical_right": "bone_cortical",
+    "Foot_cortical_left": "bone_cortical",
+    "Foot_cortical_right": "bone_cortical",
+    "Humerus_cortical_left": "bone_cortical",
+    "Humerus_cortical_right": "bone_cortical",
+    "Hyoid_cortical": "bone_cortical",
+    "Mandible_cortical": "bone_cortical",
+    "Metacarpus_I_cortical_left": "bone_cortical",
+    "Metacarpus_I_cortical_right": "bone_cortical",
+    "Metatarsus_I_cortical_left": "bone_cortical",
+    "Metatarsus_I_cortical_right": "bone_cortical",
+    "Metatarsus_II_cortical_left": "bone_cortical",
+    "Metatarsus_II_cortical_right": "bone_cortical",
+    "Metatarsus_III_cortical_left": "bone_cortical",
+    "Metatarsus_III_cortical_right": "bone_cortical",
+    "Metatarsus_IV_cortical_left": "bone_cortical",
+    "Metatarsus_IV_cortical_right": "bone_cortical",
+    "Metatarsus_V_cortical_left": "bone_cortical",
+    "Metatarsus_V_cortical_right": "bone_cortical",
+    "Patella_cortical_left": "bone_cortical",
+    "Patella_cortical_right": "bone_cortical",
+    "Pelvis_cortical": "bone_cortical",
+    "Phalanx_distalis_I_cortical_foot_left": "bone_cortical",
+    "Phalanx_distalis_I_cortical_foot_right": "bone_cortical",
+    "Phalanx_distalis_I_cortical_left": "bone_cortical",
+    "Phalanx_distalis_I_cortical_right": "bone_cortical",
+    "Phalanx_distalis_II_cortical_foot_left": "bone_cortical",
+    "Phalanx_distalis_II_cortical_foot_right": "bone_cortical",
+    "Phalanx_distalis_II_cortical_left": "bone_cortical",
+    "Phalanx_distalis_II_cortical_right": "bone_cortical",
+    "Phalanx_distalis_III_cortical_foot_left": "bone_cortical",
+    "Phalanx_distalis_III_cortical_foot_right": "bone_cortical",
+    "Phalanx_distalis_III_cortical_left": "bone_cortical",
+    "Phalanx_distalis_III_cortical_right": "bone_cortical",
+    "Phalanx_distalis_IV_cortical_foot_left": "bone_cortical",
+    "Phalanx_distalis_IV_cortical_foot_right": "bone_cortical",
+    "Phalanx_distalis_IV_cortical_left": "bone_cortical",
+    "Phalanx_distalis_IV_cortical_right": "bone_cortical",
+    "Phalanx_distalis_V_cortical_foot_left": "bone_cortical",
+    "Phalanx_distalis_V_cortical_foot_right": "bone_cortical",
+    "Phalanx_distalis_V_cortical_left": "bone_cortical",
+    "Phalanx_distalis_V_cortical_right": "bone_cortical",
+    "Phalanx_media_II_cortical_foot_left": "bone_cortical",
+    "Phalanx_media_II_cortical_foot_right": "bone_cortical",
+    "Phalanx_media_II_cortical_left": "bone_cortical",
+    "Phalanx_media_II_cortical_right": "bone_cortical",
+    "Phalanx_media_III_cortical_foot_left": "bone_cortical",
+    "Phalanx_media_III_cortical_foot_right": "bone_cortical",
+    "Phalanx_media_III_cortical_left": "bone_cortical",
+    "Phalanx_media_III_cortical_right": "bone_cortical",
+    "Phalanx_media_IV_cortical_foot_left": "bone_cortical",
+    "Phalanx_media_IV_cortical_foot_right": "bone_cortical",
+    "Phalanx_media_IV_cortical_left": "bone_cortical",
+    "Phalanx_media_IV_cortical_right": "bone_cortical",
+    "Phalanx_media_V_cortical_foot_left": "bone_cortical",
+    "Phalanx_media_V_cortical_foot_right": "bone_cortical",
+    "Phalanx_media_V_cortical_left": "bone_cortical",
+    "Phalanx_media_V_cortical_right": "bone_cortical",
+    "Phalanx_proximalis_I_cortical_foot_left": "bone_cortical",
+    "Phalanx_proximalis_I_cortical_foot_right": "bone_cortical",
+    "Phalanx_proximalis_I_cortical_left": "bone_cortical",
+    "Phalanx_proximalis_I_cortical_right": "bone_cortical",
+    "Phalanx_proximalis_II_cortical_foot_left": "bone_cortical",
+    "Phalanx_proximalis_II_cortical_foot_right": "bone_cortical",
+    "Phalanx_proximalis_II_cortical_left": "bone_cortical",
+    "Phalanx_proximalis_II_cortical_right": "bone_cortical",
+    "Phalanx_proximalis_III_cortical_foot_left": "bone_cortical",
+    "Phalanx_proximalis_III_cortical_foot_right": "bone_cortical",
+    "Phalanx_proximalis_III_cortical_left": "bone_cortical",
+    "Phalanx_proximalis_III_cortical_right": "bone_cortical",
+    "Phalanx_proximalis_IV_cortical_foot_left": "bone_cortical",
+    "Phalanx_proximalis_IV_cortical_foot_right": "bone_cortical",
+    "Phalanx_proximalis_IV_cortical_left": "bone_cortical",
+    "Phalanx_proximalis_IV_cortical_right": "bone_cortical",
+    "Phalanx_proximalis_V_cortical_foot_left": "bone_cortical",
+    "Phalanx_proximalis_V_cortical_foot_right": "bone_cortical",
+    "Phalanx_proximalis_V_cortical_left": "bone_cortical",
+    "Phalanx_proximalis_V_cortical_right": "bone_cortical",
+    "Radius_cortical_left": "bone_cortical",
+    "Radius_cortical_right": "bone_cortical",
+    "Skull_cortical": "bone_cortical",
+    "Thorax_cortical": "bone_cortical",
+    "Tibia_cortical_left": "bone_cortical",
+    "Tibia_cortical_right": "bone_cortical",
+    "Ulna_cortical_left": "bone_cortical",
+    "Ulna_cortical_right": "bone_cortical",
+    "Vertebra_cortical_C1": "bone_cortical",
+    "Vertebra_cortical_C2": "bone_cortical",
+    "Vertebra_cortical_C3": "bone_cortical",
+    "Vertebra_cortical_C4": "bone_cortical",
+    "Vertebra_cortical_C5": "bone_cortical",
+    "Vertebra_cortical_C6": "bone_cortical",
+    "Vertebra_cortical_C7": "bone_cortical",
+    "Vertebra_cortical_L1": "bone_cortical",
+    "Vertebra_cortical_L2": "bone_cortical",
+    "Vertebra_cortical_L3": "bone_cortical",
+    "Vertebra_cortical_L4": "bone_cortical",
+    "Vertebra_cortical_L5": "bone_cortical",
+    "Vertebra_cortical_os_sacrum_coccyx": "bone_cortical",
+    "Vertebra_cortical_T1": "bone_cortical",
+    "Vertebra_cortical_T10": "bone_cortical",
+    "Vertebra_cortical_T11": "bone_cortical",
+    "Vertebra_cortical_T12": "bone_cortical",
+    "Vertebra_cortical_T2": "bone_cortical",
+    "Vertebra_cortical_T3": "bone_cortical",
+    "Vertebra_cortical_T4": "bone_cortical",
+    "Vertebra_cortical_T5": "bone_cortical",
+    "Vertebra_cortical_T6": "bone_cortical",
+    "Vertebra_cortical_T7": "bone_cortical",
+    "Vertebra_cortical_T8": "bone_cortical",
+    "Vertebra_cortical_T9": "bone_cortical",
+    "Pons": "pons",
+    "Pineal_body": "pineal_body",
+    "Thalamus_left": "thalamus",
+    "Thalamus_right": "thalamus"
+  },
+  "tissue_models": [
+    {
+      "tissue_model_id": "brain_spinal_cord",
+      "display_name": "brain+spinal_cord",
+      "relative_path": "S4L\\tissue\\brain+spinal_cord.mat",
+      "dataset_kind": "voxel_snapshot",
+      "status": "partial_library",
+      "file_size_bytes": 467143616,
+      "mat_file_header": "MATLAB 5.0 MAT-file Platform: nt, Created on: Tue Mar 17 23:43:22 2026",
+      "variables": [
+        {
+          "name": "Snapshot0",
+          "shape": [
+            19463976,
+            3
+          ],
+          "dtype": "single"
+        },
+        {
+          "name": "Axis0",
+          "shape": [
+            1,
+            163
+          ],
+          "dtype": "double"
+        },
+        {
+          "name": "Axis1",
+          "shape": [
+            1,
+            197
+          ],
+          "dtype": "double"
+        },
+        {
+          "name": "Axis2",
+          "shape": [
+            1,
+            614
+          ],
+          "dtype": "double"
+        }
+      ],
+      "linked_material_ids": [
+        "brain_grey_matter",
+        "brain_white_matter",
+        "medulla_oblongata",
+        "midbrain",
+        "pons",
+        "cerebellum",
+        "hypothalamus",
+        "hippocampus",
+        "thalamus"
+      ],
+      "linked_entity_names": [
+        "Cerebrum_grey_matter",
+        "Cerebrum_white_matter",
+        "Spinal_cord_grey_matter",
+        "Spinal_cord_white_matter",
+        "Corpus_callosum"
+      ],
+      "notes": [
+        "Composite CNS snapshot covering brain and spinal cord.",
+        "This file likely spans multiple material regions rather than a single homogeneous tissue.",
+        "Models under S4L/tissue are incomplete and can be assembled into a larger human model later."
+      ]
+    },
+    {
+      "tissue_model_id": "medulla_oblongata",
+      "display_name": "Medulla_oblongata",
+      "relative_path": "S4L\\tissue\\Brainstem\\Medulla_oblongata.mat",
+      "dataset_kind": "voxel_snapshot",
+      "status": "partial_library",
+      "file_size_bytes": 58709656,
+      "mat_file_header": "MATLAB 5.0 MAT-file Platform: nt, Created on: Wed Mar 25 22:28:32 2026",
+      "variables": [
+        {
+          "name": "Snapshot0",
+          "shape": [
+            2446080,
+            3
+          ],
+          "dtype": "single"
+        },
+        {
+          "name": "Axis0",
+          "shape": [
+            1,
+            161
+          ],
+          "dtype": "double"
+        },
+        {
+          "name": "Axis1",
+          "shape": [
+            1,
+            157
+          ],
+          "dtype": "double"
+        },
+        {
+          "name": "Axis2",
+          "shape": [
+            1,
+            99
+          ],
+          "dtype": "double"
+        }
+      ],
+      "linked_material_ids": [
+        "medulla_oblongata"
+      ],
+      "linked_entity_names": [
+        "Medulla_oblongata"
+      ],
+      "notes": [
+        "Models under S4L/tissue are incomplete and can be assembled into a larger human model later."
+      ]
+    },
+    {
+      "tissue_model_id": "midbrain",
+      "display_name": "Midbrain",
+      "relative_path": "S4L\\tissue\\Brainstem\\Midbrain.mat",
+      "dataset_kind": "voxel_snapshot",
+      "status": "partial_library",
+      "file_size_bytes": 96184784,
+      "mat_file_header": "MATLAB 5.0 MAT-file Platform: nt, Created on: Wed Mar 25 22:40:42 2026",
+      "variables": [
+        {
+          "name": "Snapshot0",
+          "shape": [
+            4007520,
+            3
+          ],
+          "dtype": "single"
+        },
+        {
+          "name": "Axis0",
+          "shape": [
+            1,
+            185
+          ],
+          "dtype": "double"
+        },
+        {
+          "name": "Axis1",
+          "shape": [
+            1,
+            181
+          ],
+          "dtype": "double"
+        },
+        {
+          "name": "Axis2",
+          "shape": [
+            1,
+            122
+          ],
+          "dtype": "double"
+        }
+      ],
+      "linked_material_ids": [
+        "midbrain"
+      ],
+      "linked_entity_names": [
+        "Midbrain"
+      ],
+      "notes": [
+        "Models under S4L/tissue are incomplete and can be assembled into a larger human model later."
+      ]
+    },
+    {
+      "tissue_model_id": "caudate_nucleus",
+      "display_name": "Caudate_nucleus",
+      "relative_path": "S4L\\tissue\\Caudate_nucleus.mat",
+      "dataset_kind": "voxel_snapshot",
+      "status": "partial_library",
+      "file_size_bytes": 556729512,
+      "mat_file_header": "MATLAB 5.0 MAT-file Platform: nt, Created on: Mon Mar 23 19:22:11 2026",
+      "variables": [
+        {
+          "name": "Snapshot0",
+          "shape": [
+            23196750,
+            3
+          ],
+          "dtype": "single"
+        },
+        {
+          "name": "Axis0",
+          "shape": [
+            1,
+            376
+          ],
+          "dtype": "double"
+        },
+        {
+          "name": "Axis1",
+          "shape": [
+            1,
+            315
+          ],
+          "dtype": "double"
+        },
+        {
+          "name": "Axis2",
+          "shape": [
+            1,
+            198
+          ],
+          "dtype": "double"
+        }
+      ],
+      "linked_material_ids": [
+        "brain_grey_matter"
+      ],
+      "linked_entity_names": [
+        "Caudate_nucleus_left",
+        "Caudate_nucleus_right"
+      ],
+      "notes": [
+        "Models under S4L/tissue are incomplete and can be assembled into a larger human model later."
+      ]
+    },
+    {
+      "tissue_model_id": "cerebellum",
+      "display_name": "Cerebellum",
+      "relative_path": "S4L\\tissue\\Cerebellum.mat",
+      "dataset_kind": "voxel_snapshot",
+      "status": "partial_library",
+      "file_size_bytes": 1975520,
+      "mat_file_header": "MATLAB 5.0 MAT-file Platform: nt, Created on: Wed Mar 25 10:22:29 2026",
+      "variables": [
+        {
+          "name": "Snapshot0",
+          "shape": [
+            82251,
+            3
+          ],
+          "dtype": "single"
+        },
+        {
+          "name": "Axis0",
+          "shape": [
+            1,
+            58
+          ],
+          "dtype": "double"
+        },
+        {
+          "name": "Axis1",
+          "shape": [
+            1,
+            38
+          ],
+          "dtype": "double"
+        },
+        {
+          "name": "Axis2",
+          "shape": [
+            1,
+            40
+          ],
+          "dtype": "double"
+        }
+      ],
+      "linked_material_ids": [
+        "cerebellum"
+      ],
+      "linked_entity_names": [
+        "Cerebellum"
+      ],
+      "notes": [
+        "Models under S4L/tissue are incomplete and can be assembled into a larger human model later."
+      ]
+    },
+    {
+      "tissue_model_id": "commisura_anterior",
+      "display_name": "Commisura_anterior",
+      "relative_path": "S4L\\tissue\\Commisura_anterior.mat",
+      "dataset_kind": "voxel_snapshot",
+      "status": "partial_library",
+      "file_size_bytes": 137944,
+      "mat_file_header": "MATLAB 5.0 MAT-file Platform: nt, Created on: Wed Mar 25 10:51:39 2026",
+      "variables": [
+        {
+          "name": "Snapshot0",
+          "shape": [
+            5712,
+            3
+          ],
+          "dtype": "single"
+        },
+        {
+          "name": "Axis0",
+          "shape": [
+            1,
+            17
+          ],
+          "dtype": "double"
+        },
+        {
+          "name": "Axis1",
+          "shape": [
+            1,
+            18
+          ],
+          "dtype": "double"
+        },
+        {
+          "name": "Axis2",
+          "shape": [
+            1,
+            22
+          ],
+          "dtype": "double"
+        }
+      ],
+      "linked_material_ids": [
+        "commissura_anterior"
+      ],
+      "linked_entity_names": [
+        "Commissura_anterior"
+      ],
+      "notes": [
+        "Filename uses 'Commisura'; notebook uses 'Commissura'.",
+        "Models under S4L/tissue are incomplete and can be assembled into a larger human model later."
+      ]
+    },
+    {
+      "tissue_model_id": "commisura_posterior",
+      "display_name": "Commisura_posterior",
+      "relative_path": "S4L\\tissue\\Commisura_posterior.mat",
+      "dataset_kind": "voxel_snapshot",
+      "status": "partial_library",
+      "file_size_bytes": 117280,
+      "mat_file_header": "MATLAB 5.0 MAT-file Platform: nt, Created on: Wed Mar 25 10:57:07 2026",
+      "variables": [
+        {
+          "name": "Snapshot0",
+          "shape": [
+            4851,
+            3
+          ],
+          "dtype": "single"
+        },
+        {
+          "name": "Axis0",
+          "shape": [
+            1,
+            12
+          ],
+          "dtype": "double"
+        },
+        {
+          "name": "Axis1",
+          "shape": [
+            1,
+            22
+          ],
+          "dtype": "double"
+        },
+        {
+          "name": "Axis2",
+          "shape": [
+            1,
+            22
+          ],
+          "dtype": "double"
+        }
+      ],
+      "linked_material_ids": [
+        "commissura_posterior"
+      ],
+      "linked_entity_names": [
+        "Commissura_posterior"
+      ],
+      "notes": [
+        "Filename uses 'Commisura'; notebook uses 'Commissura'.",
+        "Models under S4L/tissue are incomplete and can be assembled into a larger human model later."
+      ]
+    },
+    {
+      "tissue_model_id": "hippocampus",
+      "display_name": "Hippocampus",
+      "relative_path": "S4L\\tissue\\Hippocampus.mat",
+      "dataset_kind": "voxel_snapshot",
+      "status": "partial_library",
+      "file_size_bytes": 215577216,
+      "mat_file_header": "MATLAB 5.0 MAT-file Platform: nt, Created on: Wed Mar 25 11:05:17 2026",
+      "variables": [
+        {
+          "name": "Snapshot0",
+          "shape": [
+            8982144,
+            3
+          ],
+          "dtype": "single"
+        },
+        {
+          "name": "Axis0",
+          "shape": [
+            1,
+            340
+          ],
+          "dtype": "double"
+        },
+        {
+          "name": "Axis1",
+          "shape": [
+            1,
+            185
+          ],
+          "dtype": "double"
+        },
+        {
+          "name": "Axis2",
+          "shape": [
+            1,
+            145
+          ],
+          "dtype": "double"
+        }
+      ],
+      "linked_material_ids": [
+        "hippocampus"
+      ],
+      "linked_entity_names": [
+        "Hippocampus_left",
+        "Hippocampus_right"
+      ],
+      "notes": [
+        "Models under S4L/tissue are incomplete and can be assembled into a larger human model later."
+      ]
+    },
+    {
+      "tissue_model_id": "hypophysis",
+      "display_name": "hypophysis",
+      "relative_path": "S4L\\tissue\\hypophysis.mat",
+      "dataset_kind": "field_result",
+      "status": "partial_library",
+      "file_size_bytes": 18578312,
+      "mat_file_header": "MATLAB 5.0 MAT-file Platform: nt, Created on: Wed Mar 25 12:51:18 2026",
+      "variables": [
+        {
+          "name": "EM_E_x_y_z_f0_Snapshot0",
+          "shape": [
+            232200,
+            3
+          ],
+          "dtype": "single"
+        },
+        {
+          "name": "D_x_y_z_f0_Snapshot0",
+          "shape": [
+            232200,
+            3
+          ],
+          "dtype": "single"
+        },
+        {
+          "name": "J_x_y_z_f0_Snapshot0",
+          "shape": [
+            232200,
+            3
+          ],
+          "dtype": "single"
+        },
+        {
+          "name": "El__Loss_Density_x_y_z_f0_Snapshot0",
+          "shape": [
+            232200,
+            1
+          ],
+          "dtype": "single"
+        },
+        {
+          "name": "SAR_x_y_z_f0_Snapshot0",
+          "shape": [
+            232200,
+            1
+          ],
+          "dtype": "single"
+        },
+        {
+          "name": "Axis0",
+          "shape": [
+            1,
+            87
+          ],
+          "dtype": "double"
+        },
+        {
+          "name": "Axis1",
+          "shape": [
+            1,
+            61
+          ],
+          "dtype": "double"
+        },
+        {
+          "name": "Axis2",
+          "shape": [
+            1,
+            46
+          ],
+          "dtype": "double"
+        }
+      ],
+      "linked_material_ids": [
+        "hypophysis"
+      ],
+      "linked_entity_names": [
+        "Hypophysis"
+      ],
+      "notes": [
+        "Models under S4L/tissue are incomplete and can be assembled into a larger human model later."
+      ]
+    },
+    {
+      "tissue_model_id": "hypothalamus",
+      "display_name": "Hypothalamus",
+      "relative_path": "S4L\\tissue\\Hypothalamus.mat",
+      "dataset_kind": "voxel_snapshot",
+      "status": "partial_library",
+      "file_size_bytes": 13747616,
+      "mat_file_header": "MATLAB 5.0 MAT-file Platform: nt, Created on: Tue Mar 17 23:56:28 2026",
+      "variables": [
+        {
+          "name": "Snapshot0",
+          "shape": [
+            572715,
+            3
+          ],
+          "dtype": "single"
+        },
+        {
+          "name": "Axis0",
+          "shape": [
+            1,
+            100
+          ],
+          "dtype": "double"
+        },
+        {
+          "name": "Axis1",
+          "shape": [
+            1,
+            66
+          ],
+          "dtype": "double"
+        },
+        {
+          "name": "Axis2",
+          "shape": [
+            1,
+            90
+          ],
+          "dtype": "double"
+        }
+      ],
+      "linked_material_ids": [
+        "hypothalamus"
+      ],
+      "linked_entity_names": [
+        "Hypothalamus"
+      ],
+      "notes": [
+        "Models under S4L/tissue are incomplete and can be assembled into a larger human model later."
+      ]
+    },
+    {
+      "tissue_model_id": "pineal_body_0_5_mm",
+      "display_name": "Pineal_body+0.5mm",
+      "relative_path": "S4L\\tissue\\Pineal_body+0.5mm.mat",
+      "dataset_kind": "voxel_snapshot",
+      "status": "partial_library",
+      "file_size_bytes": 17928,
+      "mat_file_header": "MATLAB 5.0 MAT-file Platform: nt, Created on: Wed Mar 25 22:00:56 2026",
+      "variables": [
+        {
+          "name": "Snapshot0",
+          "shape": [
+            720,
+            3
+          ],
+          "dtype": "single"
+        },
+        {
+          "name": "Axis0",
+          "shape": [
+            1,
+            7
+          ],
+          "dtype": "double"
+        },
+        {
+          "name": "Axis1",
+          "shape": [
+            1,
+            11
+          ],
+          "dtype": "double"
+        },
+        {
+          "name": "Axis2",
+          "shape": [
+            1,
+            13
+          ],
+          "dtype": "double"
+        }
+      ],
+      "linked_material_ids": [
+        "pineal_body"
+      ],
+      "linked_entity_names": [
+        "Pineal_body"
+      ],
+      "notes": [
+        "Models under S4L/tissue are incomplete and can be assembled into a larger human model later."
+      ]
+    },
+    {
+      "tissue_model_id": "thalamus",
+      "display_name": "Thalamus",
+      "relative_path": "S4L\\tissue\\Thalamus.mat",
+      "dataset_kind": "voxel_snapshot",
+      "status": "partial_library",
+      "file_size_bytes": 198867632,
+      "mat_file_header": "MATLAB 5.0 MAT-file Platform: nt, Created on: Wed Mar 25 10:34:51 2026",
+      "variables": [
+        {
+          "name": "Snapshot0",
+          "shape": [
+            8285928,
+            3
+          ],
+          "dtype": "single"
+        },
+        {
+          "name": "Axis0",
+          "shape": [
+            1,
+            260
+          ],
+          "dtype": "double"
+        },
+        {
+          "name": "Axis1",
+          "shape": [
+            1,
+            173
+          ],
+          "dtype": "double"
+        },
+        {
+          "name": "Axis2",
+          "shape": [
+            1,
+            187
+          ],
+          "dtype": "double"
+        }
+      ],
+      "linked_material_ids": [
+        "thalamus"
+      ],
+      "linked_entity_names": [
+        "Thalamus_left",
+        "Thalamus_right"
+      ],
+      "notes": [
+        "Models under S4L/tissue are incomplete and can be assembled into a larger human model later."
+      ]
+    }
+  ]
+}
